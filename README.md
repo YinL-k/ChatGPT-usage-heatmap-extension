@@ -1,78 +1,78 @@
 [English](README_en.md) | [中文](README.md)
 
-# GPT Tracker – 使用热力图  
-监控你到底有多离不开 ChatGPT 的 Chrome 扩展
+# GPT Tracker – 使用热力图 + Usage Dashboard
 
-我发现自己太爱 ChatGPT 了，于是写了这个 Chrome Extension 来监控一下我自己到底多依赖它。  
-它会记录你每天按下 Enter 发送 Prompt 的次数，然后用 GitHub 风格的热力图展示出来，再顺便给你算算今日 / 本周 / 本月用了多少次。
+Chrome 扩展：保留原来的 ChatGPT 使用热力图，同时增加会员识别、Pro Chat 本地额度估算，以及 ChatGPT Web 实际返回的 usage meter。
 
-如果你也好奇自己是不是已经离不开 ChatGPT，这个扩展能很大程度上满足你的好奇心！
+## v2.1
 
----
+### 会员切换
+Popup 支持 Auto-detect、Free、Go、Plus、Pro $100 / 5x、Pro $200 / 20x、Business Standard、Business Premium、Enterprise、Edu。
 
-## 功能特色
+自动识别读取 ChatGPT 当前会话返回的 plan/seat 信号；OpenAI 内部字段变化时，也可以手动覆盖会员类型。
 
-### 🔥 GitHub 风格热力图  
-直观展示你全年每天使用 ChatGPT 的频率。  
-相关文件：  
-- heatmap.html  
-- heatmap.js  
-- style.css  
+### Pro Chat
+Pro Chat 在正常状态下没有稳定的官方 remaining counter，因此扩展根据实际成功发送的 conversation request，在本地记录 model / reasoning mode 并计算剩余量，卡片明确标记为 `local`。
 
-### 📊 今日 / 本周 / 本月 / 总计统计  
-打开扩展弹窗即可看到你的使用频率总结。  
-相关文件：  
-- popup.html  
-- popup.js  
+当前 preset：
+- Pro $100 / 5x：共享 Pro 50 / 7 天
+- Pro $200 / 20x：GPT-6 Pro 200 / 7 天；GPT-5.6 Sol Pro 170 / 24h；全部 Pro 合计 200 / 24h
+- Business Standard：共享 Pro 15 / 30 天
+- Business Premium：共享 Pro 50 / 7 天
+- Enterprise / Edu：不假设统一固定值，以 workspace 返回值为准
 
-### 🧩 自动记录，不打扰你  
-扩展会监听你在 ChatGPT 页面按下 Enter 的行为，并将当天的 Prompt 次数记录下来。  
-相关文件：  
-- content.js  
+v2.1 以前的历史数据只有总消息数，没有 model 元数据，因此无法倒推过去用了多少条 Pro。Popup 可用 **Reset local Pro count** 从当前时刻重新计数。
 
-### 🔒 数据只存本地  
-所有统计数据都存储在 chrome.storage.local 中。  
-不上传、不联网，放心使用。
+### 能读取的服务端 usage
+扩展从已登录的 ChatGPT 页面发起只读请求，并只保存经过清洗后的 quota 数字：
 
----
+- `POST /backend-api/conversation/init`：`limits_progress`，可能包含 Deep Research、Image Generation、File Upload 等 remaining / reset
+- `GET /backend-api/wham/usage`：Work/Codex rate-limit window、used percent、reset、credits、plan type
+- `GET /backend-api/wham/tasks/rate_limit`
+- `GET /codex/settings/usage`
+- `GET /backend-api/accounts/check/v4-2023-04-27`：仅用于 plan / seat 信号识别
 
-## 安装方式
+这些是 ChatGPT Web 的内部接口，不是稳定公开 API，可能随时改变。读取失败时扩展只显示缓存或 unavailable，不绕过认证与安全控制。
 
-1. 下载整个项目文件夹。  
-2. 打开 Chrome，访问：  
-   ```
-   chrome://extensions/
-   ```
-3. 启用右上角 开发者模式（Developer mode）。  
-4. 点击 加载已解压的扩展程序（Load unpacked）。  
-5. 选择本项目文件夹即可完成安装。
+### 更准确的 Activity 记录
+旧版监听 Enter；v2.1 改为监听 ChatGPT 页面真正发出的 conversation request，并在请求成功后才 +1，所以点击发送按钮也能统计。
 
----
+扩展不会保存 Prompt/回答正文。
 
-## 项目结构
+## 原有功能
+- GitHub 风格年度热力图
+- Today / Week / Month / Total
+- Daily Activity 趋势
+- JSON Import / Export
+- Dark Mode
 
+## 隐私
+- 不保存 Prompt 或回答内容
+- 不持久化 Cookie、Access Token、邮箱、Account ID
+- Usage 请求只访问 ChatGPT 自己的 first-party endpoint
+- 无开发者后端，无 telemetry 上传
+- 本地数据存储在 `chrome.storage.local`
+
+## 安装
+1. 下载项目。
+2. 打开 `chrome://extensions/`。
+3. 开启 Developer mode。
+4. 点击 Load unpacked。
+5. 选择项目目录。
+6. 更新 v2.1 后，刷新一次已经打开的 ChatGPT 标签页。
+
+## 结构
+```text
+manifest.json
+page-hook.js       # MAIN world：成功发送检测 + ChatGPT usage 只读抓取
+content.js         # 本地存储与 popup bridge
+popup.html
+popup.js
+heatmap.html
+heatmap.js
+style.css
+privacy-policy.md
 ```
-manifest.json     // 扩展配置文件
-icon.png          // 扩展图标
-content.js        // 监听 Enter 并记录每日使用次数
-popup.html        // 展示今日/本周/本月统计
-popup.js          // 统计逻辑
-heatmap.html      // 热力图展示页面
-heatmap.js        // 生成热力图
-style.css         // 样式文件
-```
-
----
-
-## 为什么做这个项目？
-
-单纯自己到底有多依赖AI哈哈哈 
-我只是想看看自己一天到底敲了多少次 Enter 来找 ChatGPT 喵喵天。  
-
-做完之后发现……我可能确实有点依赖它？
-
----
 
 ## License
-
 MIT License.
