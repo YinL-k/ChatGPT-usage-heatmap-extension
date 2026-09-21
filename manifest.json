@@ -1,22 +1,37 @@
 {
   "manifest_version": 3,
   "name": "GPT Tracker - Usage Heatmap",
-  "version": "2.0.0",
-  "description": "Track ChatGPT usage stats with a GitHub-style contribution graph.",
+  "version": "2.1.0",
+  "description": "Track ChatGPT activity, plan allowances, and available usage meters with a GitHub-style heatmap.",
   "permissions": [
-    "storage"
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "*://chatgpt.com/*",
-        "*://chat.openai.com/*",
-        "*://*.openai.com/*"
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": [
+        "page-hook.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
       ],
       "js": [
         "content.js"
       ],
-      "run_at": "document_end"
+      "run_at": "document_start"
     }
   ],
   "action": {
