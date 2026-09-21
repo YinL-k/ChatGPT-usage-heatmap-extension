@@ -1,28 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { width: 220px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 15px; color: #333; }
-    h2 { margin: 0 0 15px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
-    .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
-    .stat-val { font-weight: bold; color: #10a37f; } /* OpenAI Green */
-    button {
-      width: 100%; margin-top: 15px; padding: 8px;
-      background: #10a37f; color: white; border: none; border-radius: 4px;
-      cursor: pointer; font-weight: 600;
-    }
-    button:hover { background: #0d8a6a; }
+    :root { color-scheme: light dark; --bg:#fff; --text:#202123; --muted:#6b7280; --border:#e5e7eb; --soft:#f7f7f8; --accent:#10a37f; --warning:#a16207; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#202123; --text:#f3f4f6; --muted:#9ca3af; --border:#3f4147; --soft:#2a2b32; --warning:#facc15; } }
+    * { box-sizing:border-box; } body { width:390px; margin:0; padding:16px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); }
+    .header{display:flex;justify-content:space-between;align-items:center;gap:12px} h1{margin:0;font-size:17px;font-weight:650} h2{margin:0 0 9px;font-size:13px;font-weight:650}
+    .subtle{color:var(--muted);font-size:11px;line-height:1.4}.refresh{border:1px solid var(--border);background:var(--soft);color:var(--text);border-radius:8px;padding:6px 9px;cursor:pointer;font-size:12px}.refresh:disabled{opacity:.55;cursor:wait}
+    .section{margin-top:14px;padding-top:13px;border-top:1px solid var(--border)}.plan-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:10px} select{width:100%;padding:8px 9px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:12px}
+    .plan-summary{margin-top:8px;padding:9px 10px;background:var(--soft);border-radius:8px;font-size:11px;line-height:1.45}.cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{border:1px solid var(--border);border-radius:10px;padding:10px;min-height:76px}
+    .card-title{display:flex;align-items:center;justify-content:space-between;gap:6px;color:var(--muted);font-size:11px}.card-value{margin-top:7px;font-size:19px;font-weight:650;letter-spacing:-.3px}.card-note{margin-top:4px;color:var(--muted);font-size:10px;line-height:1.35}
+    .badge{font-size:9px;border:1px solid var(--border);border-radius:999px;padding:1px 5px;white-space:nowrap}.badge.official{color:var(--accent)}.badge.local{color:var(--warning)}.progress{margin-top:7px;height:5px;background:var(--soft);border-radius:999px;overflow:hidden}.progress>span{display:block;height:100%;background:var(--accent);border-radius:inherit;width:0}
+    .feature-list{display:grid;gap:6px}.feature-row{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:11px}.feature-row .name{color:var(--muted)}.feature-row .value{text-align:right;font-weight:600}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.stat{background:var(--soft);border-radius:8px;padding:8px 5px;text-align:center}.stat strong{display:block;font-size:16px}.stat span{color:var(--muted);font-size:9px}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}button.action{border:0;border-radius:8px;padding:9px 8px;cursor:pointer;font-weight:600;font-size:11px;background:var(--accent);color:#fff}button.action.secondary{background:var(--soft);color:var(--text);border:1px solid var(--border)}#statusText{margin-top:8px;min-height:15px}.empty{color:var(--muted);font-size:11px}
   </style>
 </head>
 <body>
-  <h2>GPT Usage Stats</h2>
-  <div class="stat-row"><span>Today:</span> <span id="today" class="stat-val">0</span></div>
-  <div class="stat-row"><span>This Week:</span> <span id="week" class="stat-val">0</span></div>
-  <div class="stat-row"><span>This Month:</span> <span id="month" class="stat-val">0</span></div>
-  <div class="stat-row"><span>Total:</span> <span id="total" class="stat-val">0</span></div>
-  
-  <button id="openHeatmap">Open Heatmap</button>
+  <div class="header"><div><h1>GPT Usage</h1><div class="subtle" id="detectedPlan">Plan: detecting…</div></div><button id="refreshUsage" class="refresh">Refresh</button></div>
+  <div class="plan-row">
+    <select id="planSelect" aria-label="Membership plan">
+      <option value="auto">Auto-detect</option><option value="free">Free</option><option value="go">Go</option><option value="plus">Plus</option><option value="pro_100">Pro $100 / 5x</option><option value="pro_200">Pro $200 / 20x</option><option value="business_standard">Business Standard</option><option value="business_premium">Business Premium</option><option value="enterprise">Enterprise</option><option value="edu">Edu</option>
+    </select>
+    <span class="badge" id="planSource">manual</span>
+  </div>
+  <div class="plan-summary" id="planSummary"></div>
+  <div class="section"><h2>Pro Chat allowance</h2><div id="proCards" class="cards"></div></div>
+  <div class="section"><h2>Work / Codex & credits</h2><div id="agenticCards" class="cards"></div></div>
+  <div class="section"><h2>Feature limits</h2><div id="featureLimits" class="feature-list"></div></div>
+  <div class="section"><h2>Activity</h2><div class="stats"><div class="stat"><strong id="today">0</strong><span>Today</span></div><div class="stat"><strong id="week">0</strong><span>Week</span></div><div class="stat"><strong id="month">0</strong><span>Month</span></div><div class="stat"><strong id="total">0</strong><span>Total</span></div></div></div>
+  <div class="actions"><button id="openHeatmap" class="action">Open Heatmap</button><button id="resetProCounter" class="action secondary">Reset local Pro count</button></div>
+  <div id="statusText" class="subtle"></div>
   <script src="popup.js"></script>
 </body>
 </html>
