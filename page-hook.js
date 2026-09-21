@@ -14,8 +14,11 @@
     const sendProbe = inspectOutgoingChat(input, init);
     const responsePromise = originalFetch(input, init);
 
-    void sendProbe.then((event) => {
-      if (event) {
+    void Promise.all([
+      sendProbe,
+      responsePromise.then((response) => response.ok).catch(() => false),
+    ]).then(([event, requestSucceeded]) => {
+      if (event && requestSucceeded) {
         window.postMessage({ source: SOURCE, type: CHAT_SENT_TYPE, payload: event }, "*");
       }
     }).catch(() => {});
