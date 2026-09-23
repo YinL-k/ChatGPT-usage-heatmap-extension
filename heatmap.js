@@ -92,7 +92,7 @@ const TIME_BUCKETS = [
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!window.GPTTrackerI18n) {
-    console.error("[GPT Tracker] i18n module missing");
+    console.error("[SakuraMeter] i18n module missing");
     
     bootstrap();
     return;
@@ -1557,7 +1557,7 @@ function initExportImport() {
   exportBtn.addEventListener('click',()=>GPTFeedback.run(exportBtn,async()=>{
     const result=await chrome.runtime.sendMessage({type:'UG_EXPORT'});if(!result.ok)throw Error();
     const url=URL.createObjectURL(new Blob([JSON.stringify(result.payload,null,2)],{type:'application/json'}));
-    const a=document.createElement('a');a.href=url;a.download='gpt-tracker-activity-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+    const a=document.createElement('a');a.href=url;a.download='sakurameter-activity-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
     GPTFeedback.status(GPTTrackerI18n.t('u_backup'));
   },'u_export_error'));
   importBtn.addEventListener("click", () => input.click());

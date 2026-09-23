@@ -10,7 +10,7 @@
   "permissionsChanged": false,
   "priorSourcePreserved": true,
   "extensionInstalled": false,
-  "latestChange": "themed-controls-and-summary-columns",
+  "latestChange": "sakurameter-branding-hanbao-01",
   "domCasesPassed": 14,
   "themeCasesPassed": 42,
   "readabilityChecksPassed": 12,
@@ -19,7 +19,18 @@
   "protectedFilesUnchanged": [
     "background.js",
     "content.js",
-    "usage-core.js",
-    "manifest.json"
+    "usage-core.js"
+  ],
+  "product": "SakuraMeter",
+  "brandingLayoutsPassed": 12,
+  "iconSizesVerified": [
+    16,
+    32,
+    48,
+    128
+  ],
+  "manifestLocalesVerified": [
+    "en",
+    "zh_CN"
   ]
 }

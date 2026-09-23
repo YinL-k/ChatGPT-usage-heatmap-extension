@@ -1,4 +1,4 @@
-# GPT Tracker 3.5.0 — Privacy
+# SakuraMeter 3.5.0 — Privacy
 
 Activity is stored on this browser profile. There is no developer backend or telemetry.
 

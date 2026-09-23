@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "SakuraMeter — Usage Tracker for ChatGPT & Codex"
+  },
+  "extensionDescription": {
+    "message": "Track ChatGPT activity, heatmaps and Codex usage limits. Local history, read-only refresh, and Sakura light and dark themes."
+  }
+}

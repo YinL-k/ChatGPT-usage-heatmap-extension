@@ -1,17 +1,25 @@
 {
   "manifest_version": 3,
-  "name": "GPT Tracker - Usage Heatmap",
+  "name": "__MSG_extensionName__",
   "version": "3.5.0",
   "version_name": "3.5.0",
-  "description": "Track ChatGPT activity locally, auto-detect your plan, and show live Codex allowance data from your signed-in ChatGPT session.",
+  "description": "__MSG_extensionDescription__",
   "minimum_chrome_version": "111",
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/sakurameter-16.png",
+      "32": "assets/sakurameter-32.png",
+      "48": "assets/sakurameter-48.png",
+      "128": "assets/sakurameter-128.png"
+    },
+    "default_title": "SakuraMeter"
   },
   "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
+    "16": "assets/sakurameter-16.png",
+    "32": "assets/sakurameter-32.png",
+    "48": "assets/sakurameter-48.png",
+    "128": "assets/sakurameter-128.png"
   },
   "permissions": [
     "storage",
@@ -35,5 +43,7 @@
   },
   "host_permissions": [
     "https://chatgpt.com/*"
-  ]
+  ],
+  "default_locale": "en",
+  "short_name": "SakuraMeter"
 }

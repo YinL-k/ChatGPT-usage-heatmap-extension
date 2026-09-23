@@ -1,6 +1,10 @@
 English | [中文](README.md)
 
-# GPT Tracker 3.5.0
+# SakuraMeter — ChatGPT & Codex Usage Tracker
+
+![SakuraMeter](assets/sakurameter-128.png)
+
+**3.5.0**
 
 A Chrome extension for local ChatGPT activity tracking, heatmaps, trends, and read-only Codex allowance information. Sakura dark and pale-pink themes share the same layout and interactions.
 
@@ -29,3 +33,8 @@ Unknown quotas remain unavailable. Calibrated Pro balances are local estimates. 
 ## Tests
 
 Run `npm install` and `npm test` in `tests/`. Browser checks require Google Chrome: `npm run browser`, `npm run themes`, `npm run readability`, and `npm run controls`. All regression requests use local fixtures. See the [verification report](verification/3.5.0/report.json) and [testing history](TESTING.md); historical local screenshot paths are not shipped in this repository.
+
+
+## Brand and icon
+
+SakuraMeter uses the selected Hanbao (blossom bud) icon across the extension, toolbar, popup, and dashboard, with matching light and dark variants. The localized extension names include ChatGPT and Codex usage keywords. This is an independent community extension. See [brand assets](BRANDING.md).

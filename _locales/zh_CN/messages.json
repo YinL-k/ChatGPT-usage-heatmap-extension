@@ -1,0 +1,8 @@
+{
+  "extensionName": {
+    "message": "SakuraMeter — ChatGPT 用量统计与 Codex 额度监测"
+  },
+  "extensionDescription": {
+    "message": "本地记录 ChatGPT 使用统计、热力图与活动趋势，查看 Codex 额度与重置时间，支持只读刷新及樱花粉深浅主题。"
+  }
+}

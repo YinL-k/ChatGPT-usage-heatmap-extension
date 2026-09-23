@@ -1,0 +1,28 @@
+{
+  "checks": [
+    "popup-en-dark",
+    "desktop-en-dark",
+    "narrow-en-dark",
+    "popup-en-light",
+    "desktop-en-light",
+    "narrow-en-light",
+    "popup-zh-dark",
+    "desktop-zh-dark",
+    "narrow-zh-dark",
+    "popup-zh-light",
+    "desktop-zh-light",
+    "narrow-zh-light"
+  ],
+  "icons": [
+    16,
+    32,
+    48,
+    128
+  ],
+  "manifestLocales": [
+    "en",
+    "zh_CN"
+  ],
+  "errors": [],
+  "externalRequests": []
+}

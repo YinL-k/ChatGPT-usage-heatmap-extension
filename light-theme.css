@@ -159,7 +159,7 @@ body:not(.dark):has(.container) ::-webkit-scrollbar-track{background-color:#f3dc
 
 /* Theme-specific vector tiles reuse the Popup logo and membership crown. */
 body:not(.dark):has(.container) .dashboard-brand-mark{
-  content:url("assets/brand-knot-light.svg");
+  content:url("assets/sakurameter-light.svg");
   filter:none;box-shadow:0 3px 8px rgba(129,69,97,.09);
 }
 /* A small card shifted inside a fixed clipping frame, identical in both themes. */
@@ -188,3 +188,7 @@ body:not(.dark):has(.container) :is(.overview-context-icon,.usage-context-mark,.
 }
 /* Popup uses a scaled artboard: keep its edge about one physical pixel. */
 #artboard[data-theme="light"] .card::after{padding:2.2px}
+
+/* Same selected mark and geometry; only its palette changes with the theme. */
+#artboard .brand-mark{object-fit:contain;filter:none}
+#artboard[data-theme="light"] .brand-mark{content:url("assets/sakurameter-light.svg")}

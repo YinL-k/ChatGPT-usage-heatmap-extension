@@ -17,7 +17,7 @@
       const messages=await res.json();if(request!==generation)return;state.messages=messages;
     } catch (err) {
       if(request!==generation)return;
-      console.error("[GPT Tracker] i18n load failed:", err);
+      console.error("[SakuraMeter] i18n load failed:", err);
       state.messages = {};
     }
 
