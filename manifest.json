@@ -1,24 +1,10 @@
 {
   "manifest_version": 3,
   "name": "GPT Tracker - Usage Heatmap",
-  "version": "2.0.0",
-  "description": "Track ChatGPT usage stats with a GitHub-style contribution graph.",
-  "permissions": [
-    "storage"
-  ],
-  "content_scripts": [
-    {
-      "matches": [
-        "*://chatgpt.com/*",
-        "*://chat.openai.com/*",
-        "*://*.openai.com/*"
-      ],
-      "js": [
-        "content.js"
-      ],
-      "run_at": "document_end"
-    }
-  ],
+  "version": "3.5.0",
+  "version_name": "3.5.0",
+  "description": "Track ChatGPT activity locally, auto-detect your plan, and show live Codex allowance data from your signed-in ChatGPT session.",
+  "minimum_chrome_version": "111",
   "action": {
     "default_popup": "popup.html"
   },
@@ -26,5 +12,28 @@
     "16": "icon.png",
     "48": "icon.png",
     "128": "icon.png"
-  }
+  },
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "usage-core.js",
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "world": "ISOLATED"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ]
 }

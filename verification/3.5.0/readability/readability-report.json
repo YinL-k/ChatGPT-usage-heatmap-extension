@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "en: local Pro label and visible cached timestamp",
+    "en: calibration and clear change the title with the value",
+    "en: current month visible, manual scroll retained, recenter works",
+    "en: six legend entries and timestamp-only denominator",
+    "en: empty charts collapse without horizontal overflow",
+    "en: Popup cached notice fits and clears on recovery",
+    "zh: local Pro label and visible cached timestamp",
+    "zh: calibration and clear change the title with the value",
+    "zh: current month visible, manual scroll retained, recenter works",
+    "zh: six legend entries and timestamp-only denominator",
+    "zh: empty charts collapse without horizontal overflow",
+    "zh: Popup cached notice fits and clears on recovery"
+  ],
+  "errors": [],
+  "externalRequests": []
+}

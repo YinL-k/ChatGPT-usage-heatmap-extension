@@ -1,0 +1,15 @@
+{
+  "name": "gpt-tracker-regression-tests",
+  "private": true,
+  "scripts": {
+    "test": "node --test core.test.cjs reset.test.cjs refresh.test.cjs",
+    "browser": "node browser.cjs",
+    "readability": "node readability.cjs",
+    "themes": "node themes.cjs",
+    "reset": "node reset-browser.cjs",
+    "controls": "node controls.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

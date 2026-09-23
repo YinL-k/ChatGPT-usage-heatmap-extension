@@ -1,0 +1,14 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const {normalize,safeURL}=require('../reset-forecast.js');
+const now=Date.parse('2026-09-23T04:00:00Z');
+const fixture=()=>({updated_at:new Date(now).toISOString(),probabilities:{rounded_24h:20,rounded_48h:35},confidence:'low',last_reset_at:'2026-09-12T08:09:17Z'});
+test('published percent values remain percentages, including 1%',()=>{const r=fixture();r.probabilities.rounded_24h=1;assert.equal(normalize(r,now).h24,1);});
+test('raw fractions have explicit conversion only',()=>{const r=fixture();r.probabilities={raw_24h:.2,raw_48h:.35};assert.equal(normalize(r,now).h48,35);});
+test('missing one window remains unavailable; zero is valid',()=>{const r=fixture();r.probabilities={rounded_24h:0};const d=normalize(r,now);assert.equal(d.h24,0);assert.equal(d.h48,null);});
+test('malformed, unknown and conflicting probability responses rejected',()=>{for(const probabilities of [{},{rounded_24h:'20'},{rounded_24h:120},{rounded_24h:40,rounded_48h:20},{raw_24h:20}])assert.throws(()=>normalize({...fixture(),probabilities},now));});
+test('invalid or future source timestamps rejected',()=>{for(const updated_at of [null,'bad','2027-01-01'])assert.throws(()=>normalize({...fixture(),updated_at},now));});
+test('future last-reset is not confirmed',()=>assert.equal(normalize({...fixture(),last_reset_at:'2027-01-01'},now).last,null));
+test('announcement never becomes a confirmed reset; expiry is explicit',()=>{const r=fixture();r.latest_alert={kind:'watch',state:'active',source_at:'2026-09-22',url:'https://x.com/example/status/1',window:{end_at:'2026-09-23T05:00:00Z'}};assert.equal(normalize(r,now).signal,'watch');assert.equal(normalize(r,now+7200000).signal,'expired');assert.equal(normalize(r,now).last,Date.parse(r.last_reset_at));});
+test('banked grants and unknown signals are not global resets',()=>{assert.equal(normalize({...fixture(),latest_alert:{kind:'banked',state:'active'}},now).signal,'none');});
+test('signal scores cannot overwrite forecast probability',()=>{const r=fixture();r.signal_score=93;r.probabilities.signal_percent=93;assert.equal(normalize(r,now).h24,20);});
+test('source links reject script, credentials and unrelated hosts',()=>{for(const u of ['javascript:alert(1)','https://evil.com/','https://x.com.evil.com/','http://x.com/','https://a:b@x.com/'])assert.equal(safeURL(u),null);assert.equal(safeURL('https://x.com/example/status/1'),'https://x.com/example/status/1');});

@@ -1,28 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <style>
-    body { width: 220px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 15px; color: #333; }
-    h2 { margin: 0 0 15px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
-    .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
-    .stat-val { font-weight: bold; color: #10a37f; } /* OpenAI Green */
-    button {
-      width: 100%; margin-top: 15px; padding: 8px;
-      background: #10a37f; color: white; border: none; border-radius: 4px;
-      cursor: pointer; font-weight: 600;
-    }
-    button:hover { background: #0d8a6a; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#101214">
+<title>GPT Usage - 3.5.0</title>
+<!-- External dependencies are limited to font CSS. All artwork is inline SVG/CSS. -->
+<style>
+:root{--pink:#f5b5c2;--green:#aae5b4;--white:#f0f0f1;--muted:#b1b3ba;--subtle:#929297;--sans:'Lato',sans-serif;--serif:'Gelasio',Georgia,serif;--number:'Inter',sans-serif;--scale:1}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;width:100%;background:#141517}body{font-family:var(--sans);color:var(--white);font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:2px solid var(--pink);outline-offset:5px}button::-moz-focus-inner{border:0}button{border:0;padding:0;background:none}svg{display:block}h1,h2,p{margin:0}a{color:inherit}#viewport{position:relative;width:941px;height:1672px;margin:0 auto}#artboard{position:absolute;left:0;top:0;width:941px;height:1672px;overflow:hidden;isolation:isolate;transform:scale(var(--scale));transform-origin:top left;background:radial-gradient(ellipse 320px 480px at 0 0,rgba(104,86,95,.22),transparent 80%),radial-gradient(ellipse 235px 690px at 101% 69%,rgba(120,92,101,.15),transparent 80%),radial-gradient(ellipse 360px 190px at 81% 100%,rgba(140,111,116,.16),transparent 80%),linear-gradient(110deg,#111416,#0d1012 49%,#151619)}
+.svg-defs{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}.ambient-texture{position:absolute;inset:0;width:100%;height:100%;opacity:.05;mix-blend-mode:screen;pointer-events:none}.shell{position:absolute;left:49px;top:62px;width:844px;height:1553px;border-radius:22px;background:radial-gradient(ellipse 240px 360px at 0 0,rgba(145,96,118,.13),transparent 75%),radial-gradient(ellipse 450px 480px at 100% 66%,rgba(42,36,42,.09),transparent 75%),linear-gradient(125deg,#0e1113,#0a0e0f 45%,#0e1113);box-shadow:0 22px 35px 10px rgba(0,0,0,.65),0 2px 5px 2px #000;isolation:isolate;overflow:hidden}
+.shell::after{content:"";position:absolute;z-index:10;inset:0;border-radius:inherit;padding:1.45px;background:linear-gradient(128deg,rgba(245,181,198,.74) 0,rgba(199,192,195,.4) 9%,rgba(205,205,205,.38) 37%,rgba(161,164,166,.32) 72%,rgba(190,192,194,.26));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.surface-texture{position:absolute;inset:0;z-index:9;width:100%;height:100%;pointer-events:none;opacity:.038;mix-blend-mode:screen}.icon{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;overflow:visible;filter:drop-shadow(0 1px 2px rgba(0,0,0,.65))}.serif{font-family:var(--serif);font-weight:500;text-shadow:0 2px 3px rgba(0,0,0,.75)}
+/* Header coordinates are relative to the 941 x 1672 reference artboard. */
+.header{position:absolute;left:0;top:0;width:100%;height:143px}.brand-mark{position:absolute;left:34px;top:37px;width:72px;height:73px;color:var(--pink);filter:drop-shadow(0 1px 2px #000)}.brand-mark path{fill:currentColor;fill-rule:evenodd}.brand-title{position:absolute;left:123px;top:47px;font-size:43px;line-height:58px;letter-spacing:-.6px;white-space:nowrap;transform:scaleX(.974);transform-origin:left center}.version{position:absolute;left:348px;top:55px;width:95px;height:41px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#efc0c9;font-size:21px;letter-spacing:.25px;background:linear-gradient(120deg,rgba(73,48,54,.24),rgba(97,63,70,.17));border:1.4px solid rgba(185,125,139,.18);box-shadow:inset 0 0 11px rgba(216,160,174,.045)}.language{position:absolute;left:506px;top:49px;width:138px;height:54px;border-radius:28px;border:1.2px solid rgba(128,123,128,.16);box-shadow:inset 0 1px 1px rgba(255,255,255,.012);display:flex;align-items:center;padding:6px;color:#6d7076;background:rgba(23,24,26,.21)}.language button{position:relative;width:55px;height:41px;border-radius:17px;font-size:20px;line-height:41px}.language button[aria-pressed=true]{color:#f7c3ce;background:radial-gradient(ellipse at 22% 20%,rgba(146,93,108,.19),rgba(114,69,81,.13));text-shadow:0 0 8px rgba(253,182,201,.13)}.language .language-divider{height:23px;width:1px;background:rgba(177,171,175,.21);margin:0 5px}.theme-control{position:absolute;left:658px;top:51px;height:51px;width:158px;display:flex;align-items:center;color:#edbeca;gap:11px}.sun{width:39px;height:39px}.moon{width:32px;height:40px}.toggle{position:relative;width:75px;height:49px;border-radius:26px;border:1.5px solid rgba(227,158,177,.65);background:linear-gradient(110deg,#282226,#332a2e);box-shadow:0 2px 3px #000,inset 0 0 0 2px rgba(13,15,18,.32);flex:none}.toggle-knob{position:absolute;top:5px;right:5px;width:35px;height:35px;border-radius:50%;background:linear-gradient(115deg,#ffd0d8,#f2aebf);border:1.3px solid rgba(255,219,227,.85);box-shadow:0 0 10px rgba(245,173,194,.19),0 2px 4px #23171c;transition:transform .22s ease}.toggle[aria-checked=false] .toggle-knob{transform:translateX(-27px)}
+/* Every card has its own measured dimensions; no reusable spacing preset. */
+.card{position:absolute;left:28px;width:787px;border-radius:21px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 0 0,rgba(89,87,91,.052),transparent 45%),linear-gradient(118deg,#111516,#101314 54%,#111315);box-shadow:inset 0 0 21px rgba(255,255,255,.008)}.card::after{content:"";position:absolute;inset:0;z-index:5;border-radius:inherit;padding:1.3px;background:linear-gradient(122deg,rgba(148,148,151,.47),rgba(100,102,105,.25) 40%,rgba(109,108,112,.28));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}.card>.text,.card>button,.card>.icon-tile,.card>.usage-number,.card>.progress-row,.card>.card-bottom,.card>.activity-columns{z-index:2}.icon-tile{position:absolute;display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:19px;color:var(--pink);background:radial-gradient(ellipse at 24% 19%,rgba(187,147,159,.11),transparent 76%),linear-gradient(132deg,rgba(109,82,89,.16),rgba(48,39,44,.24));box-shadow:inset 0 0 16px rgba(194,139,155,.045),0 2px 5px rgba(0,0,0,.28)}.icon-tile::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.6px;background:linear-gradient(134deg,rgba(246,184,197,.71),rgba(166,117,133,.31) 55%,rgba(191,138,153,.37));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}.icon-tile>.icon{width:46px;height:46px;filter:drop-shadow(0 0 8px rgba(248,171,191,.16)) drop-shadow(0 2px 2px #000)}.badge{position:absolute;border-radius:17px;border:1.3px solid rgba(140,197,150,.43);height:46px;padding:0 21px;display:flex;align-items:center;justify-content:center;font-size:23px;line-height:1;color:#b5e9be;background:linear-gradient(112deg,rgba(32,72,42,.33),rgba(31,61,40,.21));box-shadow:inset 0 0 12px rgba(126,225,150,.035);white-space:nowrap;text-shadow:0 1px 4px #000}.dot{width:15px;height:15px;border-radius:50%;background:#b1edbd;border:1px solid rgba(224,255,231,.35);box-shadow:0 0 8px rgba(128,241,156,.12)}.waves{position:absolute;pointer-events:none;z-index:0;stroke-width:1.25;stroke:#c48b9b;opacity:.11}.membership{top:144px;height:189px;background:radial-gradient(ellipse 280px 125px at 100% 106%,rgba(188,121,143,.17),transparent 77%),radial-gradient(ellipse 200px 245px at 0 0,rgba(191,124,145,.1),transparent 79%),linear-gradient(112deg,#111415,#101314 65%,#111315)}.membership::after{background:linear-gradient(128deg,rgba(234,166,185,.85),rgba(144,118,128,.18) 21%,rgba(107,106,111,.19) 70%,rgba(235,162,183,.72))}.membership .icon-tile{left:27px;top:42px;width:92px;height:94px;border-radius:20px}.membership .icon-tile>.icon{width:53px;height:53px}.membership-label{position:absolute;left:149px;top:33px;font-size:24px;line-height:31px;letter-spacing:.03px;color:#afb1b8}.membership-title{position:absolute;left:149px;top:66px;font-size:44px;line-height:57px;white-space:nowrap;transform:scaleX(.967);transform-origin:left center;letter-spacing:-.15px}.membership-description{position:absolute;left:150px;top:128px;line-height:32px;font-size:23px;letter-spacing:.23px;color:#afb1b8;white-space:nowrap}.membership-description .detected{color:#929295}.membership-description .middot{padding:0 10px}.membership .badge{right:32px;top:31px;height:52px;width:114px;border-radius:19px;font-size:24px;gap:14px;padding:0}.waves-member{width:380px;height:135px;right:-2px;bottom:-5px;opacity:.1}
+.pro{top:353px;height:326px}.pro .icon-tile{left:29px;top:28px}.usage-title{position:absolute;top:30px;left:146px;font-size:43px;line-height:59px;letter-spacing:-.4px}.estimated{position:absolute;left:238px;top:39px;height:45px;min-width:130px;border:1.4px solid rgba(215,151,168,.3);border-radius:16px;background:linear-gradient(120deg,rgba(99,68,78,.24),rgba(93,64,72,.17));display:flex;align-items:center;justify-content:center;padding:0 16px;font-size:23px;line-height:28px;color:#eac0c9;box-shadow:inset 0 0 13px rgba(220,160,180,.035)}.card-action{position:absolute;right:30px;top:32px;width:88px;height:48px;display:flex;gap:28px;align-items:center;justify-content:flex-end;color:#e4e3e8}.card-action .signal{width:33px;height:40px}.card-action .chevron{width:22px;height:32px}.usage-number{position:absolute;left:26px;top:124px;display:flex;align-items:baseline;gap:19px;white-space:nowrap}.large-number{font-family:var(--number);font-size:87px;font-weight:700;line-height:98px;letter-spacing:-3.8px;background:linear-gradient(110deg,#ffb9c8,#f5aabb);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgba(251,191,207,.18))}.number-suffix{font-family:var(--number);font-size:43px;font-weight:400;line-height:58px;letter-spacing:-1.8px;color:#c6c5cd}.progress-row{position:absolute;left:29px;right:29px;top:224px;height:28px;display:flex;gap:18px;align-items:center}.progress-track{height:23px;flex:1;border-radius:14px;overflow:hidden;position:relative;background:linear-gradient(90deg,#282a2c,#2b2c2e);box-shadow:inset 0 1px 2px rgba(255,255,255,.012)}.progress-fill{position:absolute;inset:0 auto 0 0;width:25.45%;border-radius:14px;background:linear-gradient(95deg,#fab6c5,#f3afc0 75%,#f9bac8);box-shadow:inset 0 0 0 1.5px rgba(255,227,233,.43),0 0 12px rgba(242,157,181,.14)}.progress-fill::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 7%,rgba(255,255,255,.08) 11%,transparent 14%,transparent 31%,rgba(255,255,255,.05) 36%,transparent 45%,transparent 86%,rgba(255,255,255,.08) 91%,transparent 96%)}.percentage{display:block;min-width:43px;text-align:right;color:#c0bec5;font-size:22px;font-weight:300;line-height:28px}.card-bottom{position:absolute;left:29px;right:29px;bottom:20px;height:32px;display:flex;align-items:center;justify-content:space-between;color:#b6b8c0;font-size:21px;font-weight:400;letter-spacing:-.05px}.card-bottom p{display:flex;align-items:center;gap:15px;white-space:nowrap}.card-bottom .icon{width:30px;height:30px;stroke-width:1.6}.card-bottom .reset .icon{margin-right:2px}.waves-pro{width:585px;height:255px;right:-3px;top:65px;opacity:.10}
+.codex{top:700px;height:327px;background:radial-gradient(ellipse 170px 140px at 5% 55%,rgba(88,158,101,.025),transparent 90%),linear-gradient(112deg,#101516,#101314 55%,#111415)}.codex .icon-tile{left:29px;top:28px;width:83px;height:82px;border-radius:18px;color:var(--green);background:radial-gradient(ellipse at 17% 12%,rgba(130,224,148,.11),transparent 78%),linear-gradient(120deg,rgba(61,96,69,.13),rgba(39,56,44,.15));box-shadow:inset 0 0 22px rgba(162,239,181,.028),0 2px 6px rgba(0,0,0,.3)}.codex .icon-tile::after{background:linear-gradient(130deg,rgba(163,237,179,.78),rgba(120,188,139,.38) 70%,rgba(140,210,158,.47))}.codex .icon-tile>.icon{width:45px;height:45px;filter:drop-shadow(0 0 7px rgba(167,236,185,.1)) drop-shadow(0 2px 3px #000)}.codex .usage-title{left:146px;top:29px;font-size:43px}.codex .badge{left:286px;top:38px;width:86px;height:45px;border-radius:16px;padding:0;font-size:23px}.codex .card-action{top:33px}.codex .usage-number{top:121px;left:27px;gap:23px}.codex .large-number{font-size:85px;font-weight:700;line-height:98px;letter-spacing:-2.8px;background:linear-gradient(117deg,#b5edbf,#9ddbaf 78%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 1px 1px rgba(202,251,214,.13))}.codex .number-suffix{font-size:43px;letter-spacing:-1.4px}.codex .progress-row{top:226px}.codex .progress-fill{width:34.54%;background:linear-gradient(100deg,#a7dfb1,#97cfa3);box-shadow:inset 0 0 0 1.6px rgba(224,255,232,.48),0 0 12px rgba(149,232,169,.06)}.codex .card-bottom{bottom:20px;justify-content:flex-end}.waves-codex{width:585px;height:255px;right:-2px;top:68px;stroke:#7cc38b;opacity:.145}
+.activity{top:1046px;height:254px;background:radial-gradient(ellipse 210px 135px at 100% 106%,rgba(157,107,125,.12),transparent 84%),linear-gradient(115deg,#121516,#101314 55%,#121416)}.activity::after{background:linear-gradient(120deg,rgba(129,137,142,.4),rgba(106,112,117,.25) 45%,rgba(197,149,166,.39))}.activity .icon-tile{left:29px;top:28px;width:83px;height:74px;border-radius:19px;background:radial-gradient(ellipse at 42% 56%,rgba(199,134,154,.11),transparent 75%),linear-gradient(130deg,rgba(128,123,128,.12),rgba(68,65,70,.2))}.activity .icon-tile::after{background:linear-gradient(125deg,rgba(202,200,205,.48),rgba(164,152,161,.25))}.activity .icon-tile>.icon{width:49px;height:49px}.activity-title{position:absolute;left:145px;top:30px;font-size:31px;line-height:46px;letter-spacing:-.3px;white-space:nowrap;transform:scaleX(.985);transform-origin:left center}.info-button{position:absolute;left:351px;top:30px;width:40px;height:40px;color:#adaeb5}.info-button>.icon{width:40px;height:40px}.activity-columns{position:absolute;left:0;right:0;top:105px;height:121px;display:grid;grid-template-columns:269px 247px 1fr}.activity-column{position:relative;padding-left:48px}.activity-column+.activity-column{border-left:1.3px solid rgba(177,175,182,.22)}.activity-column:nth-child(2){padding-left:51px}.activity-column .period{position:absolute;top:12px;font-size:21px;line-height:27px;color:#bdc0c8}.activity-column .count{position:absolute;top:40px;font-family:var(--number);font-size:51px;line-height:56px;font-weight:400;letter-spacing:-1.5px;color:#f0f0f4}.activity-column .caption{position:absolute;top:100px;font-size:21px;font-weight:300;line-height:25px;color:#a3a0a7;letter-spacing:.1px}.activity-column.quiet{padding:0;text-align:center;color:#afb0b8}.quiet .leaf{position:absolute;left:50%;top:-17px;transform:translateX(-50%);width:54px;height:56px;color:#b1b4bc}.quiet-title{position:absolute;top:46px;left:0;right:0;font-size:22px;font-weight:300;line-height:30px}.quiet .caption{top:82px;left:0;right:0;font-size:21px}
+.dashboard-cta{position:absolute;left:29px;top:1325px;width:786px;height:145px;border-radius:21px;overflow:hidden;isolation:isolate;display:block;text-align:left;background:radial-gradient(ellipse 500px 150px at 6% -31%,rgba(235,156,179,.35),transparent 80%),radial-gradient(ellipse 245px 195px at 106% 101%,rgba(218,137,161,.31),transparent 83%),radial-gradient(ellipse 500px 110px at 98% -37%,rgba(235,162,185,.20),transparent 77%),linear-gradient(112deg,#261f23,#181619 58%,#2c2429);border:1.6px solid #edb5c3;box-shadow:0 0 15px rgba(239,151,179,.10),inset 0 1px 4px rgba(255,205,221,.52),inset 0 0 21px rgba(241,160,185,.04);color:var(--pink)}.dashboard-cta::before{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset -8px -2px 26px rgba(222,147,171,.045);pointer-events:none}.dashboard-cta .icon-tile{left:27px;top:30px;width:83px;height:81px;border-radius:20px;background:linear-gradient(120deg,rgba(175,105,129,.10),rgba(25,24,28,.24));box-shadow:0 4px 15px rgba(0,0,0,.3),inset 0 0 18px rgba(243,180,200,.025)}.dashboard-cta .icon-tile::after{background:linear-gradient(130deg,rgba(220,147,169,.43),rgba(150,103,121,.33))}.dashboard-cta .icon-tile>.icon{width:43px;height:43px}.cta-heading{position:absolute;left:145px;top:29px;font-size:37px;line-height:52px;letter-spacing:-.3px;white-space:nowrap;transform:scaleX(.985);transform-origin:left center}.cta-arrow{position:absolute;left:497px;top:41px;width:36px;height:32px}.cta-subtitle{position:absolute;left:146px;top:83px;font-size:22px;line-height:29px;font-weight:400;letter-spacing:.45px;color:#aba5af}.waves-cta{right:-3px;bottom:-3px;width:390px;height:150px;opacity:.47;stroke:#d18a9d;stroke-width:1.25}.footer{position:absolute;left:35px;right:34px;top:1496px;height:40px;display:flex;justify-content:space-between;align-items:center}.tagline{font-family:var(--serif);font-style:italic;font-weight:400;font-size:21px;line-height:32px;letter-spacing:-.6px;color:#b1aeb6;transform:scaleX(.94);transform-origin:left center;text-shadow:0 2px 2px #000}.footer-version{display:flex;gap:21px;align-items:center;color:#b0abb3;font-size:19px;font-weight:300;letter-spacing:.1px;white-space:nowrap}.footer-dot{width:12px;height:12px;border-radius:50%;background:#f2b0c2;border:1px solid #ffcad5;box-shadow:0 0 8px rgba(228,138,165,.07)}
+/* Alternate theme is opt-in only. The screenshot-matching default is always dark. */
+#artboard[data-theme=light]{--white:#272128;--muted:#625c65;--pink:#9e536b;background:#e6dce0}#artboard[data-theme=light] .shell{background:#f4eff1;box-shadow:0 20px 35px #7a626444}#artboard[data-theme=light] .card{background:linear-gradient(110deg,#f6f0f1,#ede7eb)}#artboard[data-theme=light] .number-suffix{color:#625660}#artboard[data-theme=light] .serif{text-shadow:none}#artboard[data-theme=light] .large-number{filter:none}#artboard[data-theme=light] .progress-track{background:#d8d0d5}#artboard[data-theme=light] .dashboard-cta{background:linear-gradient(115deg,#eed0dc,#f6e9ef)}#artboard[data-theme=light] .card-action{color:#635a63}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}@media print{body{background:#101214}#viewport{margin:0}button{print-color-adjust:exact}}
+
+/* Visual calibration, pass 2, at a 941 x 1672 browser viewport. */
+.ambient-texture{opacity:.018}
+.surface-texture{opacity:.009}
+#artboard{background:radial-gradient(ellipse 320px 480px at 0 0,rgba(104,86,95,.22),transparent 80%),radial-gradient(ellipse 235px 690px at 101% 61%,rgba(120,92,101,.22),transparent 80%),radial-gradient(ellipse 360px 190px at 81% 100%,rgba(140,111,116,.16),transparent 80%),linear-gradient(110deg,#111215,#0d0e11 49%,#151518)}
+.brand-title{top:48px}
+.theme-control{gap:7px}
+.membership-label{font-size:23px;top:34px}
+.membership-title{left:150px;top:68px;font-size:45px;transform:scaleX(.956)}
+.membership-description{letter-spacing:0;font-size:23px;top:128px}
+.membership-description .middot{padding:0 9px}
+.card:not(.membership){left:29px}
+.card::after{padding:1.5px}
+.pro .usage-title{top:32px;left:145px}
+.pro .icon-tile>.icon{width:48px;height:48px}
+.pro .usage-number{left:28px;gap:15px}
+.pro .large-number{letter-spacing:-.8px}
+.pro .number-suffix{position:relative;top:-6px;letter-spacing:-.7px}
+.pro .estimated{min-width:129px;padding:0 15px;left:238px}
+.progress-row{left:29px;right:29px;gap:18px}
+.card-bottom{font-size:20.5px;letter-spacing:.04px}
+.card-bottom .reset{gap:16px}
+.waves-pro,.waves-codex{width:787px;height:326px;right:0;top:0;mask-image:linear-gradient(90deg,transparent 22%,#000 67%),linear-gradient(180deg,#000 38%,transparent 83%);mask-composite:intersect}
+.waves-pro{opacity:.088}
+.waves-codex{opacity:.145}
+.waves-member{opacity:.072;bottom:-5px}
+.codex{top:699px}
+.codex .usage-title{left:147px;top:33px;font-size:42px}
+.codex .usage-number{top:124px;left:26px;gap:20px}
+.codex .large-number{font-size:84px;transform:scaleX(.96);transform-origin:left center;margin-right:-7.5px}
+.codex .number-suffix{position:relative;top:-3px;letter-spacing:0}
+.codex .progress-row{top:226px}
+.activity-title{left:144px;top:31px;letter-spacing:-.15px;transform:scaleX(.992)}
+.activity-column .caption{top:98px}
+.activity-column.quiet .caption{top:82px}
+.activity-columns{grid-template-columns:268px 247px 1fr}
+.activity .icon-tile{height:74px}
+.cta-heading{left:147px;top:32px;transform:scaleX(.976)}
+.cta-subtitle{left:147px;top:82px;font-size:22px;letter-spacing:.13px}
+.cta-arrow{left:497px;top:39px}
+.dashboard-cta{background:radial-gradient(ellipse 500px 150px at 6% -31%,rgba(235,156,179,.25),transparent 80%),radial-gradient(ellipse 245px 195px at 106% 101%,rgba(218,137,161,.27),transparent 83%),radial-gradient(ellipse 500px 110px at 98% -37%,rgba(235,162,185,.20),transparent 77%),linear-gradient(112deg,#261f23,#181619 58%,#2c2429)}
+.waves-cta{opacity:.32;mask-image:linear-gradient(90deg,transparent 5%,#000 67%)}
+.footer{top:1494px}
+.tagline{transform:scaleX(.93)}
+
+
+/* Final reference calibration: optical alignment, color and stroke softness. */
+.membership-label{font-family:var(--number);font-size:22px;line-height:31px;top:33px;transform:scaleX(.944);transform-origin:left center;letter-spacing:0}
+.membership-description{left:151px;top:127px}
+.membership-description .detected{display:inline-block;transform:scaleX(.984);transform-origin:left center;margin-right:-4px}
+.membership-description .middot{padding-left:16px;padding-right:10px}
+.membership .badge{right:32px}
+.membership .badge .dot{transform:translateX(-1px)}
+.membership .badge{gap:13px}
+.card:not(.membership)::after{background:linear-gradient(122deg,rgba(148,148,151,.34),rgba(100,102,105,.21) 40%,rgba(109,108,112,.25))}
+.membership::after{background:radial-gradient(ellipse 105px 195px at 0 18%,rgba(232,172,183,.69),transparent 92%),radial-gradient(ellipse 180px 125px at 100% 100%,rgba(237,172,187,.62),transparent 90%),linear-gradient(90deg,rgba(154,134,143,.21),rgba(123,115,124,.15) 30%,rgba(123,115,124,.16))}
+.pro .number-suffix{letter-spacing:-.9px;left:1px}
+.pro .large-number{background-image:radial-gradient(ellipse at 16% 36%,rgba(255,233,239,.13),transparent 50%),linear-gradient(110deg,#ffbcc1,#f8adba)}
+.pro .progress-fill{background:linear-gradient(95deg,#feb7c0,#fbb2bb 75%,#fec0c6)}
+.card-bottom{bottom:18px}
+.card-bottom>p:first-child:not(.reset){gap:17px}
+.card-bottom>p:first-child:not(.reset)>span{display:inline-block;transform:scaleX(.974);transform-origin:left center}
+.card-bottom .reset>span{display:inline-block;transform:scaleX(.969);transform-origin:right center;margin-left:-7px}
+.card-bottom .reset{gap:18px}
+.codex .usage-title{left:148px;top:32px}
+.codex .usage-number{top:123px;gap:18px}
+.codex .number-suffix{letter-spacing:.2px}
+.codex .large-number{background-image:radial-gradient(ellipse at 21% 24%,rgba(232,255,230,.10),transparent 60%),linear-gradient(117deg,#b3e7b7,#9bd5a7 78%)}
+.codex .progress-fill{background:linear-gradient(100deg,#a4d7a9,#93c89b)}
+.codex .card-bottom{bottom:18px}
+.activity-title{transform:scaleX(.987)}
+.activity-columns .period{letter-spacing:.23px}
+.activity-column:first-child{padding-left:49px}
+.activity-column .count{font-size:52px;top:41px;letter-spacing:-1.7px}
+.activity-column:first-child .count{margin-left:-1px}
+.activity-column .caption{letter-spacing:-.08px}
+.cta-subtitle{left:149px;top:80px;letter-spacing:.22px;font-size:22.15px}
+.icon-tile{background:radial-gradient(ellipse at 24% 19%,rgba(194,130,148,.14),transparent 76%),linear-gradient(132deg,rgba(113,74,81,.16),rgba(48,36,39,.24))}
+
+
+/* Extension integration layer: preserve the uploaded 941x1672 artboard exactly,
+   scaled to a Chrome popup without reflowing the reference composition. */
+html,body{width:338px;height:600px;min-height:600px;max-height:600px;overflow:hidden}
+body{background:#141517}
+#viewport{width:338px;height:600px;margin:0}
+#artboard{--scale:0.3588516746}
+/* Avoid remote font dependencies in the publishable extension. */
+/* Product rule carried forward: language/theme remain Dashboard-only. */
+.language,.theme-control{display:none!important}
+/* Dynamic trust states keep the exact badge silhouettes from the reference. */
+.trust-badge{appearance:none;-webkit-appearance:none;cursor:default}
+.trust-badge.live{color:#b5e9be;border-color:rgba(140,197,150,.43);background:linear-gradient(112deg,rgba(32,72,42,.33),rgba(31,61,40,.21))}
+.trust-badge.cached,.trust-badge.stale{color:#f1d19a;border-color:rgba(209,166,91,.38);background:linear-gradient(112deg,rgba(91,68,30,.32),rgba(64,49,27,.22));cursor:pointer}
+.trust-badge.unavailable{color:#bbb8c0;border-color:rgba(151,145,153,.30);background:linear-gradient(112deg,rgba(72,68,75,.30),rgba(47,44,50,.22));cursor:pointer}
+.trust-badge.is-refreshing{cursor:wait;opacity:.86}
+.badge.cached .dot,.badge.stale .dot,.badge.tracking .dot{background:#e8c274;border-color:#f5db9a;box-shadow:0 0 8px rgba(232,194,116,.12)}
+.badge.unavailable .dot{background:#aaa5ad;border-color:#c5c1c8;box-shadow:none}
+.badge.tracking{color:#efc77e;border-color:rgba(215,165,79,.34);background:linear-gradient(112deg,rgba(91,68,30,.32),rgba(64,49,27,.22))}
+.estimated.trust-badge{width:auto;min-width:130px;padding:0 16px}
+.estimated.trust-badge.tracking{color:#efc77e;border-color:rgba(215,165,79,.34);background:linear-gradient(120deg,rgba(101,72,24,.25),rgba(77,57,26,.18))}
+.estimated.trust-badge.unavailable{color:#b8b4bc;border-color:rgba(150,142,151,.27);background:linear-gradient(120deg,rgba(74,67,74,.22),rgba(55,50,57,.17))}
+.estimated.trust-badge.estimated{color:#eac0c9;border-color:rgba(215,151,168,.30);background:linear-gradient(120deg,rgba(99,68,78,.24),rgba(93,64,72,.17))}
+.progress-track[aria-disabled="true"] .progress-fill{width:0!important;box-shadow:none}
+.card-action{cursor:pointer}
+.info-button{cursor:pointer}
+.dashboard-cta{cursor:pointer}
+/* Dynamic copy can be slightly longer than the visual fixture; keep it on one line and fade safely. */
+.membership-title,.membership-description,.card-bottom p{overflow:hidden;text-overflow:ellipsis}
+.membership-description{max-width:560px}
+.card-bottom p{max-width:49%}
+/* Keep hidden controls from altering measured geometry. */
+[hidden]{display:none!important}
+
+</style>
+<link rel="stylesheet" href="interaction.css" />
+<link rel="stylesheet" href="light-theme.css" />
+<link rel="stylesheet" href="readability.css" />
 </head>
 <body>
-  <h2>GPT Usage Stats</h2>
-  <div class="stat-row"><span>Today:</span> <span id="today" class="stat-val">0</span></div>
-  <div class="stat-row"><span>This Week:</span> <span id="week" class="stat-val">0</span></div>
-  <div class="stat-row"><span>This Month:</span> <span id="month" class="stat-val">0</span></div>
-  <div class="stat-row"><span>Total:</span> <span id="total" class="stat-val">0</span></div>
-  
-  <button id="openHeatmap">Open Heatmap</button>
-  <script src="popup.js"></script>
+<svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<filter id="fine-noise"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+<filter id="ambient-noise"><feTurbulence type="fractalNoise" baseFrequency=".009 .022" numOctaves="3" seed="8" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+
+<symbol id="crown" viewBox="0 0 48 48"><path d="M5 16 11 40H37L43 16 30 26 24 7 17 26Z" stroke-width="3.5" stroke-linejoin="round"/></symbol>
+<symbol id="layers" viewBox="0 0 48 48"><path d="m8 16 16-8 16 8-16 8Z M8 25l16 8 16-8 M8 33l16 8 16-8" stroke-width="2.9" stroke-linejoin="round"/></symbol>
+<symbol id="code" viewBox="0 0 48 48"><path d="m12 16-9 8 9 7m24-15 9 8-9 7M28 10l-8 29" stroke-width="3.6" stroke-linejoin="round"/></symbol>
+<symbol id="activity" viewBox="0 0 48 48"><path d="M12 29v9M24 11v27m12-18v18" stroke-width="5.1"/></symbol>
+<symbol id="calendar" viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="24" rx="3"/><path d="M4 13h24M10 3v6m12-6v6"/><path d="M10 18h.1m6 0h.1m6 0h.1M10 24h.1m6 0h.1m6 0h.1" stroke-width="2.4"/></symbol>
+<symbol id="refresh" viewBox="0 0 32 32"><path d="M27 12a11.6 11.6 0 1 0 .2 9M27 5v7h-7"/><circle cx="16" cy="16" r="1.6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="signal" viewBox="0 0 34 40"><path d="M6 34v-10m10 10V14m10 20V4" stroke-width="2.5" stroke-linecap="butt"/></symbol>
+<symbol id="chevron" viewBox="0 0 24 32"><path d="m7 6 10 10L7 26" stroke-width="1.65"/></symbol>
+<symbol id="arrow" viewBox="0 0 36 32"><path d="M4 16h24m-9-9 9 9-9 9" stroke-width="2"/></symbol>
+<symbol id="info" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16.5" stroke-width="1.5"/><path d="M18 18h3v10m-4 0h8" stroke-width="1.8"/><circle cx="20.5" cy="12" r="1.7" fill="currentColor" stroke="none"/></symbol>
+<symbol id="leaf" viewBox="0 0 54 56"><path d="M26 52V32C24 15 35 10 48 8c1 16-5 27-20 27M26 39C11 39 8 29 7 21c13 0 20 6 19 18M27 34l14-17M12 26l12 11" stroke-width="2"/></symbol>
+<symbol id="external" viewBox="0 0 48 48"><path d="M24 12H11a4 4 0 0 0-4 4v22a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4V25M24 7h18v18M20 29 42 7" stroke-width="3" stroke-linejoin="round"/></symbol>
+<symbol id="sun" viewBox="0 0 40 40"><circle cx="20" cy="20" r="8"/><path d="M20 3v5m0 24v5M3 20h5m24 0h5M8 8l3.5 3.5m17 17L32 32M8 32l3.5-3.5m17-17L32 8" stroke-width="1.4"/></symbol>
+<symbol id="moon" viewBox="0 0 36 40"><path d="M14 6C2 11 2 28 14 32c7 3 14-1 17-7C15 29 7 18 14 6Z" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+
+</defs></svg>
+<div id="viewport"><div id="artboard" data-theme="dark">
+<svg class="ambient-texture" aria-hidden="true"><rect width="100%" height="100%" filter="url(#ambient-noise)"/></svg>
+<main class="shell" aria-label="GPT Usage overview" data-i18n-aria="overview_aria">
+<svg class="surface-texture" aria-hidden="true"><rect width="100%" height="100%" filter="url(#fine-noise)"/></svg>
+<header class="header">
+<svg class="brand-mark" viewBox="0 0 72 73" role="img" aria-label="OpenAI logo"><path d="M 40.00 71.46C 38.43 71.94 37.43 71.69 36.00 71.38C 34.57 71.07 31.43 70.13 30.00 69.31C 28.57 68.49 27.71 66.19 26.00 65.62C 24.29 65.05 20.14 65.95 18.00 65.32C 15.86 64.70 12.48 62.55 11.00 61.22C 9.52 59.89 8.24 57.17 7.63 56.00C 7.01 54.83 6.86 54.14 6.72 53.00C 6.58 51.86 6.45 49.29 6.65 48.00C 6.85 46.71 8.40 45.43 8.14 44.00C 7.88 42.57 5.45 39.43 4.82 38.00C 4.19 36.57 3.90 35.43 3.75 34.00C 3.59 32.57 3.42 29.73 3.74 28.00C 4.07 26.27 4.96 23.48 6.00 21.89C 7.04 20.30 9.36 18.00 11.00 16.87C 12.64 15.75 16.22 15.12 17.45 14.00C 18.69 12.88 18.72 10.34 19.66 9.00C 20.59 7.66 22.38 5.69 24.00 4.65C 25.62 3.61 29.43 2.15 31.00 1.73C 32.57 1.32 33.86 1.58 35.00 1.75C 36.14 1.91 37.43 1.99 39.00 2.87C 40.57 3.75 44.29 7.22 46.00 7.90C 47.71 8.58 49.43 7.35 51.00 7.63C 52.57 7.90 55.57 8.96 57.00 9.80C 58.43 10.65 60.08 12.35 61.00 13.52C 61.92 14.69 62.96 16.79 63.44 18.00C 63.92 19.21 64.45 20.29 64.35 22.00C 64.25 23.71 62.45 28.00 62.74 30.00C 63.03 32.00 65.71 34.57 66.37 36.00C 67.04 37.43 67.27 38.57 67.39 40.00C 67.51 41.43 67.50 44.43 67.21 46.00C 66.92 47.57 65.94 49.86 65.37 51.00C 64.80 52.14 64.14 53.11 63.23 54.00C 62.32 54.89 60.32 56.59 59.00 57.23C 57.68 57.86 55.14 57.48 54.00 58.44C 52.86 59.41 51.99 62.63 50.99 64.00C 49.99 65.37 48.57 66.98 47.00 68.04C 45.43 69.11 41.57 70.99 40.00 71.46ZM 20.56 36.00C 21.26 38.71 24.26 38.71 25.00 38.99C 25.74 39.28 25.62 39.74 25.76 38.00C 25.91 36.26 25.68 28.77 26.00 26.83C 26.32 24.90 27.64 24.28 28.00 24.45C 28.36 24.61 28.25 27.47 28.53 28.00C 28.82 28.53 28.36 29.02 30.00 28.16C 31.64 27.31 37.74 23.25 40.02 22.00C 42.31 20.75 44.88 19.73 46.00 19.44C 47.12 19.15 46.01 18.88 47.87 20.00C 49.72 21.12 57.24 26.71 59.00 27.28C 60.76 27.85 60.12 25.18 60.18 24.00C 60.23 22.82 59.65 20.00 59.40 19.00C 59.14 18.00 59.02 17.77 58.39 17.00C 57.76 16.23 56.48 14.37 55.00 13.59C 53.52 12.82 49.86 11.60 48.00 11.60C 46.14 11.61 44.86 12.18 42.00 13.62C 39.14 15.07 30.29 20.56 28.00 21.70C 25.71 22.85 26.28 21.85 26.00 21.61C 25.72 21.37 25.79 20.52 26.03 20.00C 26.27 19.48 25.54 19.43 27.70 18.00C 29.86 16.57 39.27 11.30 41.17 10.00C 43.07 8.70 41.60 9.45 41.00 8.93C 40.40 8.41 38.14 6.81 37.00 6.35C 35.86 5.88 34.14 5.64 33.00 5.67C 31.86 5.71 30.53 5.66 29.00 6.57C 27.47 7.47 23.47 10.80 22.29 12.00C 21.12 13.20 21.10 13.86 20.79 15.00C 20.48 16.14 20.15 17.00 20.12 20.00C 20.09 23.00 19.87 33.29 20.56 36.00ZM 27.00 50.23C 27.84 49.92 30.24 48.46 30.85 48.00C 31.47 47.54 33.28 48.57 31.29 47.00C 29.30 45.43 19.02 40.86 16.94 37.00C 14.87 33.14 17.02 22.53 16.74 20.00C 16.46 17.47 15.79 18.98 15.00 19.26C 14.21 19.55 12.10 21.04 11.18 22.00C 10.27 22.96 9.12 24.71 8.57 26.00C 8.02 27.29 7.35 29.43 7.36 31.00C 7.36 32.57 7.63 35.23 8.58 37.00C 9.53 38.77 11.65 41.47 14.00 43.36C 16.35 45.25 23.14 49.24 25.00 50.22C 26.86 51.20 26.16 50.55 27.00 50.23ZM 57.00 53.54C 57.76 53.08 59.56 51.79 60.31 51.00C 61.06 50.21 61.81 49.00 62.25 48.00C 62.69 47.00 63.26 45.14 63.40 44.00C 63.55 42.86 63.52 41.29 63.25 40.00C 62.98 38.71 62.43 36.35 61.53 35.00C 60.64 33.65 58.93 32.05 57.00 30.55C 55.07 29.05 49.71 25.58 48.00 24.52C 46.29 23.46 45.86 23.22 45.00 23.12C 44.14 23.02 42.71 23.51 42.00 23.83C 41.29 24.16 40.32 24.94 40.00 25.40C 39.68 25.85 37.73 25.34 39.78 27.00C 41.83 28.66 52.26 33.29 54.35 37.00C 56.44 40.71 54.32 50.55 54.41 53.00C 54.51 55.45 54.63 54.10 55.00 54.18C 55.37 54.26 56.24 53.99 57.00 53.54ZM 35.00 45.44C 36.80 45.62 39.93 43.04 41.00 42.26C 42.07 41.48 42.30 41.32 42.50 40.00C 42.70 38.68 43.33 34.69 42.40 33.00C 41.47 31.31 37.91 28.29 36.00 28.15C 34.09 28.00 30.12 31.16 29.01 32.00C 27.90 32.84 28.34 32.71 28.26 34.00C 28.17 35.29 27.45 39.37 28.41 41.00C 29.38 42.63 33.20 45.26 35.00 45.44ZM 33.00 66.34C 34.26 66.83 37.43 67.59 39.00 67.46C 40.57 67.34 42.63 66.40 44.00 65.47C 45.37 64.55 47.66 62.21 48.57 61.00C 49.48 59.79 49.97 60.14 50.37 57.00C 50.76 53.86 51.52 41.94 51.33 39.00C 51.13 36.06 49.76 37.05 49.00 36.44C 48.24 35.84 46.53 34.68 46.00 34.76C 45.47 34.84 45.40 34.25 45.26 37.00C 45.12 39.75 45.64 51.12 45.03 54.00C 44.42 56.88 43.03 55.90 41.00 57.19C 38.97 58.47 32.38 62.03 30.83 63.00C 29.28 63.97 29.84 63.52 30.15 64.00C 30.46 64.48 31.74 65.84 33.00 66.34ZM 10.52 52.00C 10.96 53.43 12.81 56.79 13.74 58.00C 14.67 59.21 16.11 59.95 17.00 60.45C 17.89 60.96 18.71 61.38 20.00 61.52C 21.29 61.65 22.86 62.71 26.00 61.38C 29.14 60.06 39.65 54.44 42.00 52.25C 44.35 50.05 42.43 46.99 42.43 46.00C 42.43 45.01 42.35 45.33 42.00 45.30C 41.65 45.27 42.29 44.52 40.00 45.79C 37.71 47.06 28.71 53.25 26.00 54.17C 23.29 55.09 23.00 53.32 21.00 52.25C 19.00 51.18 13.48 47.29 12.00 46.69C 10.52 46.08 10.85 47.24 10.64 48.00C 10.42 48.76 10.07 50.57 10.52 52.00Z"/></svg>
+<h1 class="brand-title serif" data-i18n="compact_title">GPT Usage</h1><span class="version">3.5.0</span>
+<div class="language" role="group" aria-label="Language" data-i18n-aria="button_language"><button type="button" data-language="en" aria-pressed="true">EN</button><span class="language-divider" aria-hidden="true"></span><button type="button" data-language="zh" aria-pressed="false">CN</button></div>
+<div class="theme-control"><svg class="icon sun" aria-hidden="true"><use href="#sun"/></svg><button id="popupThemeToggle" type="button" class="toggle" role="switch" aria-checked="true" aria-label="Dark theme"><span class="toggle-knob"></span></button><svg class="icon moon" aria-hidden="true"><use href="#moon"/></svg></div>
+</header>
+<section class="card membership" aria-labelledby="compactPlan" aria-live="polite">
+<svg class="waves waves-member" viewBox="0 0 380 135" fill="none" aria-hidden="true"><path d="M45 169 C183 194,226 56,383 49"/><path d="M45 181 C183 206,226 68,383 61"/><path d="M45 193 C183 218,226 80,383 73"/><path d="M45 205 C183 230,226 92,383 85"/><path d="M45 217 C183 242,226 104,383 97"/><path d="M45 229 C183 254,226 116,383 109"/><path d="M45 241 C183 266,226 128,383 121"/><path d="M45 253 C183 278,226 140,383 133"/></svg><div class="icon-tile"><svg class="icon " aria-hidden="true"><use href="#crown"/></svg></div><p class="membership-label text" data-i18n="compact_membership">Membership</p>
+<h2 id="compactPlan" class="membership-title text serif">—</h2>
+<p id="compactStatus" class="membership-description text"></p>
+<button id="planTrust" type="button" class="badge trust-badge unavailable" disabled><span class="dot" aria-hidden="true"></span><span class="trust-label" data-i18n="trust_unavailable">Unavailable</span></button>
+</section>
+<section class="card pro" aria-labelledby="pro-title">
+<svg class="waves waves-pro" viewBox="0 0 787 326" fill="none" aria-hidden="true"><path opacity="1.00" d="M 192 202 C 364 243, 456 77, 574 77 C 637 77, 698 153, 797 117"/><path opacity="0.96" d="M 192 211 C 364 251, 456 89, 574 89 C 637 89, 698 158, 797 122"/><path opacity="0.92" d="M 192 220 C 364 259, 456 101, 574 101 C 637 101, 698 163, 797 127"/><path opacity="0.88" d="M 192 229 C 364 267, 456 113, 574 113 C 637 113, 698 168, 797 132"/><path opacity="0.84" d="M 192 238 C 364 275, 456 125, 574 125 C 637 125, 698 173, 797 137"/><path opacity="0.80" d="M 192 247 C 364 283, 456 137, 574 137 C 637 137, 698 178, 797 142"/><path opacity="0.76" d="M 192 256 C 364 291, 456 149, 574 149 C 637 149, 698 183, 797 147"/><path opacity="0.72" d="M 192 265 C 364 299, 456 161, 574 161 C 637 161, 698 188, 797 152"/><path opacity="0.68" d="M 192 274 C 364 307, 456 173, 574 173 C 637 173, 698 193, 797 157"/><path opacity="0.64" d="M 192 283 C 364 315, 456 185, 574 185 C 637 185, 698 198, 797 162"/><path opacity="0.60" d="M 192 292 C 364 323, 456 197, 574 197 C 637 197, 698 203, 797 167"/></svg><div class="icon-tile"><svg class="icon " aria-hidden="true"><use href="#layers"/></svg></div><h2 id="pro-title" class="usage-title text serif">Pro</h2><span id="proTrust" class="estimated trust-badge estimated" data-i18n="trust_unavailable">Unavailable</span>
+<button id="openProDetails" class="card-action" type="button" aria-label="Open Pro usage details" data-i18n-aria="open_pro"><svg class="icon signal" aria-hidden="true"><use href="#signal"/></svg><svg class="icon chevron" aria-hidden="true"><use href="#chevron"/></svg></button>
+<div class="usage-number"><span id="proPrimary" class="large-number">—</span><span id="proSuffix" class="number-suffix"></span></div>
+<div class="progress-row"><div id="proProgress" class="progress-track" role="progressbar" aria-label="Pro remaining quota" data-i18n-aria="remaining_pro" aria-disabled="true" aria-valuemin="0" aria-valuemax="100"><span class="progress-fill"></span></div><span id="proPercentLabel" class="percentage"></span></div>
+<div class="card-bottom"><p><svg class="icon " aria-hidden="true"><use href="#calendar"/></svg><span id="proTrackingText"></span></p><p class="reset"><svg class="icon " aria-hidden="true"><use href="#refresh"/></svg><span id="proResetText"></span></p></div>
+</section>
+<section class="card codex" aria-labelledby="codex-title">
+<svg class="waves waves-codex" viewBox="0 0 787 326" fill="none" aria-hidden="true"><path opacity="1.00" d="M 192 202 C 364 243, 456 79, 563 79 C 626 79, 698 153, 797 117"/><path opacity="0.96" d="M 192 211 C 364 251, 456 91, 563 91 C 626 91, 698 158, 797 122"/><path opacity="0.92" d="M 192 220 C 364 259, 456 103, 563 103 C 626 103, 698 163, 797 127"/><path opacity="0.88" d="M 192 229 C 364 267, 456 115, 563 115 C 626 115, 698 168, 797 132"/><path opacity="0.84" d="M 192 238 C 364 275, 456 127, 563 127 C 626 127, 698 173, 797 137"/><path opacity="0.80" d="M 192 247 C 364 283, 456 139, 563 139 C 626 139, 698 178, 797 142"/><path opacity="0.76" d="M 192 256 C 364 291, 456 151, 563 151 C 626 151, 698 183, 797 147"/><path opacity="0.72" d="M 192 265 C 364 299, 456 163, 563 163 C 626 163, 698 188, 797 152"/><path opacity="0.68" d="M 192 274 C 364 307, 456 175, 563 175 C 626 175, 698 193, 797 157"/><path opacity="0.64" d="M 192 283 C 364 315, 456 187, 563 187 C 626 187, 698 198, 797 162"/><path opacity="0.60" d="M 192 292 C 364 323, 456 199, 563 199 C 626 199, 698 203, 797 167"/></svg><div class="icon-tile"><svg class="icon " aria-hidden="true"><use href="#code"/></svg></div><h2 id="codex-title" class="usage-title text serif">Codex</h2><span id="codexTrust" class="badge trust-badge live" data-i18n="trust_unavailable">Unavailable</span>
+<button id="openCodexDetails" class="card-action" type="button" aria-label="Open Codex usage details" data-i18n-aria="open_codex"><svg class="icon signal" aria-hidden="true"><use href="#signal"/></svg><svg class="icon chevron" aria-hidden="true"><use href="#chevron"/></svg></button>
+<div class="usage-number"><span id="codexPrimary" class="large-number">—</span><span id="codexSuffix" class="number-suffix" data-i18n="popup_left"></span></div>
+<div class="progress-row"><div id="codexProgress" class="progress-track" role="progressbar" aria-label="Codex remaining quota" data-i18n-aria="remaining_codex" aria-disabled="true" aria-valuemin="0" aria-valuemax="100"><span class="progress-fill"></span></div><span id="codexPercentLabel" class="percentage"></span></div>
+<div class="card-bottom"><p class="reset"><svg class="icon " aria-hidden="true"><use href="#refresh"/></svg><span id="codexResetText"></span></p></div>
+</section>
+<section class="card activity" aria-labelledby="activity-title">
+<div class="icon-tile"><svg class="icon " aria-hidden="true"><use href="#activity"/></svg></div><h2 id="activity-title" class="activity-title serif text" data-i18n="popup_local_activity">Local Activity</h2><button id="openActivityDetails" type="button" class="info-button" aria-label="Local activity information" data-i18n-aria="activity_info" title="Local Activity"><svg class="icon " aria-hidden="true"><use href="#info"/></svg></button>
+<div class="activity-columns"><div class="activity-column"><p class="period" data-i18n="popup_today">Today</p><p id="compactToday" class="count">0</p><p id="todayCaption" class="caption" data-i18n="popup_no_usage">No usage yet</p></div><div class="activity-column"><p class="period" data-i18n="popup_week">This week</p><p id="compactWeek" class="count">0</p><p id="weekCaption" class="caption" data-i18n="popup_still_quiet">Still quiet</p></div><div class="activity-column quiet"><svg class="icon leaf" aria-hidden="true"><use href="#leaf"/></svg><p id="compactActivityContext" class="quiet-title" data-i18n="popup_keeping_light">Keeping it light</p><p id="activityContextCaption" class="caption" data-i18n="popup_essentials">Just the essentials.</p></div></div>
+</section>
+<button id="openDashboard" type="button" class="dashboard-cta" aria-label="Open full dashboard" data-i18n-aria="u_openusage">
+<svg class="waves waves-cta" viewBox="0 0 390 150" fill="none" aria-hidden="true"><path d="M-30 173 C90 206,169 144,220 103 S321 18,400 29"/><path d="M-30 185 C90 218,169 156,220 115 S321 30,400 41"/><path d="M-30 197 C90 230,169 168,220 127 S321 42,400 53"/><path d="M-30 209 C90 242,169 180,220 139 S321 54,400 65"/><path d="M-30 221 C90 254,169 192,220 151 S321 66,400 77"/><path d="M-30 233 C90 266,169 204,220 163 S321 78,400 89"/><path d="M-30 245 C90 278,169 216,220 175 S321 90,400 101"/><path d="M-30 257 C90 290,169 228,220 187 S321 102,400 113"/></svg><span class="icon-tile"><svg class="icon " aria-hidden="true"><use href="#external"/></svg></span><span class="cta-heading serif" data-i18n="u_openusage">Open full dashboard</span><svg class="icon cta-arrow" aria-hidden="true"><use href="#arrow"/></svg><span class="cta-subtitle" data-i18n="popup_dashboard_subtitle">View detailed insights, history, and settings</span>
+</button>
+<footer class="footer"><p class="tagline" data-i18n="popup_tagline">Smarter tools for a brighter you.</p><p class="footer-version"><span>v3.5.0</span><span class="footer-dot" aria-hidden="true"></span></p></footer>
+</main></div></div>
+<script src="i18n.js"></script>
+<script src="usage-core.js"></script>
+<script src="feedback.js"></script>
+<script src="popup.js"></script>
 </body>
 </html>

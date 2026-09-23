@@ -1,0 +1,25 @@
+{
+  "version": "3.5.0",
+  "unitTestsPassed": 40,
+  "uiFlowsPassed": 37,
+  "screenshots": 84,
+  "pageErrors": 0,
+  "externalRequests": 0,
+  "storageSchema": 3,
+  "activityExportVersion": 5,
+  "permissionsChanged": false,
+  "priorSourcePreserved": true,
+  "extensionInstalled": false,
+  "latestChange": "themed-controls-and-summary-columns",
+  "domCasesPassed": 14,
+  "themeCasesPassed": 42,
+  "readabilityChecksPassed": 12,
+  "controlsMatrixFlowsPassed": 8,
+  "controlsEdgeSuitesPassed": 4,
+  "protectedFilesUnchanged": [
+    "background.js",
+    "content.js",
+    "usage-core.js",
+    "manifest.json"
+  ]
+}

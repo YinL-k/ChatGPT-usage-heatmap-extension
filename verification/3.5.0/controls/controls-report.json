@@ -1,0 +1,70 @@
+{
+  "checks": [
+    {
+      "theme": "light",
+      "width": 1280,
+      "emptyLayout": true,
+      "keyboardSelect": true,
+      "cancelEscapeClear": true,
+      "invalidTime": true,
+      "localTime": true,
+      "popoverBounds": {
+        "x": 644.5,
+        "y": 164.109375,
+        "width": 330,
+        "height": 407.5
+      },
+      "fullYearChart": true
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "emptyLayout": true,
+      "keyboardSelect": true,
+      "cancelEscapeClear": true,
+      "invalidTime": true,
+      "localTime": true,
+      "popoverBounds": {
+        "x": 43,
+        "y": 273.71875,
+        "width": 330,
+        "height": 407.5
+      },
+      "fullYearChart": true
+    },
+    {
+      "theme": "dark",
+      "width": 1280,
+      "emptyLayout": true,
+      "keyboardSelect": true,
+      "cancelEscapeClear": true,
+      "invalidTime": true,
+      "localTime": true,
+      "popoverBounds": {
+        "x": 644.5,
+        "y": 164.109375,
+        "width": 330,
+        "height": 407.5
+      },
+      "fullYearChart": true
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "emptyLayout": true,
+      "keyboardSelect": true,
+      "cancelEscapeClear": true,
+      "invalidTime": true,
+      "localTime": true,
+      "popoverBounds": {
+        "x": 43,
+        "y": 273.71875,
+        "width": 330,
+        "height": 407.5
+      },
+      "fullYearChart": true
+    }
+  ],
+  "errors": [],
+  "externalRequests": []
+}

@@ -1,78 +1,33 @@
-[English](README_en.md) | [中文](README.md)
+[English](README_en.md) | 中文
 
-# GPT Tracker – 使用热力图  
-监控你到底有多离不开 ChatGPT 的 Chrome 扩展
+# GPT Tracker 3.5.0
 
-我发现自己太爱 ChatGPT 了，于是写了这个 Chrome Extension 来监控一下我自己到底多依赖它。  
-它会记录你每天按下 Enter 发送 Prompt 的次数，然后用 GitHub 风格的热力图展示出来，再顺便给你算算今日 / 本周 / 本月用了多少次。
+在浏览器本地记录 ChatGPT 活动，查看热力图、使用趋势和 Codex 额度。保留 Sakura 玻璃风格，提供樱花粉浅色和深色主题、中英文界面。
 
-如果你也好奇自己是不是已经离不开 ChatGPT，这个扩展能很大程度上满足你的好奇心！
+## 本版功能
 
----
+- **发送确认**：点击、Enter 或表单提交只记录发送意图，匹配到新用户消息后才计数；排除空输入、失败发送、重复事件和历史回放。
+- **Overview / Activity / Usage**：活动趋势、全年热力图、月周柱状图、时段分布、个人用量和校准。三张统计卡片等高，周记录较多时仅图表内部横向滚动。
+- **一致的主题与控件**：主题切换保持尺寸、滚动、输入和展开状态；统一会员栏、Live 标签、下拉菜单、整框可点击的日期时间选择和操作按钮，支持键盘与 reduced-motion。
+- **只读额度刷新**：读取已有 ChatGPT 登录会话与 usage，动态显示 Codex 窗口时长；失败保留缓存，不自动重载聊天页，不提交聊天或调用模型。
+- **Codex Reset**：读取 codex-reset.com 公开全局重置预测。属于实验性第三方预测，不是个人额度重置或官方保证。
 
-## 功能特色
+## 安装与升级
 
-### 🔥 GitHub 风格热力图  
-直观展示你全年每天使用 ChatGPT 的频率。  
-相关文件：  
-- heatmap.html  
-- heatmap.js  
-- style.css  
+下载此仓库 ZIP 并解压，打开 `chrome://extensions`，开启开发者模式，点击“加载已解压的扩展程序”，选择包含 `manifest.json` 的仓库目录。安装后正常刷新一次 ChatGPT 页面，使消息统计脚本生效。
 
-### 📊 今日 / 本周 / 本月 / 总计统计  
-打开扩展弹窗即可看到你的使用频率总结。  
-相关文件：  
-- popup.html  
-- popup.js  
+升级前先导出活动备份并备份原源码目录。要保留同一扩展 ID 下的历史、手动计划和校准，请更新原加载路径的文件，再在扩展管理页重新加载；不要先卸载旧扩展。活动导出仅含日期统计，不包含计划或校准。另选路径可能生成不同扩展 ID。
 
-### 🧩 自动记录，不打扰你  
-扩展会监听你在 ChatGPT 页面按下 Enter 的行为，并将当天的 Prompt 次数记录下来。  
-相关文件：  
-- content.js  
+## 数据、权限与网络
 
-### 🔒 数据只存本地  
-所有统计数据都存储在 chrome.storage.local 中。  
-不上传、不联网，放心使用。
+统计在本地保存，不保存聊天正文、密码或认证令牌；发送确认短暂在内存比较文本，过期即丢弃。保留历史日期键、`__gptUsageV4`、schema 3、手动计划与校准；活动导出格式 version 5，appVersion 3.5.0。
 
----
+当前权限为 `storage`、`tabs` 和 `https://chatgpt.com/*`。与本次优化前的 3.4 源码一致；与仓库旧 2.0.0 的仅 storage 权限不同。个人额度使用 GET `/api/auth/session` 和 `/backend-api/wham/usage`，令牌仅用于请求内存。公开预测使用不携带账户信息的 GET；第三方会收到 IP 等普通连接元数据。无开发者后台、遥测、对话创建或模型生成请求。详见 [隐私说明](PRIVACY.md)。
 
-## 安装方式
+未知额度不补造数值；Pro 余额在手动校准后为本地估算。私有 API 和页面结构可能变化。当前自动化使用本地合成夹具，未将其视为真实登录账户或扩展安装验收。
 
-1. 下载整个项目文件夹。  
-2. 打开 Chrome，访问：  
-   ```
-   chrome://extensions/
-   ```
-3. 启用右上角 开发者模式（Developer mode）。  
-4. 点击 加载已解压的扩展程序（Load unpacked）。  
-5. 选择本项目文件夹即可完成安装。
+## 验证
 
----
+在 `tests` 目录执行 `npm install`，再执行 `npm test`。浏览器测试需要安装 Google Chrome（脚本使用 Playwright 的 chrome channel）：`npm run browser`、`npm run themes`、`npm run readability`、`npm run controls`。测试使用本地夹具，不消耗模型额度。
 
-## 项目结构
-
-```
-manifest.json     // 扩展配置文件
-icon.png          // 扩展图标
-content.js        // 监听 Enter 并记录每日使用次数
-popup.html        // 展示今日/本周/本月统计
-popup.js          // 统计逻辑
-heatmap.html      // 热力图展示页面
-heatmap.js        // 生成热力图
-style.css         // 样式文件
-```
-
----
-
-## 为什么做这个项目？
-
-单纯自己到底有多依赖AI哈哈哈 
-我只是想看看自己一天到底敲了多少次 Enter 来找 ChatGPT 喵喵天。  
-
-做完之后发现……我可能确实有点依赖它？
-
----
-
-## License
-
-MIT License.
+本版通过 40 项单元测试、14 组 DOM/网络场景、37 组 UI 流程、42 组主题/状态、12 项阅读检查，以及表单/图表专项检查。精简结果见 [验证报告](verification/3.5.0/report.json)。[TESTING.md](TESTING.md) 保留开发阶段记录；其中早期截图与本地交付路径未包含在此仓库。

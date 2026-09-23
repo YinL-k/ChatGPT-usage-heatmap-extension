@@ -2,99 +2,188 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>GPT Usage Heatmap</title>
+  <title data-i18n="title_document">GPT Usage Heatmap</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="usage.css" />
+  <link rel="stylesheet" href="dashboard-premium.css" />
+  <link rel="stylesheet" href="dashboard-ia.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="interaction.css" />
+<link rel="stylesheet" href="light-theme.css" />
+<link rel="stylesheet" href="readability.css" />
+<link rel="stylesheet" href="reset-forecast.css" />
+<link rel="stylesheet" href="controls.css" />
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>GPT Usage Contribution</h1>
+      <div class="dashboard-brand">
+        <img class="dashboard-brand-mark" src="assets/brand-knot.png" alt="" aria-hidden="true" />
+        <div class="title-with-tag"><h1 data-i18n="app_title">GPT Dependency</h1><span class="test-label">3.5.0</span></div>
+      </div>
       <div class="header-right">
-        <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">🌙</button>
-        <button id="exportData" class="secondary-button">Export</button>
-        <button id="importData" class="secondary-button">Import</button>
+        <div class="toggle">
+          <span class="sr-only" data-i18n="label_appearance">Appearance</span>
+          <div id="themeToggle" class="ios-switch" role="switch" aria-checked="false" tabindex="0"></div>
+        </div>
+
+        <div id="languageToggle" class="lang-inline" aria-label="Language" data-i18n-aria="button_language">
+          <span class="opt" data-lang="zh">CN</span>
+          <span class="sep">|</span>
+          <span class="opt" data-lang="en">EN</span>
+        </div>
+
+        <button id="exportData" class="secondary-button tool-btn" type="button" data-i18n="button_export">Export</button>
+        <button id="importData" class="secondary-button tool-btn" type="button" data-i18n="button_import">Import</button>
         <input type="file" id="importFileInput" accept="application/json" style="display: none" />
-        <select id="yearSelect"></select>
+<select id="yearSelect" aria-label="Year" data-i18n-aria="year"></select>
       </div>
     </div>
 
+    <nav class="view-tabs" role="tablist" aria-label="Views" data-i18n-aria="views" data-active="overview"><span class="tab-slider" aria-hidden="true"></span><button id="tab-overview" type="button" role="tab" aria-selected="true" aria-controls="overviewView" data-i18n="overview">Overview</button><button id="tab-activity" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="activityView" data-i18n="u_activity">Activity</button><button id="tab-usage" type="button" role="tab" aria-selected="false" tabindex="-1" aria-controls="usageView" data-i18n="u_usage">Usage</button></nav>
+    <section id="overviewView" class="view-panel" role="tabpanel" aria-labelledby="tab-overview">
+      <div class="overview-context">
+        <div class="overview-context-main"><span class="overview-context-icon" aria-hidden="true"></span><div class="overview-context-copy"><strong id="overviewPlan">Not identified yet</strong><p id="overviewPlanMeta">Open ChatGPT to detect your membership.</p></div></div>
+        <div class="overview-context-side"><span id="overviewFreshness" class="overview-freshness unavailable">Unavailable</span><span id="overviewUpdated">No live reading yet</span></div>
+      </div>
+      <div class="overview-kpis">
+        <article class="overview-kpi"><div class="overview-kpi-label" data-i18n="this_week">This week</div><div id="overviewWeek" class="overview-kpi-value">0</div><div id="overviewWeekDelta" class="overview-kpi-sub">No prior-week baseline yet</div></article>
+        <article class="overview-kpi"><div class="overview-kpi-label" data-i18n="this_month">This month</div><div id="overviewMonth" class="overview-kpi-value">0</div><div id="overviewMonthSub" class="overview-kpi-sub" data-i18n="local_messages">Local messages tracked</div></article>
+        <article class="overview-kpi"><div id="overviewProTitle" class="overview-kpi-label">Pro remaining</div><div id="overviewPro" class="overview-kpi-value">—</div><div id="overviewProSub" class="overview-kpi-sub">Sync once for an estimate</div></article>
+        <article class="overview-kpi green"><div id="overviewCodexTitle" class="overview-kpi-label">Codex</div><div id="overviewCodex" class="overview-kpi-value">—</div><div id="overviewCodexSub" class="overview-kpi-sub">No live meter yet</div></article>
+      </div>
+      <div class="overview-grid">
+        <section class="overview-panel"><div class="overview-panel-heading"><div><h2 data-i18n="trend_title">14-day activity trend</h2><p data-i18n="trend_note">Local messages by day — history, not a duplicate of the popup.</p></div><span class="overview-period-pill" data-i18n="days14">14 days</span></div><div class="overview-chart-wrap"><canvas id="overviewTrendCanvas"></canvas><div id="overviewTrendEmpty" class="overview-chart-empty" data-i18n="period_empty">No activity recorded in this period.</div></div></section>
+        <section class="overview-panel"><div class="overview-panel-heading"><div><h2 data-i18n="next_resets">Next resets</h2><p data-i18n="reset_note">Upcoming Pro and Codex windows.</p></div></div><div id="overviewResets" class="reset-list"></div></section>
+      </div>
+      <div class="overview-lower">
+        <section class="overview-panel"><div class="overview-panel-heading"><div><h2 data-i18n="usage_context">Usage context</h2><p data-i18n="context_note">A quick interpretation of your current activity.</p></div></div><div class="overview-insight-list"><div class="overview-insight"><span data-i18n="popup_today">Today</span><strong id="overviewToday">0 messages</strong></div><div class="overview-insight"><span data-i18n="avg7">7-day average</span><strong id="overviewAvg7">—</strong></div><div class="overview-insight"><span data-i18n="compact_tracking_since">Tracking since</span><strong id="overviewTrackingSince">—</strong></div></div></section>
+        <section class="overview-panel"><div class="overview-panel-heading"><div><h2 data-i18n="go_deeper">Go deeper</h2><p data-i18n="pages_note">Dashboard pages now have distinct jobs.</p></div></div><div class="overview-insight-list"><div class="overview-insight"><span data-i18n="u_activity">Activity</span><strong data-i18n="activity_features">Heatmap · daily trend · time distribution</strong></div><div class="overview-insight"><span data-i18n="u_usage">Usage</span><strong data-i18n="usage_features">Current cycles · resets · controls</strong></div></div><div class="overview-jump"><button type="button" data-jump="activity" data-i18n="open_activity">Open Activity</button><button type="button" data-jump="usage" data-i18n="open_usage">Open Usage</button></div></section>
+      </div>
+      <section id="resetForecast" class="reset-forecast" aria-labelledby="rfTitle">
+        <div class="rf-heading"><div class="rf-title"><h2 id="rfTitle">Codex Reset</h2><span class="rf-subtitle" data-i18n="rf_title">Global reset outlook</span></div><div class="rf-tools"><span class="rf-badge" data-i18n="rf_badge">Third-party forecast</span><button id="rfRefresh" class="rf-refresh" type="button" aria-label="Refresh forecast">↻</button></div></div>
+        <div class="rf-metrics">
+          <div class="rf-metric"><span class="rf-label" data-i18n="rf_24">Next 24 hours</span><strong class="rf-value" id="rf24">—</strong><div class="rf-track" aria-hidden="true"><span id="rfBar24"></span></div></div>
+          <div class="rf-metric"><span class="rf-label" data-i18n="rf_48">Within 48 hours</span><strong class="rf-value" id="rf48">—</strong><div class="rf-track" aria-hidden="true"><span id="rfBar48"></span></div></div>
+          <div class="rf-metric rf-last"><span class="rf-label" data-i18n="rf_last">Last global reset</span><strong class="rf-value" id="rfLast">—</strong></div>
+        </div>
+        <div class="rf-signal"><span id="rfSignal"></span><a id="rfSignalLink" href="https://codex-reset.com/" target="_blank" rel="noopener noreferrer" data-i18n="rf_source">View source ↗</a></div>
+        <div class="rf-footer"><a href="https://codex-reset.com/" target="_blank" rel="noopener noreferrer">codex-reset.com ↗</a><span id="rfStatus" role="status"></span><span id="rfUpdated"></span><span id="rfConfidence"></span></div>
+        <p class="rf-note" id="rfError"></p>
+      </section>
+    </section>
+    <section id="activityView" class="view-panel" role="tabpanel" aria-labelledby="tab-activity" hidden>
+      <div class="activity-intro"><div><h2 data-i18n="activity_history">Activity history</h2><p data-i18n="activity_note">Long-term usage patterns, streaks, daily movement and time-of-day behavior.</p></div><span class="activity-intro-badge" data-i18n="local_history">Local history</span></div>
     <div class="stats-bar">
       <div class="stat-box">
-        <span class="label">Total in Year</span>
+        <span class="label" data-i18n="stat_year_total">Total in Year</span>
         <span class="value" id="yearTotal">0</span>
       </div>
       <div class="stat-box">
-        <span class="label">Active Days</span>
+        <span class="label" data-i18n="stat_active_days">Active Days</span>
         <span class="value" id="activeDays">0</span>
       </div>
       <div class="stat-box">
-        <span class="label">Avg (Active Days)</span>
+        <span class="label" data-i18n="stat_avg_active">Avg (Active Days)</span>
         <span class="value" id="avgDaily">0</span>
       </div>
       <div class="stat-box">
-        <span class="label">Current Streak</span>
+        <span class="label" data-i18n="stat_current_streak">Current Streak</span>
         <span class="value" id="currentStreak">0</span>
       </div>
       <div class="stat-box">
-        <span class="label">Longest Streak</span>
+        <span class="label" data-i18n="stat_longest_streak">Longest Streak</span>
         <span class="value" id="longestStreak">0</span>
       </div>
     </div>
 
-    <div class="graph-container">
+    <div class="heatmap-navigation" id="heatmapNavigation" hidden><span data-i18n="heatmap_scroll_hint"></span><button type="button" id="heatmapCurrent" data-i18n="heatmap_current"></button></div>
+    <div class="graph-container scrollbar-x" id="heatmapScroll" tabindex="0" aria-describedby="heatmapNavigation">
       <div class="months-label" id="monthsLabel"></div>
       <div class="days-label">
-        <span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span><span></span>
+        <span data-i18n="weekday_mon_short">Mon</span><span></span>
+        <span data-i18n="weekday_wed_short">Wed</span><span></span>
+        <span data-i18n="weekday_fri_short">Fri</span><span></span><span></span>
       </div>
       <div class="heatmap-grid" id="heatmapGrid"></div>
     </div>
 
     <div class="legend">
-      <span>Less</span>
+      <span data-i18n="legend_less">Less</span>
       <div class="legend-item" data-level="0"></div>
       <div class="legend-item" data-level="1"></div>
       <div class="legend-item" data-level="2"></div>
       <div class="legend-item" data-level="3"></div>
       <div class="legend-item" data-level="4"></div>
-      <span>More</span>
+      <span data-i18n="legend_more">More</span>
     </div>
 
     <div class="trend-section">
-      <h2>Daily Activity</h2>
+      <h2 data-i18n="title_daily_activity">Daily Activity</h2>
       <div class="daily-chart-wrapper">
-        <canvas id="dailyChart" height="160"></canvas>
+        <canvas id="dailyChart" height="160"></canvas><p id="dailyEmpty" class="chart-empty" hidden></p>
+        <div id="dailyTooltip" class="tooltip tooltip-hidden"></div>
       </div>
 
       <div class="trend-summary">
+                <div class="summary-block">
+          <div class="summary-title">
+            <span data-i18n="summary_monthly_totals">Monthly totals</span>
+            <span id="monthlyAverage" class="summary-metric"></span>
+          </div>
+          <ul id="monthlyTotals" class="summary-list monthly-list scrollbar-y"></ul>
+        </div>
         <div class="summary-block">
           <div class="summary-title">
-            Weekly totals
+            <span data-i18n="summary_weekly_totals">Weekly totals</span>
             <span id="weeklyAverage" class="summary-metric"></span>
           </div>
-          <ul id="weeklyTotals" class="summary-list"></ul>
+          <ul id="weeklyTotals" class="summary-list monthly-list scrollbar-y"></ul>
         </div>
         <div class="summary-block">
-          <div class="summary-title">Monthly totals</div>
-          <ul id="monthlyTotals" class="summary-list monthly-list"></ul>
-        </div>
-        <div class="summary-block">
-          <div class="summary-title">Most active weekday</div>
+          <div class="summary-title" data-i18n="summary_busiest_weekday">Most active weekday</div>
           <div id="busiestWeekday" class="summary-metric">-</div>
         </div>
       </div>
+
+      <div id="timeDistributionSection" class="time-distribution-section">
+        <h2 data-i18n="title_time_distribution">Usage Time Distribution</h2>
+        <p class="distribution-scope" data-i18n="distribution_scope"></p><div class="time-distribution-layout">
+          <div class="time-distribution-chart-wrapper" style="display:flex; justify-content:center; align-items:center;">
+            <canvas id="timePieChart" width="520" height="520"></canvas>
+          </div>
+
+          <ul id="distributionLegend" class="distribution-legend"></ul><div id="timeDistributionEmpty" class="time-distribution-empty" data-i18n="text_time_distribution_empty"></div>
+          <div id="pieTooltip" class="tooltip tooltip-hidden"></div>
+        </div>
+      </div>
     </div>
+    </section>
+    <section id="usageView" class="view-panel" role="tabpanel" aria-labelledby="tab-usage" hidden><div id="usagePanel"></div></section>
   </div>
 
   <div id="dayDetailOverlay" class="modal-overlay hidden">
-    <div class="modal">
-      <button id="modalCloseBtn" class="modal-close" aria-label="Close">&times;</button>
-      <h2 id="modalDateTitle">Date</h2>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalDateTitle">
+      <button id="modalCloseBtn" class="modal-close" aria-label="Close" data-i18n-aria="close">&times;</button>
+      <h2 id="modalDateTitle" data-i18n="modal_title_date">Date</h2>
       <p id="modalCountText" class="modal-count"></p>
       <div id="modalTimesSummary" class="modal-times-summary"></div>
       <canvas id="dayTimeChart" height="140"></canvas>
+      <div id="dayTimeTooltip" class="tooltip tooltip-hidden"></div>
     </div>
   </div>
 
+  <script src="i18n.js"></script>
+  <script src="usage-core.js"></script>
+<script src="feedback.js"></script>
+  <script src="summary-columns.js"></script>
   <script src="heatmap.js"></script>
+  <script src="usage-ui.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="reset-forecast.js"></script>
+  <script src="controls.js"></script>
 </body>
 </html>
+
+
+

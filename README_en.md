@@ -1,79 +1,31 @@
-[English](README_en.md) | [中文](README.md)
+English | [中文](README.md)
 
-# GPT Tracker – Usage Heatmap  
-A Chrome extension to monitor just how dependent you are on ChatGPT.
+# GPT Tracker 3.5.0
 
-I realized I'm way too into ChatGPT, so I built this Chrome extension to keep an eye on just how hooked I am.  
-It logs how many times you hit **Enter** to send a prompt each day, then shows your streak in a GitHub‑style contribution graph.  
-It also totals up your prompts for **today**, **this week** and **this month**.
-
-If you're also curious whether you can live without ChatGPT, this extension will go a long way toward satisfying that curiosity!
-
----
+A Chrome extension for local ChatGPT activity tracking, heatmaps, trends, and read-only Codex allowance information. Sakura dark and pale-pink themes share the same layout and interactions.
 
 ## Features
 
-### 🔥 GitHub‑Style Heatmap  
-Shows at a glance how often you talk to ChatGPT every day of the year.  
-Related files:  
-‑ heatmap.html  
-‑ heatmap.js  
-‑ style.css  
+- Confirm sends only after a matching new user message appears; ignore empty, failed, duplicate, and replayed events.
+- Overview, Activity, and Usage pages with monthly/weekly columns, daily trends, heatmaps, time-of-day distribution, and manual Pro calibration.
+- Consistent membership rows, compact Live badges, themed dropdowns and date/time picker, keyboard navigation, and reduced-motion support.
+- Read-only refresh using the existing ChatGPT session, dynamic Codex windows, timeout/backoff, and cached/error states. No chat submission, generation, or automatic page reload.
+- Experimental third-party global reset forecasts from codex-reset.com, distinct from personal reset times and official promises.
 
-### 📊 Today's / This Week's / This Month's / Overall Stats  
-Open the popup and you'll see a summary of your prompt habits.  
-Related files:  
-‑ popup.html  
-‑ popup.js  
+## Install and update
 
-### 🧩 Hands‑Off Tracking  
-The extension listens for **Enter** key presses on the ChatGPT page and logs the number of prompts for the day.  
-Related files:  
-‑ content.js  
+Download and extract the repository. Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select the directory containing `manifest.json`. Reload your ChatGPT page normally once to activate activity tracking.
 
-### 🔒 Data Stays Local  
-All stats are stored in `chrome.storage.local`.  
-Nothing is uploaded or synced, so you can use it worry‑free.
+Export activity and back up the existing extension directory before updating. Replace files in the existing loaded path and reload the extension to retain its ID and local data. Do not uninstall first. Loading another path may create a new ID. Activity exports do not include manual plans or calibrations.
 
----
+## Privacy and permissions
 
-## Installation
+Activity remains local. Chat text is briefly compared in memory to confirm a send, never persisted or exported. Authentication tokens remain in request-local memory. Current permissions are storage, tabs, and the ChatGPT host, unchanged from the optimized 3.4 source but different from the old 2.0.0 repository version.
 
-1. Download the entire project folder.  
-2. Open Chrome and navigate to:  
-   ```
-   chrome://extensions/
-   ```
-3. In the top right, enable **Developer mode**.  
-4. Click **Load unpacked**.  
-5. Select this project folder. Done!
+Personal usage uses GET requests to ChatGPT session and usage endpoints. Public forecasts use credential-free GET requests; the forecast provider receives normal connection metadata such as IP address. No developer backend, telemetry, conversation creation, or model calls. See [Privacy](PRIVACY.md).
 
----
+Unknown quotas remain unavailable. Calibrated Pro balances are local estimates. Private APIs and markup can change; local fixture tests do not establish real-account compatibility.
 
-## Project Structure
+## Tests
 
-```
-manifest.json     // Extension configuration
-icon.png          // Extension icon
-content.js        // Monitors Enter and logs daily usage
-popup.html        // Popup showing today/week/month stats
-popup.js          // Counting logic
-heatmap.html      // Heatmap display page
-heatmap.js        // Generates heatmap
-style.css         // Stylesheet
-```
-
----
-
-## Why build this?
-
-Honestly? I just wanted to know how dependent I am on AI, haha.  
-I was curious how many times a day I mash **Enter** to talk to ChatGPT.
-
-Now that it's built… it turns out I'm probably a bit hooked.
-
----
-
-## License
-
-MIT License.
+Run `npm install` and `npm test` in `tests/`. Browser checks require Google Chrome: `npm run browser`, `npm run themes`, `npm run readability`, and `npm run controls`. All regression requests use local fixtures. See the [verification report](verification/3.5.0/report.json) and [testing history](TESTING.md); historical local screenshot paths are not shipped in this repository.
