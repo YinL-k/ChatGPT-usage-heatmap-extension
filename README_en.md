@@ -8,6 +8,12 @@ English | [中文](README.md)
 
 A Chrome extension for local ChatGPT activity tracking, heatmaps, trends, and read-only Codex allowance information. Sakura dark and pale-pink themes share the same layout and interactions.
 
+## Preview
+
+English Chrome Web Store preview containing six screenshots plus the Small and Large promotional tiles.
+
+![SakuraMeter English store preview](store-assets/en/SakuraMeter-GitHub-Preview.jpg)
+
 ## Features
 
 - Confirm sends only after a matching new user message appears; ignore empty, failed, duplicate, and replayed events.
