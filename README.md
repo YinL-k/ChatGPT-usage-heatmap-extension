@@ -8,6 +8,12 @@
 
 在浏览器本地记录 ChatGPT 活动，查看热力图、使用趋势和 Codex 额度。保留 Sakura 玻璃风格，提供樱花粉浅色和深色主题、中英文界面。
 
+## 产品预览
+
+下面汇总展示英文版的 6 张商店截图，以及 Small / Large 两张 promotional tile。
+
+![SakuraMeter English store preview](store-assets/en/SakuraMeter-GitHub-Preview.jpg)
+
 ## 本版功能
 
 - **发送确认**：点击、Enter 或表单提交只记录发送意图，匹配到新用户消息后才计数；排除空输入、失败发送、重复事件和历史回放。
