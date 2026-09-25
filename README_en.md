@@ -13,18 +13,18 @@ A Chrome extension for local ChatGPT activity tracking, heatmaps, trends, and re
 Six English store screenshots plus the Small and Large promotional tiles.
 
 <table>
-<tr><td width="50%"><img src="store-assets/en/preview/01-popup-dark.jpg" alt="Popup dark" /></td><td width="50%"><img src="store-assets/en/preview/02-popup-light.jpg" alt="Popup light" /></td></tr>
-<tr><td width="50%"><img src="store-assets/en/preview/03-overview-dark.jpg" alt="Overview dark" /></td><td width="50%"><img src="store-assets/en/preview/04-overview-light.jpg" alt="Overview light" /></td></tr>
-<tr><td width="50%"><img src="store-assets/en/preview/05-activity-dark.jpg" alt="Activity dark" /></td><td width="50%"><img src="store-assets/en/preview/06-activity-light.jpg" alt="Activity light" /></td></tr>
+<tr><td width="50%"><img src="https://raw.githubusercontent.com/YinL-k/chatgpt-codex-usage-tracker/main/store-assets/en/preview/01-popup-dark.jpg?v=3a031125" alt="Popup dark" /></td><td width="50%"><img src="https://raw.githubusercontent.com/YinL-k/chatgpt-codex-usage-tracker/main/store-assets/en/preview/02-popup-light.jpg?v=3a031125" alt="Popup light" /></td></tr>
+<tr><td width="50%"><img src="https://raw.githubusercontent.com/YinL-k/chatgpt-codex-usage-tracker/main/store-assets/en/preview/03-overview-dark.jpg?v=3a031125" alt="Overview dark" /></td><td width="50%"><img src="https://raw.githubusercontent.com/YinL-k/chatgpt-codex-usage-tracker/main/store-assets/en/preview/04-overview-light.jpg?v=3a031125" alt="Overview light" /></td></tr>
+<tr><td width="50%"><img src="https://raw.githubusercontent.com/YinL-k/chatgpt-codex-usage-tracker/main/store-assets/en/preview/05-activity-dark.jpg?v=3a031125" alt="Activity dark" /></td><td width="50%"><img src="https://raw.githubusercontent.com/YinL-k/chatgpt-codex-usage-tracker/main/store-assets/en/preview/06-activity-light.jpg?v=3a031125" alt="Activity light" /></td></tr>
 </table>
 
 **Large promotional tile**
 
-<img src="store-assets/en/preview/large-promotional.jpg" alt="Large promotional tile" />
+<img src="https://raw.githubusercontent.com/YinL-k/chatgpt-codex-usage-tracker/main/store-assets/en/preview/large-promotional.jpg?v=3a031125" alt="Large promotional tile" />
 
 **Small promotional tile**
 
-<img src="store-assets/en/preview/small-promotional.jpg" alt="Small promotional tile" width="440" />
+<img src="https://raw.githubusercontent.com/YinL-k/chatgpt-codex-usage-tracker/main/store-assets/en/preview/small-promotional.jpg?v=3a031125" alt="Small promotional tile" width="440" />
 
 ## Features
 
