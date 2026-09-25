@@ -10,9 +10,21 @@ A Chrome extension for local ChatGPT activity tracking, heatmaps, trends, and re
 
 ## Preview
 
-English Chrome Web Store preview containing six screenshots plus the Small and Large promotional tiles.
+Six English store screenshots plus the Small and Large promotional tiles.
 
-![SakuraMeter English store preview](store-assets/en/SakuraMeter-GitHub-Preview.jpg)
+<table>
+<tr><td width="50%"><img src="store-assets/en/preview/01-popup-dark.jpg" alt="Popup dark" /></td><td width="50%"><img src="store-assets/en/preview/02-popup-light.jpg" alt="Popup light" /></td></tr>
+<tr><td width="50%"><img src="store-assets/en/preview/03-overview-dark.jpg" alt="Overview dark" /></td><td width="50%"><img src="store-assets/en/preview/04-overview-light.jpg" alt="Overview light" /></td></tr>
+<tr><td width="50%"><img src="store-assets/en/preview/05-activity-dark.jpg" alt="Activity dark" /></td><td width="50%"><img src="store-assets/en/preview/06-activity-light.jpg" alt="Activity light" /></td></tr>
+</table>
+
+**Large promotional tile**
+
+<img src="store-assets/en/preview/large-promotional.jpg" alt="Large promotional tile" />
+
+**Small promotional tile**
+
+<img src="store-assets/en/preview/small-promotional.jpg" alt="Small promotional tile" width="440" />
 
 ## Features
 
