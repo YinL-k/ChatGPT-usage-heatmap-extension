@@ -46,7 +46,7 @@
 
 在 `tests` 目录执行 `npm install`，再执行 `npm test`。浏览器测试需要安装 Google Chrome（脚本使用 Playwright 的 chrome channel）：`npm run browser`、`npm run themes`、`npm run readability`、`npm run controls`。测试使用本地夹具，不消耗模型额度。
 
-本版通过 40 项单元测试、14 组 DOM/网络场景、37 组 UI 流程、42 组主题/状态、12 项阅读检查，以及表单/图表专项检查。精简结果见 [验证报告](verification/3.6.0.61/report.json)。[TESTING.md](TESTING.md) 保留开发阶段记录；其中早期截图与本地交付路径未包含在此仓库。
+历史自动化验证基线见 [3.5.0 验证报告](verification/3.5.0/report.json)。3.6.0.61 发布前已完成版本号、JavaScript/JSON 语法、资源引用与扩展包结构审计；[TESTING.md](TESTING.md) 保留历史开发与验证记录。
 
 
 ## 品牌与图标
