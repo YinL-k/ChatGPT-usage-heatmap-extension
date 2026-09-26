@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg-color: #fdf7fb;
   --text-color: #2b1a23;
   --card-bg: #ffffff;
@@ -874,4 +874,3 @@ select,
 .monthly-list {
   padding-right: 26px;
 }
-
