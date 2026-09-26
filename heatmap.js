@@ -1,6 +1,9 @@
 let allData = {};
 let currentYear = new Date().getFullYear();
-let yearSelectEl;
+let availableYears = [];
+let yearSelectButtonEl;
+let yearSelectValueEl;
+let yearSelectMenuEl;
 
 /** Hourly chart state (24h line) */
 const hourlyChartState = {
@@ -118,7 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function bootstrap() {
   
-  yearSelectEl = document.getElementById("yearSelect");
+  yearSelectButtonEl = document.getElementById("yearSelectButton");
+  yearSelectValueEl = document.getElementById("yearSelectValue");
+  yearSelectMenuEl = document.getElementById("yearSelectMenu");
 
   
   allData = await getStorageData();
@@ -140,15 +145,7 @@ async function bootstrap() {
   document.dispatchEvent(new CustomEvent("gpt-heatmap-ready"));
 
   
-  if (yearSelectEl) {
-    yearSelectEl.addEventListener("change", (e) => {
-      const year = parseInt(e.target.value, 10);
-      if (!Number.isNaN(year)) {
-        currentYear = year;
-        renderCalendar(currentYear);
-      }
-    });
-  }
+  initYearSelectControl();
 
   
   const langBtn = document.getElementById("languageToggle");
@@ -165,11 +162,10 @@ async function bootstrap() {
   }
 }
 
-
 function refreshI18nAndCharts() {
   if (window.GPTTrackerI18n) {
     window.GPTTrackerI18n.applyI18n(document);
-  }
+    }
 
   
   initMonthsHeader();
@@ -234,9 +230,99 @@ function initMonthsHeader() {
 
 /* ---------- Year select ---------- */
 
-function buildYearOptions() {
-  if (!yearSelectEl) return;
+function closeYearSelectMenu({ returnFocus = false } = {}) {
+  const shell = yearSelectButtonEl?.closest('.year-select-shell');
+  if (!shell || !yearSelectButtonEl || !yearSelectMenuEl) return;
+  shell.classList.remove('is-open');
+  yearSelectButtonEl.setAttribute('aria-expanded', 'false');
+  yearSelectMenuEl.hidden = true;
+  if (returnFocus) yearSelectButtonEl.focus({ preventScroll: true });
+}
 
+function openYearSelectMenu({ focusSelected = false } = {}) {
+  const shell = yearSelectButtonEl?.closest('.year-select-shell');
+  if (!shell || !yearSelectButtonEl || !yearSelectMenuEl) return;
+  shell.classList.add('is-open');
+  yearSelectButtonEl.setAttribute('aria-expanded', 'true');
+  yearSelectMenuEl.hidden = false;
+  if (focusSelected) {
+    const selected = yearSelectMenuEl.querySelector('[aria-selected="true"]') || yearSelectMenuEl.querySelector('button');
+    selected?.focus({ preventScroll: true });
+  }
+}
+
+function applyYearSelection(year, { focusButton = true } = {}) {
+  if (!Number.isFinite(year)) return;
+  currentYear = year;
+  if (yearSelectValueEl) yearSelectValueEl.textContent = String(year);
+  yearSelectMenuEl?.querySelectorAll('[role="option"]').forEach((option) => {
+    option.setAttribute('aria-selected', option.dataset.year === String(year) ? 'true' : 'false');
+  });
+  renderCalendar(currentYear);
+  closeYearSelectMenu({ returnFocus: focusButton });
+}
+
+function syncYearSelectControl() {
+  if (!yearSelectMenuEl || !yearSelectValueEl) return;
+  yearSelectValueEl.textContent = String(currentYear);
+  yearSelectMenuEl.replaceChildren();
+  availableYears.forEach((year) => {
+    const value = String(year);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'year-select-option';
+    button.setAttribute('role', 'option');
+    button.dataset.year = value;
+    button.textContent = value;
+    button.setAttribute('aria-selected', year === currentYear ? 'true' : 'false');
+    button.addEventListener('click', () => applyYearSelection(year));
+    button.addEventListener('keydown', (e) => {
+      const options = Array.from(yearSelectMenuEl.querySelectorAll('.year-select-option'));
+      const index = options.indexOf(button);
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        options[(index + 1) % options.length]?.focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        options[(index - 1 + options.length) % options.length]?.focus();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeYearSelectMenu({ returnFocus: true });
+      } else if (e.key === 'Tab') {
+        closeYearSelectMenu();
+      }
+    });
+    yearSelectMenuEl.appendChild(button);
+  });
+}
+
+function initYearSelectControl() {
+  if (!yearSelectButtonEl || !yearSelectMenuEl) return;
+  const shell = yearSelectButtonEl.closest('.year-select-shell');
+
+  yearSelectButtonEl.addEventListener('click', () => {
+    if (shell?.classList.contains('is-open')) closeYearSelectMenu();
+    else openYearSelectMenu();
+  });
+
+  yearSelectButtonEl.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      openYearSelectMenu({ focusSelected: true });
+    } else if (e.key === 'Escape') {
+      closeYearSelectMenu();
+    }
+  });
+
+  document.addEventListener('pointerdown', (e) => {
+    if (!shell?.contains(e.target)) closeYearSelectMenu();
+  }, { capture: true });
+
+  window.addEventListener('blur', () => closeYearSelectMenu());
+  syncYearSelectControl();
+}
+
+function buildYearOptions() {
   const years = new Set();
   const todayYear = new Date().getFullYear();
   years.add(todayYear);
@@ -247,20 +333,11 @@ function buildYearOptions() {
     if (!Number.isNaN(y)) years.add(y);
   });
 
-  const sorted = Array.from(years).sort((a, b) => b - a);
-  yearSelectEl.innerHTML = "";
-  sorted.forEach((y) => {
-    const opt = document.createElement("option");
-    opt.value = String(y);
-    opt.textContent = String(y);
-    yearSelectEl.appendChild(opt);
-  });
-
-  if (!sorted.includes(currentYear)) {
-    currentYear = sorted[0] || todayYear;
+  availableYears = Array.from(years).sort((a, b) => b - a);
+  if (!availableYears.includes(currentYear)) {
+    currentYear = availableYears[0] || todayYear;
   }
-
-  yearSelectEl.value = String(currentYear);
+  syncYearSelectControl();
 }
 
 /* ---------- Calendar rendering ---------- */
@@ -1527,6 +1604,8 @@ function applyTheme(theme) {
     document.body.classList.remove("dark");
     theme = "light";
   }
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.style.colorScheme = theme;
   localStorage.setItem("gptTrackerTheme", theme);
 
   if (btn) {

@@ -1,0 +1,89 @@
+/* SakuraMeter background-only refinement.
+   1) Popup uses the approved A / Fine Waves surface in BOTH themes.
+   2) Overview's four KPI cards restore the original concentric-ring motif.
+   No geometry, typography, data, controls, or interaction rules are changed. */
+
+/* --------------------------------------------------------------------------
+   POPUP — A / FINE WAVES ONLY
+   Exact A formulas from SakuraMeter-Frontend-A-B-C(2).html.
+   Existing card backgrounds/gradients remain untouched; only decoration layers change.
+   -------------------------------------------------------------------------- */
+#artboard[data-theme] .card::before{
+  background:
+    radial-gradient(ellipse 370px 230px at 101% 108%,rgb(var(--surface-rgb) / var(--surface-warm)),transparent 78%),
+    radial-gradient(ellipse 390px 210px at -6% -13%,rgb(var(--surface-soft-rgb) / .060),transparent 80%),
+    linear-gradient(124deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 44%)!important;
+  mask-image:none!important;
+  -webkit-mask-image:none!important;
+}
+#artboard[data-theme] .membership::before{
+  background:
+    radial-gradient(ellipse 355px 165px at 101% 106%,rgb(var(--surface-rgb) / .14),transparent 76%),
+    linear-gradient(132deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 45%)!important;
+  mask-image:none!important;
+  -webkit-mask-image:none!important;
+}
+#artboard[data-theme="light"] .membership::before{
+  background:
+    radial-gradient(ellipse 355px 165px at 101% 106%,rgb(var(--surface-rgb) / .085),transparent 76%),
+    linear-gradient(132deg,rgb(var(--surface-white) / .66),transparent 48%)!important;
+}
+#artboard[data-theme] .activity::before{
+  background:radial-gradient(ellipse 380px 220px at 105% 100%,rgb(var(--surface-rgb) / .07),transparent 79%)!important;
+  mask-image:none!important;
+  -webkit-mask-image:none!important;
+}
+#artboard[data-theme] .dashboard-cta::after{
+  background:
+    radial-gradient(ellipse 330px 165px at 102% 119%,rgb(var(--surface-rgb) / .12),transparent 83%),
+    linear-gradient(122deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 49%)!important;
+  mask-image:none!important;
+  -webkit-mask-image:none!important;
+}
+/* B reduced the main SVG motif in dark mode. A restores the native fine-wave strength. */
+#artboard[data-theme="dark"] :is(.waves-pro,.waves-codex){opacity:var(--surface-wave)!important}
+
+/* --------------------------------------------------------------------------
+   OVERVIEW KPI STRIP — RESTORE THE ORIGINAL CONTOUR RINGS.
+   The original dashboard already had this motif in dashboard-ia.css.
+   Scope is strictly limited to the four Overview KPI cards.
+   No layout, text, spacing, sizing, or interaction properties are changed.
+   -------------------------------------------------------------------------- */
+body:has(>.container) #overviewView .overview-kpis > .overview-kpi{
+  isolation:isolate;
+  overflow:hidden;
+}
+
+/* Remove only the later water-wave layer. */
+body:has(>.container) #overviewView .overview-kpis > .overview-kpi::before{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+
+/* Restore the exact original Overview ring treatment from dashboard-ia.css. */
+body:has(>.container) #overviewView .overview-kpis > .overview-kpi::after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:auto -25px -38px 28%!important;
+  width:auto!important;
+  height:90px!important;
+  opacity:.11!important;
+  background:repeating-radial-gradient(
+    ellipse at center,
+    transparent 0 10px,
+    rgba(245,181,194,.58) 11px 12px,
+    transparent 13px 22px
+  )!important;
+  transform:rotate(-10deg)!important;
+  pointer-events:none!important;
+  filter:none!important;
+  mask-image:none!important;
+  -webkit-mask-image:none!important;
+}
+
+/* Match the original light-mode strength as well. */
+body:not(.dark):has(>.container) #overviewView .overview-kpis > .overview-kpi::after{
+  opacity:.075!important;
+}

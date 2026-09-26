@@ -125,7 +125,7 @@ body:not(.dark):has(.container) .window-progress span{background:linear-gradient
 body:not(.dark):has(.container) .mini-bar{background:linear-gradient(180deg,#ff9dc5,#df4d8b)}
 body:not(.dark):has(.container) :is(.reset-item,.credits-row){background:#fae7f0;border-color:#ead0dc}
 body:not(.dark):has(.container) :is(.overview-insight,.history-total,.summary-list li){border-color:#ead1de}
-body:not(.dark):has(.container) :is(.overview-period-pill,.activity-intro-badge,.test-label){color:#816878;border-color:#e8cada;background:#f5e2ed;box-shadow:none}
+body:not(.dark):has(.container) :is(.overview-period-pill,.activity-intro-badge,.version-label){color:#816878;border-color:#e8cada;background:#f5e2ed;box-shadow:none}
 body:not(.dark):has(.container) :is(.header-right .secondary-button,.header-right select,.lang-inline,.overview-jump button){color:#79596f;background:#fff2f8;border-color:#e4bdd1;box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(40,55,75,.025)}
 body:not(.dark):has(.container) :is(.header-right .secondary-button:hover,.lang-inline:hover,.overview-jump button:hover){color:#b72b65;background:#f8f0f4;border-color:#cfadbd;box-shadow:none}
 body:not(.dark):has(.container) .lang-inline .opt.active{color:#b72b65}

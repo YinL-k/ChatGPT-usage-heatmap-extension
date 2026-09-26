@@ -1,0 +1,595 @@
+/* Trend-first popup layout. Presentation only; existing data IDs and handlers remain. */
+#artboard .membership{top:144px;height:189px}
+#artboard .usage-trend-main{top:353px;height:240px;padding:0;background:radial-gradient(ellipse 270px 155px at 100% 112%,rgba(190,122,145,.08),transparent 78%),linear-gradient(118deg,#111516,#101314 54%,#111315)}
+#artboard .codex{top:613px;height:315px}
+#artboard .pro{top:948px;height:220px}
+#artboard .activity{top:1188px;height:190px}
+#artboard .dashboard-cta{top:1398px;height:135px}
+#artboard .footer{top:1556px}
+
+/* Lighter hierarchy: metrics stay readable but stop dominating the popup. */
+#artboard :is(.pro,.codex) .icon-tile{left:25px;top:20px;width:68px;height:68px;border-radius:16px}
+#artboard :is(.pro,.codex) .icon-tile>.icon{width:38px;height:38px}
+#artboard :is(.pro,.codex) .usage-title{left:116px;top:18px;font-size:34px;line-height:48px}
+#artboard .pro .estimated{left:205px;top:24px;min-width:112px;height:38px;border-radius:14px;font-size:19px;padding:0 13px}
+#artboard .codex .badge{left:232px;top:24px;width:78px;height:38px;border-radius:14px;font-size:19px}
+#artboard :is(.pro,.codex) .card-action{right:24px;top:21px;height:42px}
+#artboard :is(.pro,.codex) .usage-number{left:24px;top:80px;gap:13px}
+#artboard :is(.pro,.codex) .large-number{font-size:60px;line-height:68px;font-weight:620;letter-spacing:-2px}
+#artboard :is(.pro,.codex) .number-suffix{font-size:29px;line-height:40px;letter-spacing:-.8px}
+#artboard :is(.pro,.codex) .progress-row{left:24px;right:24px;top:151px;height:23px;gap:13px}
+#artboard :is(.pro,.codex) .progress-track{height:17px;border-radius:11px}
+#artboard :is(.pro,.codex) .progress-fill{border-radius:11px}
+#artboard :is(.pro,.codex) .percentage{min-width:38px;font-size:17px;line-height:22px}
+#artboard :is(.pro,.codex) .card-bottom{left:24px;right:24px;bottom:13px;height:27px;font-size:16px}
+#artboard :is(.pro,.codex) .card-bottom .icon{width:23px;height:23px}
+#artboard :is(.pro,.codex) .card-bottom p{gap:9px}
+#artboard .pro .waves-pro,#artboard .codex .waves-codex{top:36px;height:198px}
+
+/* Codex quota breathing-room refinement. Keep the 90% size, but use a
+   tighter modern display stack and give the metric more vertical air. */
+#artboard .codex{height:325px}
+#artboard .codex .usage-number{top:84px}
+#artboard .codex .large-number{
+  font-family:"Segoe UI Variable Display","Segoe UI",var(--number),system-ui,sans-serif;
+  font-size:60px;
+  font-weight:600;
+  line-height:64px;
+  letter-spacing:-1.8px;
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+#artboard .codex .progress-row{top:158px}
+
+/* Pro remains visually secondary but its bar is always present, like Codex. */
+#artboard .pro{opacity:.96}
+#artboard .pro .progress-row{display:flex!important}
+#artboard .pro .progress-track{display:block!important;opacity:1}
+
+/* Main usage trend card. */
+#artboard .usage-trend-main>.trend-main-head{position:absolute;left:28px;right:28px;top:23px;z-index:2;display:flex;align-items:flex-start;justify-content:space-between}
+#artboard .trend-main-title{font-size:32px;line-height:42px;font-weight:500;letter-spacing:-.2px}
+#artboard .trend-main-sub{margin-top:1px;font-size:16px;line-height:22px;color:#8f9097}
+#artboard .trend-main-range{margin-top:2px;height:31px;min-width:48px;padding:0 11px;border-radius:16px;border:1px solid rgba(174,165,172,.20);display:flex;align-items:center;justify-content:center;color:#a9a4aa;font-size:15px;background:rgba(18,20,22,.42)}
+#artboard .trend-main-chart{position:absolute;left:27px;right:27px;top:82px;width:733px;height:108px;z-index:2;overflow:visible}
+#artboard .trend-main-grid{fill:none;stroke:rgba(171,169,176,.10);stroke-width:1}
+#artboard .trend-main-area{fill:url(#usage-trend-fill)}
+#artboard .trend-main-line{fill:none;stroke:#eca8bc;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+#artboard .trend-main-dot{fill:#f5b3c7;stroke:#f7d7e0;stroke-width:1}
+#artboard .trend-main-foot{position:absolute;left:28px;right:28px;bottom:16px;z-index:2;display:flex;justify-content:space-between;align-items:center;color:#8d8990;font-size:15px}
+#artboard .trend-main-foot strong{font-weight:600;color:#d5cbd1}
+#artboard .trend-main-delta{color:#c892a5}
+
+
+/* Codex global reset outlook, nested inside the existing Codex card. */
+#artboard .codex .card-bottom{bottom:79px}
+#artboard .codex-reset-outlook{
+  position:absolute;left:24px;right:24px;bottom:14px;height:54px;z-index:2;
+  border-top:1px solid rgba(176,168,174,.12);display:grid;
+  grid-template-columns:186px 1fr 1fr;align-items:center;column-gap:18px;
+}
+#artboard .codex-reset-open{height:44px;display:flex;align-items:center;gap:9px;text-align:left;color:inherit}
+#artboard .codex-reset-open .reset-mark{width:8px;height:8px;border-radius:50%;background:#f0a9bd;box-shadow:0 0 9px rgba(240,169,189,.22);flex:none}
+#artboard .codex-reset-copy{min-width:0;display:flex;flex-direction:column;gap:1px}
+#artboard .codex-reset-title{font-family:var(--serif);font-size:18px;line-height:22px;color:#eee7eb;white-space:nowrap}
+#artboard .codex-reset-sub{font-size:12px;line-height:15px;color:#88838a;white-space:nowrap}
+#artboard .codex-reset-open .chevron{width:14px;height:20px;margin-left:auto;color:#79747a}
+#artboard .codex-reset-metric{min-width:0}
+#artboard .codex-reset-metric-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:12px;line-height:15px;color:#969097}
+#artboard .codex-reset-metric strong{font-family:var(--number);font-size:18px;font-weight:620;line-height:21px;color:#f0a9bd;letter-spacing:-.4px}
+#artboard .codex-reset-track{height:4px;border-radius:3px;background:rgba(112,78,91,.26);overflow:hidden;margin-top:4px}
+#artboard .codex-reset-track>span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#ed9eb6,#f2bdd0);transition:width .22s ease}
+#artboard .codex-reset-outlook[data-state="stale"]{opacity:.72}
+#artboard .codex-reset-outlook[data-state="error"] .codex-reset-title,
+#artboard .codex-reset-outlook[data-state="unavailable"] .codex-reset-title{color:#b7adb3}
+
+#artboard[data-theme=light] .codex-reset-outlook{border-top-color:rgba(126,92,109,.13)}
+#artboard[data-theme=light] .codex-reset-title{color:#4d4149}
+#artboard[data-theme=light] .codex-reset-sub,#artboard[data-theme=light] .codex-reset-metric-head{color:#786e75}
+#artboard[data-theme=light] .codex-reset-track{background:rgba(151,105,127,.13)}
+#artboard[data-theme=light] .codex-reset-metric strong{color:#ad5577}
+
+/* Compact local activity. */
+#artboard .activity .icon-tile{left:25px;top:21px;width:64px;height:60px;border-radius:16px}
+#artboard .activity .icon-tile>.icon{width:38px;height:38px}
+#artboard .activity-title{left:112px;top:20px;font-size:27px;line-height:40px}
+#artboard .info-button{left:305px;top:20px;width:34px;height:34px}
+#artboard .info-button>.icon{width:34px;height:34px}
+#artboard .activity-columns{top:82px;height:92px;grid-template-columns:269px 247px 1fr}
+#artboard .activity-column{padding-left:43px}
+#artboard .activity-column:nth-child(2){padding-left:45px}
+#artboard .activity-column .period{top:7px;font-size:18px;line-height:23px}
+#artboard .activity-column .count{top:30px;font-size:39px;line-height:43px;font-weight:400}
+#artboard .activity-column .caption{display:none}
+#artboard .quiet .leaf{top:-13px;width:44px;height:45px}
+#artboard .quiet-title{top:35px;font-size:18px;line-height:24px}
+
+/* Compact dashboard CTA and footer. */
+#artboard .dashboard-cta .icon-tile{left:24px;top:26px;width:69px;height:69px;border-radius:17px}
+#artboard .dashboard-cta .icon-tile>.icon{width:37px;height:37px}
+#artboard .cta-heading{left:116px;top:24px;font-size:31px;line-height:43px}
+#artboard .cta-arrow{left:408px;top:34px;width:30px;height:27px}
+#artboard .cta-subtitle{left:117px;top:69px;font-size:18px;line-height:25px}
+#artboard .footer{left:31px;right:30px}
+#artboard .tagline{font-size:18px}
+
+/* Light mode keeps the selected A / fine-wave treatment. */
+#artboard[data-theme=light] .usage-trend-main{background:linear-gradient(110deg,#f6f0f1,#ede7eb)}
+#artboard[data-theme=light] .trend-main-sub,#artboard[data-theme=light] .trend-main-foot{color:#746972}
+#artboard[data-theme=light] .trend-main-foot strong{color:#51454d}
+#artboard[data-theme=light] .trend-main-range{background:#f4eaef;border-color:rgba(160,98,128,.18);color:#755d69}
+#artboard[data-theme=light] .trend-main-grid{stroke:rgba(133,96,115,.12)}
+#artboard[data-theme=light] .trend-main-line{stroke:#b65b82}
+#artboard[data-theme=light] .trend-main-dot{fill:#bd668a;stroke:#f9e3ec}
+
+
+/* ===== Edge-to-edge popup shell =====
+   The browser popup already provides the outer boundary. Remove the redundant
+   inner shell frame and let the existing SakuraMeter cards use that space.
+   No internal typography, card heights, tracking UI or interaction changes. */
+#artboard .shell{
+  left:0!important;
+  top:0!important;
+  width:941px!important;
+  height:1672px!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:
+    radial-gradient(ellipse 250px 370px at 0 0,rgba(145,96,118,.13),transparent 75%),
+    radial-gradient(ellipse 470px 500px at 100% 66%,rgba(42,36,42,.09),transparent 75%),
+    linear-gradient(125deg,#0e1113,#0a0e0f 45%,#0e1113)!important;
+}
+#artboard .shell::after{display:none!important}
+/* Preserve the existing 28px design gutter, but let every primary module span
+   the newly available shell width. */
+#artboard .card{
+  left:28px!important;
+  width:885px!important;
+}
+#artboard .usage-trend-main .trend-main-chart{
+  width:831px!important;
+}
+#artboard .dashboard-cta{
+  left:28px!important;
+  width:885px!important;
+}
+#artboard .footer{
+  left:31px!important;
+  right:31px!important;
+}
+/* Light mode keeps the same edge-to-edge hierarchy, only its established A
+   surface treatment changes the palette. */
+#artboard[data-theme=light] .shell{
+  background:#f4eff1!important;
+  box-shadow:none!important;
+}
+
+/* Soften only Codex / Pro / Local Activity card rims.
+   Geometry, content, textures, gradients and interactions stay untouched. */
+#artboard :is(.codex,.pro,.activity)::after{
+  opacity:.18;
+  padding:1px;
+  background:linear-gradient(128deg,rgba(255,255,255,.34),rgba(189,156,171,.13) 28%,rgba(168,148,159,.08) 64%,rgba(219,167,190,.16));
+}
+#artboard :is(.codex,.pro,.activity){
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.028),0 6px 18px rgba(0,0,0,.055);
+}
+#artboard[data-theme="light"] :is(.codex,.pro,.activity)::after{
+  opacity:.20;
+  padding:1px;
+  background:linear-gradient(128deg,rgba(255,255,255,.96),rgba(189,128,157,.12) 30%,rgba(173,116,145,.07) 67%,rgba(164,91,127,.13));
+}
+#artboard[data-theme="light"] :is(.codex,.pro,.activity){
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.93),0 3px 9px rgba(122,70,96,.028),0 9px 22px rgba(122,70,96,.035);
+}
+
+
+/* Codex KPI hierarchy. Remove the redundant mini remaining trend and
+   make the quota read as a true KPI: value, compact unit, then secondary label. */
+#artboard .codex .codex-details-action{
+  right:20px;top:22px;width:28px;height:40px;gap:0;justify-content:center;
+  color:#8e8a90;
+}
+#artboard .codex .codex-details-action .chevron{width:16px;height:27px;color:#8e8a90}
+#artboard .codex .codex-usage-number{
+  left:24px;top:76px;display:grid;
+  grid-template-columns:auto auto;grid-template-rows:58px 19px;
+  column-gap:3px;row-gap:0;align-items:start;white-space:nowrap;
+}
+#artboard .codex .codex-usage-number .large-number{
+  grid-column:1;grid-row:1;
+  font-family:"Segoe UI Variable Display","Segoe UI",var(--number),system-ui,sans-serif;
+  font-size:60px;font-weight:600;line-height:58px;letter-spacing:-1.9px;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;
+  transform:none;margin-right:0;
+}
+#artboard .codex .codex-unit{
+  grid-column:2;grid-row:1;align-self:start;margin-top:7px;
+  font-family:"Segoe UI Variable Display","Segoe UI",var(--number),system-ui,sans-serif;
+  font-size:22px;font-weight:560;line-height:24px;letter-spacing:-.5px;
+  color:#a7dcb2;
+}
+#artboard .codex .codex-usage-number .number-suffix{
+  grid-column:1 / span 2;grid-row:2;position:static;top:auto;
+  align-self:start;font-family:var(--sans);font-size:15px;font-weight:450;
+  line-height:18px;letter-spacing:.1px;color:#8f9992;
+}
+#artboard .codex .progress-row{top:164px}
+#artboard[data-theme=light] .codex .codex-unit{color:#4f8d66}
+#artboard[data-theme=light] .codex .codex-usage-number .number-suffix{color:#6f756f}
+
+/* Codex KPI composition. The value gets its own visual zone instead
+   of sitting directly under the title. Remove duplicate percentage at the bar. */
+#artboard .codex .codex-usage-number{
+  left:32px;top:88px;display:grid;position:absolute;
+  grid-template-columns:auto auto;grid-template-rows:16px 60px;
+  column-gap:3px;row-gap:3px;align-items:start;white-space:nowrap;
+}
+#artboard .codex .codex-usage-number::before{
+  content:"";position:absolute;left:-12px;top:23px;width:3px;height:39px;
+  border-radius:999px;background:linear-gradient(180deg,rgba(171,238,188,.18),rgba(137,220,159,.88),rgba(126,202,146,.24));
+  box-shadow:0 0 10px rgba(138,220,162,.10);
+}
+#artboard .codex .codex-usage-number .number-suffix{
+  grid-column:1 / span 2;grid-row:1;position:static;
+  align-self:start;margin:0;font-family:var(--sans);font-size:12px;font-weight:650;
+  line-height:14px;letter-spacing:1.65px;text-transform:uppercase;color:#76837b;
+}
+#artboard .codex .codex-usage-number .large-number{
+  grid-column:1;grid-row:2;align-self:start;
+  font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;
+  font-size:58px;font-weight:610;line-height:58px;letter-spacing:-2.35px;
+  font-variant-numeric:proportional-nums;font-feature-settings:"pnum" 1;
+  background:linear-gradient(118deg,#b9efc4 0%,#9fe2af 58%,#83d59b 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 1px 1px rgba(202,251,214,.10));
+}
+#artboard .codex .codex-unit{
+  grid-column:2;grid-row:2;align-self:start;margin-top:9px;
+  font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;
+  font-size:20px;font-weight:600;line-height:22px;letter-spacing:-.4px;color:#91cda0;
+}
+#artboard .codex .progress-row{top:174px;right:24px;gap:0}
+#artboard .codex .progress-row .percentage{display:none}
+#artboard .codex .progress-track{
+  background:linear-gradient(90deg,rgba(255,255,255,.13),rgba(255,255,255,.10));
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.025);
+}
+#artboard .codex .progress-fill{
+  background:linear-gradient(90deg,#a9e8b8,#86d99d);
+  box-shadow:inset 0 0 0 1px rgba(228,255,235,.28),0 0 10px rgba(137,220,159,.07);
+}
+#artboard[data-theme=light] .codex .codex-usage-number .number-suffix{color:#66806f}
+#artboard[data-theme=light] .codex .codex-unit{color:#4f8d66}
+#artboard[data-theme=light] .codex .codex-usage-number::before{background:linear-gradient(180deg,rgba(64,132,92,.12),rgba(64,132,92,.72),rgba(64,132,92,.16))}
+
+
+/* Codex backdrop KPI refinement.
+   The large remaining value is decorative background art on the right.
+   It fades OUT from top to bottom so it disappears before the progress bar,
+   while the percent sign is independently positioned to avoid overlap. */
+#artboard .codex .codex-kpi-caption{
+  position:absolute;left:25px;top:103px;z-index:2;
+  display:flex;align-items:center;gap:10px;height:20px;
+  pointer-events:none;
+}
+#artboard .codex .codex-kpi-caption::before{
+  content:"";width:18px;height:2px;border-radius:999px;
+  background:linear-gradient(90deg,rgba(156,228,175,.78),rgba(156,228,175,.16));
+  box-shadow:0 0 8px rgba(146,222,166,.08);
+}
+#artboard .codex .codex-kpi-caption .number-suffix{
+  position:static;margin:0;font-family:var(--sans);
+  font-size:13px;font-weight:620;line-height:18px;
+  letter-spacing:1.75px;text-transform:uppercase;color:#78837c;
+}
+#artboard .codex .codex-background-kpi{
+  position:absolute;right:18px;top:57px;z-index:1!important;
+  width:258px;height:111px;
+  pointer-events:none;user-select:none;overflow:hidden;
+  opacity:1;
+
+  /* Real visibility fade: strongest at the top, disappearing downward. */
+  -webkit-mask-image:linear-gradient(to bottom,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,.96) 18%,
+    rgba(0,0,0,.78) 42%,
+    rgba(0,0,0,.48) 64%,
+    rgba(0,0,0,.18) 84%,
+    rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(to bottom,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,.96) 18%,
+    rgba(0,0,0,.78) 42%,
+    rgba(0,0,0,.48) 64%,
+    rgba(0,0,0,.18) 84%,
+    rgba(0,0,0,0) 100%);
+}
+#artboard .codex .codex-background-kpi .large-number{
+  position:absolute;right:31px;top:-8px;margin:0;transform:none;
+  font-family:"Segoe UI Variable Display","Segoe UI",var(--number),system-ui,sans-serif;
+  font-size:151px;font-weight:760;line-height:.82;letter-spacing:-7.5px;
+  font-variant-numeric:proportional-nums;font-feature-settings:"pnum" 1;
+  background:none!important;
+  color:rgba(145,222,163,.30)!important;
+  -webkit-text-fill-color:currentColor!important;
+  filter:none;text-shadow:none;
+}
+#artboard .codex .codex-background-kpi .codex-unit{
+  position:absolute;right:3px;top:14px;margin:0;
+  font-family:"Segoe UI Variable Display","Segoe UI",var(--number),system-ui,sans-serif;
+  font-size:29px;font-weight:700;line-height:1;letter-spacing:-.7px;
+  background:none!important;
+  color:rgba(151,226,168,.20)!important;
+  -webkit-text-fill-color:currentColor!important;
+  filter:none;text-shadow:none;
+}
+#artboard .codex .progress-row{top:164px;right:24px;gap:0;z-index:2}
+#artboard .codex .progress-row .percentage{display:none}
+#artboard .codex .progress-track{
+  background:linear-gradient(90deg,rgba(255,255,255,.125),rgba(255,255,255,.085));
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.025);
+}
+#artboard .codex .progress-fill{
+  background:linear-gradient(90deg,#a9e8b8,#86d99d);
+  box-shadow:inset 0 0 0 1px rgba(228,255,235,.26),0 0 10px rgba(137,220,159,.055);
+}
+#artboard .codex .waves-codex{opacity:.11}
+#artboard[data-theme=light] .codex .codex-kpi-caption .number-suffix{color:#68786d}
+#artboard[data-theme=light] .codex .codex-kpi-caption::before{
+  background:linear-gradient(90deg,rgba(73,142,96,.68),rgba(73,142,96,.10));
+}
+#artboard[data-theme=light] .codex .codex-background-kpi .large-number{
+  background:none!important;
+  color:rgba(61,126,84,.23)!important;
+  -webkit-text-fill-color:currentColor!important;
+}
+#artboard[data-theme=light] .codex .codex-background-kpi .codex-unit{
+  background:none!important;
+  color:rgba(61,126,84,.16)!important;
+  -webkit-text-fill-color:currentColor!important;
+}
+
+
+/* Pro backdrop KPI. Mirror the Codex background-number treatment
+   with the Pro palette: a large right-side decorative number, top-to-bottom fade,
+   and a small left caption for the suffix. */
+#artboard .pro .pro-kpi-caption{
+  position:absolute;left:25px;top:103px;z-index:2;
+  display:flex;align-items:center;gap:10px;height:20px;
+  pointer-events:none;
+}
+#artboard .pro .pro-kpi-caption::before{
+  content:"";width:18px;height:2px;border-radius:999px;
+  background:linear-gradient(90deg,rgba(246,184,197,.78),rgba(246,184,197,.16));
+  box-shadow:0 0 8px rgba(242,157,181,.08);
+}
+#artboard .pro .pro-kpi-caption .number-suffix{
+  position:static;margin:0;font-family:var(--sans);
+  font-size:13px;font-weight:620;line-height:18px;
+  letter-spacing:1.75px;text-transform:uppercase;color:#8a7a82;
+}
+#artboard .pro .pro-background-kpi{
+  position:absolute;right:22px;top:64px;width:240px;height:112px;z-index:1!important;
+  pointer-events:none;user-select:none;overflow:hidden;opacity:1;
+  -webkit-mask-image:linear-gradient(to bottom,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,.88) 18%,
+    rgba(0,0,0,.62) 40%,
+    rgba(0,0,0,.30) 62%,
+    rgba(0,0,0,.10) 82%,
+    rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(to bottom,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,.88) 18%,
+    rgba(0,0,0,.62) 40%,
+    rgba(0,0,0,.30) 62%,
+    rgba(0,0,0,.10) 82%,
+    rgba(0,0,0,0) 100%);
+}
+#artboard .pro .pro-background-kpi .large-number{
+  position:absolute;right:10px;bottom:-8px;margin:0;transform:none;
+  font-family:"Segoe UI Variable Display","Segoe UI",var(--number),system-ui,sans-serif;
+  font-size:168px;font-weight:760;line-height:.82;letter-spacing:-8px;
+  font-variant-numeric:proportional-nums;font-feature-settings:"pnum" 1;
+  background:none;color:rgba(246,184,197,.34);-webkit-text-fill-color:currentColor;
+  text-shadow:none;filter:none;
+}
+#artboard .pro .progress-row{z-index:2}
+#artboard[data-theme=light] .pro .pro-kpi-caption .number-suffix{color:#7e6772}
+#artboard[data-theme=light] .pro .pro-kpi-caption::before{
+  background:linear-gradient(90deg,rgba(164,89,118,.68),rgba(164,89,118,.10));
+}
+#artboard[data-theme=light] .pro .pro-background-kpi .large-number{
+  color:rgba(181,77,112,.24);-webkit-text-fill-color:currentColor;
+}
+
+
+/* 3.6.0.61 — no-Pro plans: reuse the Pro card as Codex reset forecast.
+   The card becomes two calm forecast panes; only the right pane retains waves. */
+#artboard .pro-reset-forecast{display:none}
+#artboard .pro.is-reset-forecast .pro-kpi-caption,
+#artboard .pro.is-reset-forecast .pro-background-kpi,
+#artboard .pro.is-reset-forecast .progress-row,
+#artboard .pro.is-reset-forecast .card-bottom{display:none!important}
+#artboard .pro.is-reset-forecast .trend-action .trend-dot,
+#artboard .pro.is-reset-forecast .trend-action .mini-sparkline{display:none!important}
+#artboard .pro.is-reset-forecast .trend-action{width:34px!important;right:22px!important;justify-content:center!important}
+#artboard .pro.is-reset-forecast .estimated{left:292px!important;min-width:104px!important}
+#artboard .pro.is-reset-forecast .waves-pro{
+  opacity:.12!important;
+  clip-path:inset(0 0 0 50%)!important;
+  -webkit-clip-path:inset(0 0 0 50%)!important;
+  mask-image:linear-gradient(90deg,transparent 49%,#000 63%),linear-gradient(180deg,#000 30%,transparent 88%)!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 49%,#000 63%),linear-gradient(180deg,#000 30%,transparent 88%)!important;
+}
+#artboard .pro.is-reset-forecast .pro-reset-forecast{
+  position:absolute;
+  left:24px;right:24px;top:78px;bottom:14px;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1fr 1px 1fr;
+  column-gap:0;
+  align-items:stretch;
+  overflow:hidden;
+  border-radius:16px;
+  background:linear-gradient(90deg,rgba(33,26,30,.12),rgba(25,22,25,.05));
+}
+#artboard .pro.is-reset-forecast .pro-reset-pane{
+  position:relative;
+  min-width:0;
+  padding:10px 17px 9px;
+  overflow:hidden;
+}
+#artboard .pro.is-reset-forecast .pro-reset-pane-left{
+  background:linear-gradient(115deg,rgba(51,35,42,.10),rgba(22,20,22,.02));
+}
+#artboard .pro.is-reset-forecast .pro-reset-pane-right{
+  background:radial-gradient(ellipse 180px 96px at 86% 86%,rgba(216,137,161,.08),transparent 72%);
+}
+#artboard .pro.is-reset-forecast .pro-reset-divider{
+  width:1px;
+  background:linear-gradient(180deg,transparent,rgba(236,174,195,.17) 18%,rgba(236,174,195,.11) 82%,transparent);
+}
+#artboard .pro.is-reset-forecast .pro-reset-label{
+  position:relative;z-index:2;
+  display:block;
+  font-family:var(--sans);
+  font-size:14px;
+  line-height:18px;
+  color:#8f858c;
+  white-space:nowrap;
+}
+#artboard .pro.is-reset-forecast .pro-reset-value{
+  position:absolute;
+  left:15px;bottom:17px;
+  z-index:1;
+  display:flex;
+  align-items:flex-end;
+  gap:3px;
+  pointer-events:none;
+  user-select:none;
+}
+#artboard .pro.is-reset-forecast .pro-reset-value>span:first-child{
+  font-family:"Segoe UI Variable Display","Segoe UI",var(--number),system-ui,sans-serif;
+  font-size:72px;
+  font-weight:720;
+  line-height:.78;
+  letter-spacing:-4px;
+  background:linear-gradient(180deg,rgba(250,205,220,.36) 0%,rgba(239,163,189,.22) 52%,rgba(216,126,158,.08) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+}
+#artboard .pro.is-reset-forecast .pro-reset-unit{
+  margin-bottom:4px;
+  font-size:24px;
+  line-height:1;
+  color:rgba(235,172,194,.30);
+}
+#artboard .pro.is-reset-forecast .pro-reset-mini-track{
+  position:absolute;
+  left:17px;right:17px;bottom:7px;
+  height:4px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(116,77,92,.22);
+}
+#artboard .pro.is-reset-forecast .pro-reset-mini-track>span{
+  display:block;height:100%;width:0;border-radius:inherit;
+  background:linear-gradient(90deg,#e997b2,#f1bfd0);
+  transition:width .24s ease;
+}
+#artboard .pro.is-reset-forecast .pro-reset-meta{
+  position:absolute;
+  right:16px;top:10px;
+  z-index:3;
+  max-width:155px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  text-align:right;
+  font-size:11px;
+  line-height:16px;
+  color:#766f74;
+}
+#artboard[data-theme=light] .pro.is-reset-forecast .pro-reset-forecast{
+  background:linear-gradient(90deg,rgba(233,207,218,.18),rgba(255,255,255,.16));
+}
+#artboard[data-theme=light] .pro.is-reset-forecast .pro-reset-pane-left{
+  background:linear-gradient(115deg,rgba(220,168,188,.10),rgba(255,255,255,.02));
+}
+#artboard[data-theme=light] .pro.is-reset-forecast .pro-reset-label{color:#7b6b73}
+#artboard[data-theme=light] .pro.is-reset-forecast .pro-reset-value>span:first-child{
+  background:linear-gradient(180deg,rgba(166,73,109,.40) 0%,rgba(188,89,125,.25) 56%,rgba(195,104,135,.08) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+}
+#artboard[data-theme=light] .pro.is-reset-forecast .pro-reset-unit{color:rgba(159,75,106,.30)}
+#artboard[data-theme=light] .pro.is-reset-forecast .pro-reset-mini-track{background:rgba(157,111,129,.13)}
+#artboard[data-theme=light] .pro.is-reset-forecast .pro-reset-meta{color:#8a7981}
+
+
+/* 3.6.0.61 — no-Pro forecast cleanup.
+   Forecast is intentionally brand-neutral: no duplicated Codex title/icon/action.
+   24h/48h are the visual hierarchy; Forecast sits quietly in the upper-right. */
+#artboard .pro.is-reset-forecast > .icon-tile,
+#artboard .pro.is-reset-forecast > .usage-title,
+#artboard .pro.is-reset-forecast > .card-action,
+#artboard .pro.is-reset-forecast .pro-reset-meta{
+  display:none!important;
+}
+#artboard .pro.is-reset-forecast .estimated{
+  left:auto!important;
+  right:22px!important;
+  top:18px!important;
+  min-width:86px!important;
+  height:34px!important;
+  padding:0 13px!important;
+  border-radius:13px!important;
+  font-size:17px!important;
+  line-height:32px!important;
+  text-align:center;
+}
+#artboard .pro.is-reset-forecast .pro-reset-forecast{
+  left:24px!important;
+  right:24px!important;
+  top:54px!important;
+  bottom:13px!important;
+  border-radius:17px!important;
+}
+#artboard .pro.is-reset-forecast .pro-reset-pane{
+  padding:14px 18px 10px!important;
+}
+#artboard .pro.is-reset-forecast .pro-reset-label{
+  font-size:19px!important;
+  line-height:24px!important;
+  font-weight:600!important;
+  letter-spacing:-.2px!important;
+  color:#b4a8af!important;
+}
+#artboard .pro.is-reset-forecast .pro-reset-value{
+  left:17px!important;
+  bottom:18px!important;
+}
+#artboard .pro.is-reset-forecast .pro-reset-value>span:first-child{
+  font-size:82px!important;
+  line-height:.78!important;
+  letter-spacing:-4.8px!important;
+}
+#artboard .pro.is-reset-forecast .pro-reset-unit{
+  margin-bottom:5px!important;
+  font-size:26px!important;
+}
+#artboard .pro.is-reset-forecast .pro-reset-mini-track{
+  left:18px!important;
+  right:18px!important;
+  bottom:7px!important;
+  height:4px!important;
+}
+#artboard .pro.is-reset-forecast .waves-pro{
+  opacity:.115!important;
+  clip-path:inset(0 0 0 50%)!important;
+  -webkit-clip-path:inset(0 0 0 50%)!important;
+}
+#artboard[data-theme=light] .pro.is-reset-forecast .pro-reset-label{
+  color:#765f6a!important;
+}

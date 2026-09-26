@@ -4,7 +4,7 @@
 
 ![SakuraMeter](assets/sakurameter-128.png)
 
-**3.5.0**
+**3.6.0.61**
 
 在浏览器本地记录 ChatGPT 活动，查看热力图、使用趋势和 Codex 额度。保留 Sakura 玻璃风格，提供樱花粉浅色和深色主题、中英文界面。
 
@@ -36,7 +36,7 @@
 
 ## 数据、权限与网络
 
-统计在本地保存，不保存聊天正文、密码或认证令牌；发送确认短暂在内存比较文本，过期即丢弃。保留历史日期键、`__gptUsageV4`、schema 3、手动计划与校准；活动导出格式 version 5，appVersion 3.5.0。
+统计在本地保存，不保存聊天正文、密码或认证令牌；发送确认短暂在内存比较文本，过期即丢弃。保留历史日期键、`__gptUsageV4`、schema 3、手动计划与校准；活动导出格式 version 5，appVersion 3.6.0.61。
 
 当前权限为 `storage`、`tabs` 和 `https://chatgpt.com/*`。与本次优化前的 3.4 源码一致；与仓库旧 2.0.0 的仅 storage 权限不同。个人额度使用 GET `/api/auth/session` 和 `/backend-api/wham/usage`，令牌仅用于请求内存。公开预测使用不携带账户信息的 GET；第三方会收到 IP 等普通连接元数据。无开发者后台、遥测、对话创建或模型生成请求。详见 [隐私说明](PRIVACY.md)。
 

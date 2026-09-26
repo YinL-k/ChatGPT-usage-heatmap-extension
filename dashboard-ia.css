@@ -1,4 +1,4 @@
-/* 3.4.0.21 — Dashboard information architecture. Popup = current state; Dashboard = history, trends, detail, control. */
+/* Dashboard information architecture. Popup = current state; Dashboard = history, trends, detail, control. */
 :root{
   --ia-pink:#f5b5c2;
   --ia-pink-strong:#f7a9bc;
@@ -83,7 +83,7 @@
 @media(max-width:950px){.overview-kpis{grid-template-columns:1fr 1fr}.overview-grid,.overview-lower,.usage-detail-grid{grid-template-columns:1fr}.codex-window-grid{grid-template-columns:1fr}.view-tabs{width:100%!important}}
 @media(max-width:620px){.overview-kpis{grid-template-columns:1fr 1fr}.overview-context{align-items:flex-start}.overview-context-side{flex-direction:column;align-items:flex-end}.overview-kpi{min-height:116px}.overview-kpi-value{font-size:29px}}
 
-/* ===== 3.4.0.22 — IA components in light mode ===== */
+/* ===== IA components in light mode ===== */
 body:not(.dark){
   --ia-pink:#d97a96;
   --ia-pink-strong:#ce5e82;
@@ -186,3 +186,8 @@ body:not(.dark) .history-total{border-color:rgba(116,84,99,.07)}
 body:not(.dark) .history-total strong,
 body:not(.dark) .credits-row strong{color:#58464e}
 body:not(.dark) .credits-row{background:rgba(255,255,255,.52);border-color:rgba(116,84,99,.08)}
+
+
+/* 3.6.0.61 — known no-Pro subscriptions do not render an empty Pro section. */
+.usage-panel.no-pro-plan .pro-detail[hidden],
+.usage-panel.no-pro-plan #calibrateDetails[hidden]{display:none!important}

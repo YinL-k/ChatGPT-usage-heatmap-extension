@@ -1,0 +1,197 @@
+/* SakuraMeter B / Arc Glass - whole-product presentation layer.
+   No base gradients, geometry, charts, data, permissions or event handlers are replaced.
+   Theme switches continue using the existing app's theme state.
+   Decorative pseudo-elements are non-interactive and below content. */
+:root[data-sakura-surface="b"] {
+  --sb-rgb:224 149 177; --sb-soft-rgb:207 174 190; --sb-arc:.090;
+  --sb-arc-fine:.042; --sb-shine:255 227 239; --sb-sheen:.047;
+  --sb-rim:rgba(242,191,211,.31); --sb-low:rgba(150,122,140,.15);
+  --sb-top:rgba(255,226,239,.10); --sb-shadow:rgba(0,0,0,.18);
+  --sb-rose-ink:#efb3c7; --sb-edge-warm:rgba(228,154,184,.11);
+  --sb-surface-depth:inset 0 1px 0 var(--sb-top),inset 1px 0 0 rgba(240,200,220,.028),inset 0 -1px 0 var(--sb-low),0 5px 18px var(--sb-shadow);
+}
+:root[data-sakura-surface="b"][data-theme="light"],
+:root[data-sakura-surface="b"] body:not(.dark):has(>.container),
+:root[data-sakura-surface="b"] #artboard[data-theme="light"] {
+  --sb-rgb:157 72 112; --sb-soft-rgb:177 116 145; --sb-arc:.078;
+  --sb-arc-fine:.034; --sb-shine:255 255 255; --sb-sheen:.82;
+  --sb-rim:rgba(157,84,119,.24); --sb-low:rgba(158,101,133,.11);
+  --sb-top:rgba(255,255,255,.96); --sb-shadow:rgba(117,62,90,.060);
+  --sb-rose-ink:#944968; --sb-edge-warm:rgba(195,113,151,.08);
+  --sb-surface-depth:inset 0 1px 0 rgba(255,255,255,.99),inset 1px 0 0 rgba(255,255,255,.8),inset 0 -1px 0 rgba(151,77,113,.08),0 2px 4px rgba(114,64,88,.025),0 8px 23px rgba(114,64,88,.065);
+}
+/* SakuraMeter surface study: CSS-only. No layout, data, permission or script changes.
+   Original background declarations remain in their original files.
+   The decoration uses non-interactive pseudo-elements below card content. */
+#artboard[data-theme="dark"]{--surface-rgb:224 149 177;--surface-soft-rgb:214 179 194;--surface-white:255 229 239;--surface-warm:0.13;--surface-sheen:0.038;--surface-wave:0.37;--surface-line:#ca94a8;--surface-cta-wave:0.48;--surface-ring:0.085}
+#artboard[data-theme="light"]{--surface-rgb:173 66 111;--surface-soft-rgb:195 115 153;--surface-white:255 255 255;--surface-warm:0.095;--surface-sheen:0.55;--surface-wave:0.32;--surface-line:#af567e;--surface-cta-wave:0.39;--surface-ring:0.10}
+#artboard[data-theme] .codex{--surface-rgb:115 198 143;--surface-soft-rgb:145 204 168;--surface-line:#98c9a8}
+#artboard[data-theme="light"] .codex{--surface-rgb:66 132 94;--surface-soft-rgb:100 156 127;--surface-line:#54816c;--surface-warm:0.075}
+#artboard[data-theme] .card::before{content:"";position:absolute;inset:0;width:auto;height:auto;border-radius:inherit;z-index:0;pointer-events:none;opacity:1;transform:none;mix-blend-mode:normal;mask-image:none;-webkit-mask-image:none}
+#artboard[data-theme] .shell::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 540px 550px at -12% -8%,rgb(var(--surface-rgb) / .065),transparent 78%),radial-gradient(ellipse 380px 720px at 112% 75%,rgb(var(--surface-rgb) / .045),transparent 82%)}
+#artboard[data-theme] .waves{stroke:var(--surface-line);opacity:var(--surface-wave);stroke-width:2;mix-blend-mode:normal;pointer-events:none}
+#artboard[data-theme] :is(.waves-pro,.waves-codex){mask-image:linear-gradient(90deg,transparent 28%,#000 68%),linear-gradient(180deg,#000 12%,#000 65%,transparent 94%);mask-composite:intersect}
+#artboard[data-theme] .waves-member{opacity:calc(var(--surface-wave) + .08);stroke-width:1.8}
+#artboard[data-theme] .waves-cta{opacity:var(--surface-cta-wave);stroke-width:1.7;mask-image:linear-gradient(90deg,transparent 8%,#000 62%)}
+#artboard[data-theme] .dashboard-cta::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:0;pointer-events:none}
+#artboard[data-theme] .dashboard-cta :is(.icon-tile,.cta-heading,.cta-subtitle,.cta-arrow){z-index:2}
+#artboard[data-theme] .trend-action .mini-sparkline{position:relative;z-index:2}
+#artboard[data-theme] .card :is(.usage-number,.progress-row,.card-bottom,.activity-columns){z-index:2}
+@media (forced-colors:active){#artboard[data-theme] :is(.card,.shell,.dashboard-cta)::before,#artboard[data-theme] .dashboard-cta::after,#artboard[data-theme] .waves{display:none}}
+@media (prefers-reduced-motion:reduce){#artboard[data-theme] .card::before,#artboard[data-theme] .dashboard-cta::after{animation:none;transition:none}}
+/* B - Arc glass. Wide translucent contours on the right, original fine waves retained. */
+#artboard[data-theme] .card::before{background:repeating-radial-gradient(ellipse 460px 285px at 106% 127%,transparent 0 72px,rgb(var(--surface-rgb) / var(--surface-ring)) 73px 103px,rgb(var(--surface-rgb) / .033) 104px 128px,transparent 129px 175px),radial-gradient(ellipse 480px 300px at 109% 117%,rgb(var(--surface-rgb) / .07),transparent 78%),linear-gradient(124deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 44%);mask-image:linear-gradient(100deg,transparent 28%,#000 61%)}
+#artboard[data-theme] :is(.waves-pro,.waves-codex){opacity:.22}
+#artboard[data-theme="light"] :is(.waves-pro,.waves-codex){opacity:.23}
+#artboard[data-theme] .membership::before{background:repeating-radial-gradient(ellipse 420px 270px at 110% 143%,transparent 0 64px,rgb(var(--surface-rgb) / .09) 65px 91px,rgb(var(--surface-rgb) / .035) 92px 113px,transparent 114px 152px),radial-gradient(ellipse 350px 210px at 100% 107%,rgb(var(--surface-rgb) / .10),transparent 80%);mask-image:linear-gradient(105deg,transparent 38%,#000 70%)}
+#artboard[data-theme] .activity::before{background:repeating-radial-gradient(ellipse 510px 290px at 107% 141%,transparent 0 71px,rgb(var(--surface-rgb) / .065) 72px 105px,rgb(var(--surface-rgb) / .025) 106px 135px,transparent 136px 184px);mask-image:linear-gradient(100deg,transparent 33%,#000 68%)}
+#artboard[data-theme="light"] .activity::before{background:repeating-radial-gradient(ellipse 510px 290px at 107% 141%,transparent 0 71px,rgb(var(--surface-rgb) / .080) 72px 105px,rgb(var(--surface-rgb) / .027) 106px 135px,transparent 136px 184px)}
+#artboard[data-theme] .dashboard-cta::after{background:repeating-radial-gradient(ellipse 400px 270px at 106% 172%,transparent 0 69px,rgb(var(--surface-rgb) / .11) 70px 97px,rgb(var(--surface-rgb) / .03) 98px 117px,transparent 118px 156px);mask-image:linear-gradient(100deg,transparent 34%,#000 76%)}
+
+/* Popup: the artboard is scaled. A 2px rim becomes approximately one physical pixel. */
+#artboard[data-theme] .card {
+  box-shadow:inset 0 0 21px rgba(255,255,255,.008),inset 0 2px 0 rgba(255,232,242,.055),0 8px 24px rgba(0,0,0,.09);
+}
+#artboard[data-theme] .card::after {
+  padding:2px;
+  background:linear-gradient(127deg,rgba(250,210,224,.53),rgba(245,211,226,.15) 22%,rgba(170,163,174,.18) 58%,rgba(241,181,205,.32));
+}
+#artboard[data-theme] .membership::after {
+  background:radial-gradient(ellipse 150px 130px at 0 0,rgba(252,203,221,.85),transparent 90%),radial-gradient(ellipse 160px 100px at 100% 100%,rgba(247,181,210,.60),transparent 90%),linear-gradient(125deg,rgba(238,184,205,.30),rgba(193,160,177,.16) 46%,rgba(217,165,190,.30));
+}
+#artboard[data-theme="light"] .card {
+  box-shadow:inset 0 2px 1px rgba(255,255,255,.96),inset 2px 0 0 rgba(255,255,255,.62),inset 0 -2px 0 rgba(155,82,117,.05),0 4px 10px rgba(119,66,92,.035),0 12px 28px rgba(119,66,92,.065);
+}
+#artboard[data-theme="light"] .card::after {
+  padding:2.2px;
+  background:linear-gradient(129deg,rgba(255,255,255,.99),rgba(196,146,171,.38) 22%,rgba(190,127,159,.23) 62%,rgba(157,80,118,.43));
+}
+#artboard[data-theme="light"] .membership::after {
+  background:linear-gradient(128deg,#fff,rgba(183,111,147,.48) 25%,rgba(195,143,169,.30) 57%,rgba(159,76,116,.50));
+}
+#artboard[data-theme="light"] .codex::after {
+  background:linear-gradient(128deg,#fff,rgba(125,161,144,.40) 25%,rgba(137,167,151,.23) 60%,rgba(87,140,109,.40));
+}
+#artboard[data-theme="light"] .dashboard-cta {
+  box-shadow:inset 0 2px 0 #fff8fc,inset 1px 0 0 rgba(255,255,255,.72),0 5px 14px rgba(147,74,111,.065),0 12px 27px rgba(147,74,111,.065);
+}
+/* Avoid washing out the original gradients. Add only edge highlights to the shell. */
+#artboard[data-theme="light"] .shell::after {
+  background:linear-gradient(129deg,#fff,rgba(206,156,183,.55) 22%,rgba(192,135,165,.34) 65%,rgba(171,95,135,.4));
+  padding:2px;
+}
+/* Dashboard: shared geometry; arc scale follows the card rather than viewport. */
+body:has(>.container) :is(.overview-context,.overview-kpi,.overview-panel,.stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,.usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,.reset-forecast,.usage-details,.advanced-panel,.modal) {
+  position:relative;isolation:isolate;
+  border-color:var(--sb-rim)!important;
+  box-shadow:var(--sb-surface-depth)!important;
+}
+body:has(>.container) :is(.overview-context,.overview-kpi,.overview-panel,.stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,.usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,.reset-forecast,.usage-details,.advanced-panel,.modal)::before {
+  content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;
+  background:
+    repeating-radial-gradient(ellipse at 103% 132%,transparent 0 30px,rgb(var(--sb-rgb) / var(--sb-arc)) 31px 45px,rgb(var(--sb-rgb) / var(--sb-arc-fine)) 46px 57px,transparent 58px 87px),
+    radial-gradient(ellipse at 103% 113%,rgb(var(--sb-rgb) / .050),transparent 67%),
+    linear-gradient(127deg,rgb(var(--sb-shine) / var(--sb-sheen)),transparent 34%);
+  background-size:100% 100%;
+  -webkit-mask-image:linear-gradient(108deg,transparent 31%,#000 83%);
+  mask-image:linear-gradient(108deg,transparent 31%,#000 83%);
+}
+/* Wider containers get broad arcs rather than denser stripes. */
+body:has(>.container) :is(.overview-panel,.usage-detail-section,.reset-forecast,.modal)::before {
+  background:repeating-radial-gradient(ellipse at 105% 132%,transparent 0 51px,rgb(var(--sb-rgb) / var(--sb-arc)) 52px 75px,rgb(var(--sb-rgb) / var(--sb-arc-fine)) 76px 95px,transparent 96px 145px),linear-gradient(127deg,rgb(var(--sb-shine) / var(--sb-sheen)),transparent 35%);
+}
+/* Plot data must remain the foreground. */
+body:has(>.container) :is(.graph-container,.daily-chart-wrapper,.time-distribution-section,.summary-block)::before{opacity:.35}
+body:has(>.container) .overview-panel:has(canvas)::before{opacity:.34}
+body:has(>.container) :is(.graph-container,.daily-chart-wrapper) canvas{position:relative;z-index:1}
+body:has(>.container) .overview-kpi::after{opacity:.09}
+body:has(>.container) :is(.overview-kpi.green,.codex-detail,.window-card){--sb-rgb:115 190 140;--sb-rim:rgba(154,212,172,.24)}
+body:not(.dark):has(>.container) :is(.overview-kpi.green,.codex-detail,.window-card){--sb-rgb:65 133 98;--sb-rim:rgba(77,132,102,.23)}
+body:has(>.container) :is(.overview-context,.usage-context-strip)::before{opacity:.70}
+body:has(>.container) .container {
+  isolation:isolate;
+}
+body:has(>.container) .container::before{border-radius:inherit}
+body:has(>.container) .container::after {
+  content:"";position:absolute;inset:0;z-index:3;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(126deg,rgba(245,197,218,.40),rgba(186,157,174,.05) 22%,rgba(182,151,169,.05) 65%,rgba(228,180,204,.26));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+}
+body:not(.dark):has(>.container) .container::after {
+  background:linear-gradient(126deg,rgba(255,255,255,.99),rgba(182,113,149,.28) 24%,rgba(182,113,149,.1) 58%,rgba(167,93,133,.30));
+}
+/* Navigation, controls, menus and dialogs share the same edge language. */
+body:has(>.container) :is(.view-tabs,.control-popover,.control-menu,.control-calendar,.calendar-popover,.control-panel,.reset-item) {
+  border-color:var(--sb-rim)!important;
+  box-shadow:inset 0 1px 0 var(--sb-top),0 3px 9px var(--sb-shadow)!important;
+}
+body:has(>.container) :is(.tab-slider,.view-tabs button[aria-selected="true"],.overview-jump button,.tool-btn,.usage-button,.control-trigger) {
+  box-shadow:inset 0 1px 0 var(--sb-top),inset 0 -1px 0 var(--sb-low)!important;
+}
+body:has(>.container) :is(.overview-jump button,.tool-btn,.usage-button,.control-trigger):hover{border-color:var(--sb-rose-ink)!important}
+body:has(>.container) :is(.cycle-card,.window-card,.usage-history-card){border-radius:16px!important}
+body:has(>.container) .usage-detail-section{border-radius:20px!important}
+/* Give the light rim a rose-toned lower edge: white-on-white alone is invisible. */
+body:not(.dark):has(>.container) :is(.overview-kpi,.stat-box,.cycle-card,.window-card){
+  box-shadow:inset 0 1px 0 #fff,inset 1px 0 0 #fff,inset 0 -1px 0 rgba(145,87,117,.08),0 2px 4px rgba(120,65,93,.035),0 7px 20px rgba(120,65,93,.065)!important;
+}
+/* Side Chat: retain the compact 48px masthead; no new header or page card. */
+body:has(#chat-frame) .shell {isolation:isolate}
+body:has(#chat-frame) .masthead {position:relative;isolation:isolate}
+body:has(#chat-frame) .masthead::before {
+  content:"";position:absolute;inset:3px 0 2px;z-index:-1;border-radius:12px;pointer-events:none;
+  background:linear-gradient(116deg,rgb(var(--sb-shine) / .055),transparent 38%),radial-gradient(ellipse at 18% 0,rgb(var(--sb-rgb) / .06),transparent 68%);
+}
+body:has(#chat-frame) .workspace {
+  position:relative;isolation:isolate;border-color:var(--sb-rim);
+  box-shadow:var(--sb-surface-depth);
+}
+body:has(#chat-frame) .workspace::after {
+  content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;z-index:4;pointer-events:none;
+  background:linear-gradient(130deg,rgba(255,228,242,.40),rgba(233,193,215,.04) 25%,rgba(217,171,200,.04) 69%,rgba(225,166,193,.29));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+}
+:root[data-theme="light"] body:has(#chat-frame) .workspace::after {
+  background:linear-gradient(130deg,#fff,rgba(163,99,133,.24) 26%,rgba(163,99,133,.10) 68%,rgba(163,99,133,.34));
+}
+body:has(#chat-frame) :is(.popover,dialog,.permission-choice,.sample-quote,.notice) {
+  isolation:isolate;border-color:var(--sb-rim);box-shadow:var(--sb-surface-depth);
+}
+body:has(#chat-frame) :is(dialog,.welcome,.permission-choice,.sample-quote){position:relative}
+body:has(#chat-frame) :is(.popover,dialog,.welcome,.permission-choice,.sample-quote)::before {
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
+  background:repeating-radial-gradient(ellipse at 118% 122%,transparent 0 33px,rgb(var(--sb-rgb) / var(--sb-arc)) 34px 49px,rgb(var(--sb-rgb) / var(--sb-arc-fine)) 50px 61px,transparent 62px 88px),linear-gradient(130deg,rgb(var(--sb-shine) / var(--sb-sheen)),transparent 38%);
+  -webkit-mask-image:linear-gradient(115deg,transparent 24%,#000 82%);mask-image:linear-gradient(115deg,transparent 24%,#000 82%);
+}
+body:has(#chat-frame) .welcome::before {opacity:.65}
+body:has(#chat-frame) :is(.more-menu,dialog){box-shadow:inset 0 1px 0 var(--sb-top),0 12px 34px var(--sb-shadow)}
+body:has(#chat-frame) .menu-divider{background:var(--sb-low)}
+body:has(#chat-frame) :is(.primary-button,.secondary-button){box-shadow:inset 0 1px 0 var(--sb-top),inset 0 -1px 0 var(--sb-low),0 4px 11px var(--sb-shadow)}
+body:has(#chat-frame) .permission-choice:has(input:checked){border-color:var(--accent);box-shadow:inset 0 1px 0 var(--sb-top),0 0 0 1px var(--sb-edge-warm)}
+body:has(#chat-frame) :is(.icon-button,.more-menu>button):hover{box-shadow:inset 0 1px 0 var(--sb-top)}
+/* Accessible preferences. Decorations never animate or intercept input. */
+@media (forced-colors:active) {
+  body:has(>.container) :is(.overview-context,.overview-kpi,.overview-panel,.stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,.usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,.reset-forecast,.usage-details,.advanced-panel,.modal)::before,
+  body:has(>.container) .container::after,
+  body:has(#chat-frame) :is(.masthead,.popover,dialog,.welcome,.permission-choice,.sample-quote)::before,
+  body:has(#chat-frame) .workspace::after {display:none}
+}
+@media (prefers-reduced-motion:reduce) {
+  :root[data-sakura-surface="b"] *, :root[data-sakura-surface="b"] *::before, :root[data-sakura-surface="b"] *::after {animation:none!important;transition:none!important}
+}
+
+/* Final whole-product calibration. No change to source backgrounds. */
+body:has(>.container){--sb-rim:rgba(232,183,204,.22);--sb-top:rgba(255,226,239,.085);--sb-arc:.078}
+body:not(.dark):has(>.container){--sb-rim:rgba(157,84,119,.22);--sb-top:rgba(255,255,255,.98);--sb-arc:.072}
+body:has(>.container) :is(.overview-context,.overview-kpi,.overview-panel,.stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,.usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,.reset-forecast,.usage-details,.advanced-panel,.modal)::before {
+  left:auto;width:100%;max-width:580px;
+  background:repeating-radial-gradient(ellipse 340px 230px at 106% 134%,transparent 0 36px,rgb(var(--sb-rgb) / var(--sb-arc)) 37px 54px,rgb(var(--sb-rgb) / var(--sb-arc-fine)) 55px 69px,transparent 70px 103px),radial-gradient(ellipse at 103% 113%,rgb(var(--sb-rgb) / .035),transparent 67%),linear-gradient(127deg,rgb(var(--sb-shine) / var(--sb-sheen)),transparent 34%);
+}
+body:has(>.container) :is(.overview-panel,.usage-detail-section,.reset-forecast,.modal)::before {
+  background:repeating-radial-gradient(ellipse 410px 290px at 107% 134%,transparent 0 48px,rgb(var(--sb-rgb) / var(--sb-arc)) 49px 72px,rgb(var(--sb-rgb) / var(--sb-arc-fine)) 73px 91px,transparent 92px 142px),linear-gradient(127deg,rgb(var(--sb-shine) / var(--sb-sheen)),transparent 34%);
+  opacity:.68;
+}
+body:has(>.container) :is(.overview-context,.usage-context-strip)::before{max-width:450px;opacity:.58}
+body:has(>.container) :is(.graph-container,.daily-chart-wrapper,.time-distribution-section,.summary-block)::before{opacity:.28}
+body:has(>.container) .overview-panel:has(canvas)::before{opacity:.23}
+body:has(>.container) :is(.usage-details,.advanced-panel)::before{opacity:.45}

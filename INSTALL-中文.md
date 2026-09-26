@@ -1,4 +1,4 @@
-# SakuraMeter 3.5.0 安装说明
+# SakuraMeter 3.6.0.61 安装说明
 
 1. 打开 Chrome 的 `chrome://extensions`。
 2. 开启“开发者模式”。

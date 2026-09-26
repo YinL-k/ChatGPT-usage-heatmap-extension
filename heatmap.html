@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-sakura-surface="b">
 <head>
   <meta charset="UTF-8" />
   <title data-i18n="title_document">SakuraMeter — ChatGPT & Codex Usage</title>
@@ -14,13 +14,17 @@
 <link rel="stylesheet" href="reset-forecast.css" />
 <link rel="stylesheet" href="controls.css" />
 <link rel="icon" type="image/png" href="assets/sakurameter-32.png" />
+<link rel="stylesheet" href="frontend/b-surface.css"><link rel="stylesheet" href="frontend/native-light.css"><link rel="stylesheet" href="frontend/reference-hybrid.css"><link rel="stylesheet" href="frontend/texture-hierarchy.css"><link rel="stylesheet" href="frontend/background-refine.css">
+<link rel="stylesheet" href="motion.css">
+<link rel="stylesheet" href="dashboard-controls-fix.css">
+<script src="motion.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="header">
       <div class="dashboard-brand">
         <img class="dashboard-brand-mark" src="assets/sakurameter-dark.svg" alt="" aria-hidden="true" />
-        <div class="title-with-tag"><h1 data-i18n="app_title">SakuraMeter</h1><span class="test-label">3.5.0</span></div>
+        <div class="title-with-tag"><h1 data-i18n="app_title">SakuraMeter</h1><span class="version-label">3.6.0.61</span></div>
       </div>
       <div class="header-right">
         <div class="toggle">
@@ -37,7 +41,15 @@
         <button id="exportData" class="secondary-button tool-btn" type="button" data-i18n="button_export">Export</button>
         <button id="importData" class="secondary-button tool-btn" type="button" data-i18n="button_import">Import</button>
         <input type="file" id="importFileInput" accept="application/json" style="display: none" />
-<select id="yearSelect" aria-label="Year" data-i18n-aria="year"></select>
+        <div class="year-select-shell">
+          <button id="yearSelectButton" class="year-select-trigger" type="button" aria-label="Year" data-i18n-aria="year" aria-haspopup="listbox" aria-expanded="false" aria-controls="yearSelectMenu">
+            <span id="yearSelectValue" class="year-select-value">2026</span>
+            <svg class="year-select-caret" viewBox="0 0 12 8" aria-hidden="true" focusable="false">
+              <path d="M1.5 1.75L6 6.25L10.5 1.75" />
+            </svg>
+          </button>
+          <div id="yearSelectMenu" class="year-select-menu" role="listbox" aria-label="Year" hidden></div>
+        </div>
       </div>
     </div>
 

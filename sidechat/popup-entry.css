@@ -1,0 +1,6 @@
+/* Only the old footer's version slot changes; the existing 338 x 600 layout is kept. */
+#scOpen{display:flex;align-items:center;gap:13px;border:1.4px solid rgba(225,154,185,.36);border-radius:18px;background:linear-gradient(120deg,rgba(205,128,162,.14),rgba(125,86,112,.08));color:#ecc0d1;padding:12px 17px;font:500 23px/29px var(--sans, sans-serif);white-space:nowrap;cursor:pointer;box-shadow:inset 0 1px rgba(255,224,238,.1)}
+#scOpen svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.7}
+#scOpen:hover{border-color:#e3adbf;background:rgba(231,159,190,.14)}
+#scOpen:focus-visible{outline:3px solid #df9cbc;outline-offset:5px}
+#artboard[data-theme=light] #scOpen{color:#9c4b70;border-color:rgba(159,94,126,.38);background:linear-gradient(120deg,#f8d8e7,#fcebf2);box-shadow:inset 0 1px #fff}

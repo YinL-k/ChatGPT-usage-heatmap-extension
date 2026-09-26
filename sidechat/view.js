@@ -1,0 +1,78 @@
+/* Local presentation only. Never edits stored ChatGPT messages or their source text. */
+(() => {
+  'use strict';
+  const svg = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5H3v6h4V5Zm10 0h-4v6h4V5ZM7 11c0 3-2 4-4 4m14-4c0 3-2 4-4 4"/></svg>';
+  function create({composer,translate,onClear}) {
+    let host=null,shadow=null,previewOpen=false, current=null, lastKey='',currentTheme='dark';
+    const folds=new WeakMap(),foldList=[];
+    function mount() {
+      if(!host) {
+        host=document.createElement('div');host.dataset.sakuraSidechat='quote';
+        host.style.cssText='margin:4px 10px 5px;max-width:100%;position:relative;z-index:2;';
+        shadow=host.attachShadow({mode:'closed'});
+        shadow.innerHTML=`<style>
+        :host{--ink:#efbdd0;--bg:#292129;--line:rgba(228,158,190,.27);--muted:#bca6b6;font:11px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+        :host([data-theme=light]){--ink:#914c6b;--bg:#fbe8f0;--line:rgba(156,89,121,.27);--muted:#80576f}
+        *{box-sizing:border-box}button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+        .row{display:inline-flex;align-items:center;max-width:100%;border:1px solid var(--line);border-radius:9px;background:var(--bg)}
+        .chip{display:flex;align-items:center;gap:6px;padding:4px 8px;max-width:100%;min-height:26px;border-radius:8px;text-align:left}
+        svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.7;flex:none}.label{white-space:nowrap;font-weight:500}
+        .remove{width:25px;height:26px;padding:5px;border-left:1px solid var(--line);font-size:15px;line-height:1}
+        button:hover{background:rgba(215,139,175,.09)}
+        .preview{margin-top:5px;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);max-height:240px;overflow:auto;scrollbar-width:thin}
+        .source{font-size:10px;color:var(--muted);word-break:break-all;margin-bottom:8px}.preview pre{margin:0;white-space:pre-wrap;word-break:break-word;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+        .note{font-size:10px;color:var(--muted);margin:8px 0 0;padding-top:7px;border-top:1px solid var(--line)}[hidden]{display:none!important}
+        
+        /* B SURFACE: own context controls only; no ChatGPT content or handlers changed. */
+        :host{--arc:224 149 177;--edge:rgba(242,191,211,.38);--top:rgba(255,226,239,.12);--depth:rgba(0,0,0,.17)}
+        :host([data-theme=light]){--arc:157 72 112;--edge:rgba(157,84,119,.30);--top:#fff;--depth:rgba(117,62,90,.08)}
+        .row,.preview{position:relative;isolation:isolate;border-color:var(--edge);box-shadow:inset 0 1px 0 var(--top),0 3px 10px var(--depth)}
+        .row::before,.preview::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;background:repeating-radial-gradient(ellipse at 115% 130%,transparent 0 21px,rgb(var(--arc) / .095) 22px 32px,transparent 33px 52px);mask-image:linear-gradient(100deg,transparent 22%,#000 85%)}
+        .row{border-radius:10px}.remove{border-radius:0 9px 9px 0}.preview{border-radius:12px}
+        @media(forced-colors:active){.row::before,.preview::before{display:none}}
+        /* Light native-fine treatment: no broad arc in the small context surfaces. */
+        :host([data-theme=light]){--edge:rgba(157,84,119,.22);--top:rgba(255,255,255,.92);--depth:rgba(117,62,90,.04)}
+        :host([data-theme=light]) .row::before,:host([data-theme=light]) .preview::before{background:radial-gradient(ellipse at 104% 116%,rgba(173,66,111,.05),transparent 78%),linear-gradient(124deg,rgba(255,255,255,.28),transparent 45%);mask-image:none}
+        /* END B SURFACE */
+</style><div class="row"><button class="chip" type="button">${svg}<span class="label"></span></button><button class="remove" type="button">\u00d7</button></div><div class="preview" hidden><div class="source"></div><pre></pre><p class="note"></p></div>`;
+        shadow.querySelector('.chip').addEventListener('click',()=>{previewOpen=!previewOpen;lastKey='';update(current,currentTheme);});
+        shadow.querySelector('.remove').addEventListener('click',()=>{if(current?.selection)onClear(current);previewOpen=false;composer()?.focus();});
+      }
+      const el=composer(),parent=el?.closest('form')||el?.parentElement?.parentElement;
+      if(parent&&!parent.contains(host))parent.insertBefore(host,parent.firstChild);
+      return !!el;
+    }
+    function update(item,theme='dark') {
+      current=item;currentTheme=theme;const hasEditor=mount();
+      const key=JSON.stringify([item?.id,item?.page?.fingerprint,item?.selection?.id,item?.selection?.capturedAt,theme,previewOpen,translate('shortPage'),hasEditor]);
+      if(lastKey===key)return;lastKey=key;
+      host.hidden=!item||!hasEditor;host.dataset.theme=theme;
+      if(!item)return;
+      const page=SakuraSideCore.validPage(item.page),selection=SakuraSideCore.validSelection(item.selection);
+      shadow.querySelector('.label').textContent=(page?translate('shortPage'):'')+(page&&selection?' \u00b7 ':'')+(selection?translate('shortSelection'):'');
+      const chip=shadow.querySelector('.chip');chip.title=translate('preview');chip.setAttribute('aria-expanded',String(previewOpen));
+      const remove=shadow.querySelector('.remove');remove.hidden=!selection;remove.title=translate('remove');remove.setAttribute('aria-label',translate('remove'));
+      shadow.querySelector('.preview').hidden=!previewOpen;
+      // Keep pending page text out of the document until the user opens this preview.
+      shadow.querySelector('pre').textContent=previewOpen ? (selection? '[Highlight]\n'+item.selection.text+'\n\n':'')+(page?item.page.text:'') : '';
+      shadow.querySelector('.source').textContent=previewOpen ? item.source.title+'\n'+item.source.url : '';
+      shadow.querySelector('.note').textContent=previewOpen ? translate('quoteNote')+(item.page?.truncated?' '+translate('compactNote'):'') : '';
+    }
+    function fold(node,receipt) {
+      if(!receipt.marker || !node?.parentElement || !node.textContent.includes(receipt.marker))return;
+      if(folds.has(node))return;
+      const summary=document.createElement('div');summary.dataset.sakuraSidechat='sent-summary';summary.style.cssText='display:block;min-width:0;max-width:100%;';
+      const root=summary.attachShadow({mode:'closed'});
+      root.innerHTML='<style>:host{display:block;font:inherit;color:inherit}.question{white-space:pre-wrap;overflow-wrap:anywhere;line-height:inherit}.toggle{display:flex;align-items:center;gap:6px;font:11px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:9px 0 0;padding:4px 0;border:0;background:none;color:inherit;opacity:.72;cursor:pointer}.toggle:hover{opacity:1}.toggle:focus-visible{outline:2px solid currentColor;outline-offset:3px}svg{height:12px;width:12px;fill:none;stroke:currentColor;stroke-width:1.7}[hidden]{display:none!important}</style><div class="question"></div><button class="toggle" type="button">'+svg+'<span></span></button>';
+      root.querySelector('.question').textContent=receipt.question;
+      const button=root.querySelector('button'),text=button.querySelector('span');
+      let expanded=false;const previousDisplay=node.style.display;
+      function paint(){node.style.display=expanded?previousDisplay:'none';root.querySelector('.question').hidden=expanded;text.textContent=translate(expanded?'hideContext':'viewContext');button.title=translate('localFoldNote');button.setAttribute('aria-expanded',String(expanded));}
+      button.addEventListener('click',()=>{expanded=!expanded;paint();});
+      node.parentElement.insertBefore(summary,node);paint();const reveal=()=>{expanded=true;paint();};folds.set(node,{summary,paint,reveal});foldList.push({node,summary,paint});
+    }
+    function refreshFolds(){for(let i=foldList.length-1;i>=0;i--){const f=foldList[i];if(!f.node.isConnected){f.summary.remove();foldList.splice(i,1);}else f.paint();}}
+    return {update,fold,refreshFolds,reveal:node=>folds.get(node)?.reveal()};
+  }
+  globalThis.SakuraSideView={create};
+})();

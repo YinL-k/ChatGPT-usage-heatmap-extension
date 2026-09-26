@@ -7,7 +7,7 @@
   'use strict';
   const KEY = '__gptUsageV4';
   const STATE_SCHEMA = 3;
-  const APP_VERSION = '3.5.0';
+  const APP_VERSION = '3.6.0.61';
   const LOCAL_SCOPE = 's_' + '0'.repeat(40);
   const DAY = 86400000;
   const VERIFIED = '2026-09-22';
@@ -107,13 +107,17 @@
     const mm=obj(msg.metadata);
     const model=text(body.model||body.model_slug||cfg.model||cfg.model_slug||cfg.slug||meta.model_slug,90);
     const effort=text(body.reasoning_effort||body.thinking_effort||cfg.reasoning_effort||cfg.thinking_effort||meta.reasoning_effort||mm.reasoning_effort||mm.thinking_effort,32);
-    return {id:safeId(msg.id),model,effort,kind:classify(model,effort)};
+    const tier=text(body.model_tier||body.product_tier||body.tier||cfg.model_tier||cfg.tier||meta.model_tier||meta.tier,24);
+    return {id:safeId(msg.id),model,effort,tier,kind:classify(model,effort,tier)};
   }
-  function classify(model,effort) {
-    const m=text(model).toLowerCase(), e=text(effort).toLowerCase();
-    const isPro=/(^|[-_\s])pro($|[-_\s])/.test(m)||e==='pro';
-    if(isPro) {
-      if(/gpt[-_]?6|astra/.test(m))return 'gpt6_pro';
+  function classify(model,effort,tier='') {
+    const m=text(model).toLowerCase(), t=text(tier,24).toLowerCase();
+    // Pro is a model choice in the ChatGPT composer. Thinking/reasoning effort
+    // (Medium/High/Extra High/etc.) is a separate dimension and must never
+    // promote a non-Pro model into Pro usage.
+    const isProModel=t==='pro'||/(^|[-_\s])pro($|[-_\s])/.test(t)||/(^|[-_\s])pro($|[-_\s])/.test(m);
+    if(isProModel) {
+      if(/(?:^|[-_\s])(?:gpt[-_\s]?)?6[-_\s]+pro(?:$|[-_\s])/.test(m)||/gpt[-_]?6/.test(m))return 'gpt6_pro';
       if(/5[._-]6|sol/.test(m))return 'sol_pro';
       return 'other_pro';
     }
@@ -203,7 +207,8 @@
   }
   function event(raw) {
     raw=obj(raw);if(!/^[a-f0-9]{64}$/.test(raw.id)||!scopeOK(raw.scope)||!Number.isFinite(raw.ts)||raw.ts<946684800000||raw.ts>Date.now()+60000)return null;
-    return {id:raw.id,scope:raw.scope,ts:raw.ts,model:text(raw.model,90),effort:text(raw.effort,32),kind:classify(raw.model,raw.effort)};
+    const tier=text(raw.tier,24),modelSource=text(raw.modelSource,40);
+    return {id:raw.id,scope:raw.scope,ts:raw.ts,model:text(raw.model,90),effort:text(raw.effort,32),tier,modelSource,kind:classify(raw.model,raw.effort,tier)};
   }
   function matches(e,rule) {return rule.kind==='all_pro'?e.kind.endsWith('_pro'):e.kind===rule.kind;}
   function allowance(s,scope,planKey,now=Date.now()) {
@@ -219,11 +224,89 @@
       return {...rule,observed,used,remaining:used===null?null:Math.max(0,rule.cap-used),resetAt:valid?b.resetAt:null,expired:b.plan===planKey&&b.resetAt<=now,unknown:events.filter(e=>e.ts>=(valid?b.at:now-duration)&&e.kind==='unknown').length};
     });
   }
+  function proKind(label) {
+    const v=text(label,140).toLowerCase();
+    if(!v)return 'all_pro';
+    if(/(?:5[._ -]?6|sol)/.test(v)&&/(^|[-_\s])pro($|[-_\s])/.test(v))return 'sol_pro';
+    if(/(?:gpt[-_\s]?)?6/.test(v)&&/(^|[-_\s])pro($|[-_\s])/.test(v))return 'gpt6_pro';
+    return 'all_pro';
+  }
+  function proLive(raw,now=Date.now()) {
+    raw=obj(raw);const updatedAt=nonnegative(raw.updatedAt);
+    if(!updatedAt||updatedAt>now+60000)return null;
+    const meters=(Array.isArray(raw.meters)?raw.meters:[]).map((r,i)=>{
+      r=obj(r);const label=text(r.label||r.model||r.name,100),id=text(r.id||label||('pro:'+i),140);
+      const remaining=nonnegative(r.remaining),limit=nonnegative(r.limit),usedPercent=percent(r.usedPercent),remainingPercent=percent(r.remainingPercent);
+      const reset=nonnegative(r.resetAt),windowSeconds=nonnegative(r.windowSeconds);
+      if([remaining,limit,usedPercent,remainingPercent,reset,windowSeconds].every(v=>v===null))return null;
+      return {id,label:label||'Pro',kind:text(r.kind,24)||proKind(label),remaining,limit,usedPercent,remainingPercent:remainingPercent!==null?remainingPercent:usedPercent!==null?100-usedPercent:null,resetAt:reset,windowSeconds};
+    }).filter(Boolean).slice(0,24);
+    return meters.length?{meters,updatedAt,source:text(raw.source,160)}:null;
+  }
+  function proCycles(raw) {
+    raw=obj(raw);const out={};
+    for(const [id,v0] of Object.entries(obj(raw.cycles||raw))){const v=obj(v0),windowMs=nonnegative(v.windowMs),lastResetAt=nonnegative(v.lastResetAt),nextResetAt=nonnegative(v.nextResetAt),seen=nonnegative(v.detectedResets)||0,kind=text(v.kind,24)||'all_pro',label=text(v.label,100);if(!windowMs&&!lastResetAt&&!nextResetAt)continue;out[text(id,140)||id]={id:text(id,140)||id,label,kind,windowMs,lastResetAt,nextResetAt,detectedResets:Math.floor(seen),confidence:text(v.confidence,24)||'learning'};}
+    return out;
+  }
+  function ruleCycle(cycles,rule) {
+    const all=Object.values(proCycles(cycles));if(!all.length)return null;
+    const targetMs=(rule.period==='day'?1:rule.period==='week'?7:31)*DAY;
+    const score=c=>{
+      let n=0;if(c.kind===rule.kind)n+=8;else if(rule.kind==='all_pro'||c.kind==='all_pro')n+=4;
+      if(c.windowMs){const ratio=Math.max(c.windowMs,targetMs)/Math.max(1,Math.min(c.windowMs,targetMs));if(ratio<1.15)n+=6;else if(ratio<1.6)n+=2;}
+      if(c.nextResetAt)n+=2;if(c.detectedResets>=1)n+=2;return n;
+    };
+    return all.sort((a,b)=>score(b)-score(a))[0]||null;
+  }
+  function currentLearnedWindow(cycle,rule,now) {
+    if(!cycle)return null;let windowMs=nonnegative(cycle.windowMs),next=nonnegative(cycle.nextResetAt),last=nonnegative(cycle.lastResetAt);
+    // Do not manufacture a cycle from a lone future reset timestamp. We need
+    // either an observed/reset-derived start or an explicit server window length.
+    if(!last&&!windowMs)return null;
+    if(last&&next&&last<=now&&next>now)return {startAt:last,nextResetAt:next,windowMs:next-last};
+    if(!windowMs&&last&&next&&next>last)windowMs=next-last;
+    if(!windowMs)return null;
+    if(next&&next<=now){const steps=Math.floor((now-next)/windowMs)+1;next+=steps*windowMs;}
+    if(!next&&last){next=last+windowMs;while(next<=now)next+=windowMs;}
+    if(!next)return null;const start=last&&last<=now&&now-last<windowMs*1.05?last:next-windowMs;if(start>now||now-start>windowMs*1.05)return null;
+    return {startAt:start,nextResetAt:next,windowMs};
+  }
+  function proAllowances(s,scope,planKey,serverRaw,cycleRaw,now=Date.now()) {
+    const preset=plans[planKey],rules=preset?.rules;
+    const server=proLive(serverRaw,now),serverFresh=server?freshness(server.updatedAt,now,5*60*1000,60*60*1000):{kind:'unavailable'};
+    if(server&&serverFresh.kind!=='stale'&&server.meters.length){
+      return server.meters.map(m=>{
+        const cap=m.limit!==null?m.limit:null;
+        const remaining=m.remaining!==null?m.remaining:cap!==null&&m.remainingPercent!==null?Math.round(cap*m.remainingPercent/100):null;
+        const observedWindow=m.windowSeconds?m.windowSeconds*1000:7*DAY;
+        const observed=s.events.filter(e=>e.scope===scope&&e.ts<=now&&e.ts>=now-observedWindow&&e.kind.endsWith('_pro')).length;
+        return {...m,cap,remaining,observed,mode:'official',trust:serverFresh.kind,source:'chatgpt'};
+      });
+    }
+    if(!rules)return [];
+    const manual=allowance(s,scope,planKey,now).map(r=>({...r,mode:r.remaining!==null?'manual':'observed',trust:r.remaining!==null?'estimated':'tracking'}));
+    if(manual.some(r=>r.remaining!==null))return manual;
+    const cycles=proCycles(cycleRaw),events=s.events.filter(e=>e.scope===scope&&e.ts<=now);
+    let learnedAny=false;
+    const learned=rules.map(rule=>{
+      const cycle=ruleCycle(cycles,rule),win=currentLearnedWindow(cycle,rule,now);
+      if(!win)return null;learnedAny=true;
+      const observed=events.filter(e=>e.ts>=win.startAt&&matches(e,rule)).length;
+      return {...rule,observed,used:observed,remaining:Math.max(0,rule.cap-observed),remainingPercent:100*Math.max(0,rule.cap-observed)/rule.cap,resetAt:win.nextResetAt,windowSeconds:win.windowMs/1000,mode:'learned',trust:'estimated',cycleConfidence:cycle.confidence};
+    });
+    if(learnedAny)return learned.map((r,i)=>r||{...manual[i],mode:'observed',trust:'tracking'});
+    return manual;
+  }
+  function proPrimary(items) {
+    items=Array.isArray(items)?items:[];
+    const rank={official:4,manual:3,learned:2,observed:1};
+    return items.slice().sort((a,b)=>(rank[b.mode]||0)-(rank[a.mode]||0)||(Number.isFinite(b.remaining)-Number.isFinite(a.remaining))||(Number.isFinite(b.remainingPercent)-Number.isFinite(a.remainingPercent)))[0]||null;
+  }
   function mergeEntry(a,b) {
     a=entry(a);b=entry(b);const counts=new Map();
     for(const ts of [a.timestamps,b.timestamps]) {const own=new Map();for(const v of ts)own.set(v,(own.get(v)||0)+1);for(const [v,c]of own)counts.set(v,Math.max(counts.get(v)||0,c));}
     const timestamps=[...counts].flatMap(([v,c])=>Array(c).fill(v)).sort((x,y)=>x-y);
     return {count:Math.max(a.count,b.count,timestamps.length),timestamps};
   }
-  return {APP_VERSION,windowLabel,liveStatus,KEY,STATE_SCHEMA,LOCAL_SCOPE,DAY,VERIFIED,SOURCE,plans,obj,text,number,nonnegative,percent,safeId,scopeOK,localDate,dateFromKey,entry,stats,detectPlan,resolveAccount,modelInfo,classify,resetAt,meter,normalizeWham,normalizeInit,freshState,migrateState,state,freshness,event,matches,allowance,mergeEntry};
+  return {APP_VERSION,windowLabel,liveStatus,KEY,STATE_SCHEMA,LOCAL_SCOPE,DAY,VERIFIED,SOURCE,plans,obj,text,number,nonnegative,percent,safeId,scopeOK,localDate,dateFromKey,entry,stats,detectPlan,resolveAccount,modelInfo,classify,resetAt,meter,normalizeWham,normalizeInit,freshState,migrateState,state,freshness,event,matches,allowance,proKind,proLive,proCycles,proAllowances,proPrimary,mergeEntry};
 });

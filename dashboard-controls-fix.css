@@ -1,0 +1,525 @@
+/* SakuraMeter 3.6.0.61 — dashboard utility control polish.
+   Loaded last so dark/light controls are deterministic and not overridden by legacy theme layers. */
+
+.header-right{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  flex-wrap:wrap!important;
+  justify-content:flex-end!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  overflow:visible!important;
+  isolation:isolate;
+}
+.header-right::before,
+.header-right::after{
+  content:none!important;
+  display:none!important;
+}
+
+/* Theme / day-night switch — true capsule shape. */
+.header-right .toggle{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.header-right .ios-switch{
+  position:relative!important;
+  width:52px!important;
+  min-width:52px!important;
+  height:32px!important;
+  min-height:32px!important;
+  padding:0!important;
+  margin:0!important;
+  border-radius:999px!important;
+  border:1px solid rgba(233,176,192,.34)!important;
+  background:rgba(44,37,42,.88)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+  overflow:hidden!important;
+  transition:background-color .2s ease,border-color .2s ease!important;
+}
+.header-right .ios-switch::after{
+  content:""!important;
+  position:absolute!important;
+  top:50%!important;
+  left:3px!important;
+  width:24px!important;
+  height:24px!important;
+  border-radius:50%!important;
+  transform:translateY(-50%)!important;
+  background:linear-gradient(145deg,#ffd8e7,#efaac3)!important;
+  border:1px solid rgba(255,231,239,.78)!important;
+  box-shadow:0 3px 9px rgba(216,128,163,.18)!important;
+  transition:transform .24s cubic-bezier(.2,.8,.2,1),background .2s ease!important;
+}
+.header-right .ios-switch[aria-checked="true"]{
+  background:rgba(58,42,49,.92)!important;
+  border-color:rgba(239,165,185,.54)!important;
+}
+.header-right .ios-switch[aria-checked="true"]::after{
+  transform:translateX(20px) translateY(-50%)!important;
+}
+
+/* Shared small utility control geometry. */
+.header-right .lang-inline,
+.header-right .secondary-button,
+.header-right #yearSelect{
+  box-sizing:border-box!important;
+  height:35px!important;
+  min-height:35px!important;
+  border-radius:11px!important;
+  border:1px solid rgba(194,184,190,.18)!important;
+  background:rgba(15,17,19,.46)!important;
+  color:#aaa4a8!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018)!important;
+  font-size:11px!important;
+  margin:0!important;
+}
+.header-right .lang-inline{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:7px!important;
+  padding:0 11px!important;
+}
+.header-right .lang-inline .opt{
+  color:#777178!important;
+  font-size:11px!important;
+  line-height:1!important;
+}
+.header-right .lang-inline .opt.active{color:var(--lux-pink)!important}
+.header-right .lang-inline .sep{color:#8a8389!important;opacity:.55!important}
+.header-right .secondary-button{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 11px!important;
+  line-height:35px!important;
+}
+.header-right .secondary-button:hover,
+.header-right .lang-inline:hover{
+  background:rgba(245,181,194,.09)!important;
+  border-color:rgba(245,181,194,.30)!important;
+  color:var(--lux-pink)!important;
+  transform:none!important;
+}
+
+/* Year selector — native arrow removed, custom fine chevron drawn as an SVG background. */
+.header-right #yearSelect{
+  width:auto!important;
+  min-width:82px!important;
+  padding:0 31px 0 12px!important;
+  line-height:normal!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  -moz-appearance:none!important;
+  background-color:rgba(15,17,19,.46)!important;
+  background-image:none!important;
+  background-repeat:no-repeat!important;
+  background-position:right 11px center!important;
+  background-size:12px 8px!important;
+}
+.header-right #yearSelect::-ms-expand{display:none!important}
+.header-right #yearSelect:hover{
+  border-color:rgba(245,181,194,.26)!important;
+  color:#d5cdd1!important;
+}
+
+/* LIGHT THEME — explicitly neutralize the legacy pale strip behind the controls. */
+body:not(.dark) .header-right{
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+body:not(.dark) .header-right .lang-inline,
+body:not(.dark) .header-right .secondary-button,
+body:not(.dark) .header-right #yearSelect{
+  background-color:rgba(255,250,252,.90)!important;
+  color:#665860!important;
+  border-color:rgba(124,91,106,.16)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 2px 8px rgba(91,59,73,.025)!important;
+}
+body:not(.dark) .header-right .lang-inline .opt{color:#887780!important}
+body:not(.dark) .header-right .lang-inline .opt.active{color:#bd5879!important}
+body:not(.dark) .header-right .lang-inline .sep{color:#b7a7ae!important}
+body:not(.dark) .header-right .secondary-button:hover,
+body:not(.dark) .header-right .lang-inline:hover{
+  background-color:#fff7fa!important;
+  border-color:rgba(196,101,131,.24)!important;
+  color:#b34f71!important;
+  box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(180,94,121,.045)!important;
+}
+body:not(.dark) .header-right .ios-switch{
+  background:#eee6ea!important;
+  border-color:rgba(126,96,109,.18)!important;
+  box-shadow:inset 0 1px 2px rgba(93,63,76,.045)!important;
+}
+body:not(.dark) .header-right .ios-switch::after{
+  background:linear-gradient(145deg,#fff,#f4d9e4)!important;
+  border-color:#fff!important;
+  box-shadow:0 2px 7px rgba(141,74,104,.12)!important;
+}
+body:not(.dark) .header-right .ios-switch[aria-checked="true"]{
+  background:#e8c3d2!important;
+  border-color:rgba(187,91,123,.28)!important;
+}
+body:not(.dark) .header-right #yearSelect{
+  background-color:rgba(255,250,252,.90)!important;
+  color:#5e5058!important;
+  background-image:none!important;
+}
+body:not(.dark) .header-right #yearSelect:hover{
+  background-color:#fff7fa!important;
+  border-color:rgba(196,101,131,.24)!important;
+  color:#4f4149!important;
+}
+
+.header-right .ios-switch:focus-visible,
+.header-right .lang-inline:focus-visible,
+.header-right .secondary-button:focus-visible,
+.header-right #yearSelect:focus-visible{
+  outline:none!important;
+  box-shadow:0 0 0 3px rgba(231,143,176,.10)!important;
+}
+
+@media(max-width:760px){
+  .header-right{width:100%!important;justify-content:flex-start!important;gap:8px!important}
+}
+
+/* 3.6.0.61 — compact year selector with one soft caret.
+   All legacy/native arrow layers are suppressed. The only visible indicator is
+   the single DOM SVG below. */
+.header-right .year-select-shell{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  width:64px!important;
+  min-width:64px!important;
+  height:31px!important;
+  min-height:31px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+.header-right .year-select-shell #yearSelect,
+body:not(.dark) .header-right .year-select-shell #yearSelect{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  -moz-appearance:none!important;
+  box-sizing:border-box!important;
+  width:64px!important;
+  min-width:64px!important;
+  height:31px!important;
+  min-height:31px!important;
+  margin:0!important;
+  padding:0 20px 0 10px!important;
+  border-radius:10px!important;
+  line-height:31px!important;
+  background-image:none!important;
+  background-repeat:no-repeat!important;
+  background-position:initial!important;
+  background-size:auto!important;
+  font-size:11px!important;
+  text-align:left!important;
+}
+.header-right .year-select-shell #yearSelect::-ms-expand{display:none!important}
+
+/* One new caret only. */
+.header-right .year-caret{
+  position:absolute!important;
+  right:6px!important;
+  top:50%!important;
+  width:14px!important;
+  height:14px!important;
+  display:grid!important;
+  place-items:center!important;
+  color:#b99aa7!important;
+  opacity:.9!important;
+  pointer-events:none!important;
+  transform:translateY(-50%) rotate(0deg)!important;
+  transform-origin:50% 50%!important;
+  transition:transform 180ms cubic-bezier(.2,.8,.2,1),color 160ms ease,opacity 160ms ease!important;
+}
+.header-right .year-caret svg{
+  display:block!important;
+  width:14px!important;
+  height:14px!important;
+  overflow:visible!important;
+}
+.header-right .year-caret path{
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:1.55!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  vector-effect:non-scaling-stroke;
+}
+.header-right .year-select-shell:hover .year-caret{
+  color:#d8aabd!important;
+  opacity:1!important;
+}
+.header-right .year-select-shell.is-open .year-caret{
+  transform:translateY(-50%) rotate(180deg)!important;
+  color:#e5b4c7!important;
+  opacity:1!important;
+}
+body:not(.dark) .header-right .year-caret{color:#8f7781!important}
+body:not(.dark) .header-right .year-select-shell:hover .year-caret,
+body:not(.dark) .header-right .year-select-shell.is-open .year-caret{color:#a95473!important}
+
+@media(max-width:760px){
+  .header-right .year-select-shell,
+  .header-right .year-select-shell #yearSelect{
+    width:62px!important;
+    min-width:62px!important;
+  }
+}
+
+
+/* 3.6.0.61 — native year select is data-only; visible UI is one custom button.
+   This structurally prevents duplicate browser arrows. The value and caret live
+   inside the same trigger, so every hover/press/open transform moves them together. */
+.header-right .year-select-shell{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  width:auto!important;
+  min-width:0!important;
+  height:31px!important;
+  min-height:31px!important;
+  overflow:visible!important;
+}
+.header-right .year-select-shell #yearSelect.year-select-native,
+body:not(.dark) .header-right .year-select-shell #yearSelect.year-select-native{
+  position:absolute!important;
+  width:1px!important;
+  min-width:1px!important;
+  height:1px!important;
+  min-height:1px!important;
+  padding:0!important;
+  margin:0!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  clip-path:inset(50%)!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  -moz-appearance:none!important;
+  border:0!important;
+  background:none!important;
+}
+.header-right .year-caret{display:none!important}
+
+.header-right .year-select-trigger{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  width:66px!important;
+  min-width:66px!important;
+  height:31px!important;
+  min-height:31px!important;
+  padding:0 8px 0 10px!important;
+  margin:0!important;
+  border:1px solid rgba(194,184,190,.18)!important;
+  border-radius:10px!important;
+  background:rgba(15,17,19,.46)!important;
+  color:#d7cfd3!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018)!important;
+  font:500 11px/1 var(--lux-ui,Inter,system-ui,sans-serif)!important;
+  cursor:pointer!important;
+  transform:translate3d(0,0,0) scale(1)!important;
+  transform-origin:50% 50%!important;
+  transition:
+    transform 150ms cubic-bezier(.2,.8,.2,1),
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease!important;
+}
+.header-right .year-select-trigger:hover{
+  color:#f2e9ed!important;
+  border-color:rgba(236,174,195,.30)!important;
+  background:rgba(29,25,28,.62)!important;
+}
+.header-right .year-select-trigger:active{
+  transform:translate3d(0,1px,0) scale(.975)!important;
+}
+.header-right .year-select-shell.is-open .year-select-trigger{
+  transform:translate3d(0,1px,0) scale(.985)!important;
+  color:#f6edf1!important;
+  border-color:rgba(236,174,195,.34)!important;
+  background:rgba(34,27,31,.72)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.028),0 5px 16px rgba(0,0,0,.12)!important;
+}
+.header-right .year-select-value{
+  display:block!important;
+  min-width:28px!important;
+  text-align:left!important;
+  pointer-events:none!important;
+}
+.header-right .year-select-caret{
+  display:block!important;
+  flex:0 0 auto!important;
+  width:10px!important;
+  height:7px!important;
+  color:#b99aa7!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+  transform:rotate(0deg)!important;
+  transform-origin:50% 50%!important;
+  transition:transform 200ms cubic-bezier(.2,.8,.2,1),color 160ms ease!important;
+}
+.header-right .year-select-caret path{
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:1.45!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  vector-effect:non-scaling-stroke!important;
+}
+.header-right .year-select-shell.is-open .year-select-caret{
+  transform:rotate(180deg)!important;
+  color:#e2b1c4!important;
+}
+
+.header-right .year-select-menu{
+  position:absolute!important;
+  z-index:1000!important;
+  top:calc(100% + 6px)!important;
+  right:0!important;
+  min-width:72px!important;
+  max-height:184px!important;
+  overflow:auto!important;
+  padding:5px!important;
+  border:1px solid rgba(194,184,190,.16)!important;
+  border-radius:11px!important;
+  background:rgba(15,17,19,.96)!important;
+  box-shadow:0 14px 32px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.025)!important;
+  backdrop-filter:blur(14px)!important;
+  -webkit-backdrop-filter:blur(14px)!important;
+}
+.header-right .year-select-menu[hidden]{display:none!important}
+.header-right .year-select-option{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  height:29px!important;
+  padding:0 8px!important;
+  border:0!important;
+  border-radius:7px!important;
+  background:transparent!important;
+  color:#a9a1a6!important;
+  font:500 11px/1 var(--lux-ui,Inter,system-ui,sans-serif)!important;
+  cursor:pointer!important;
+}
+.header-right .year-select-option:hover,
+.header-right .year-select-option:focus-visible{
+  outline:0!important;
+  color:#fff2f7!important;
+  background:rgba(242,174,198,.09)!important;
+}
+.header-right .year-select-option[aria-selected="true"]{
+  color:#f2b5ca!important;
+  background:rgba(242,174,198,.06)!important;
+}
+
+body:not(.dark) .header-right .year-select-trigger{
+  color:#5f5158!important;
+  background:rgba(255,255,255,.66)!important;
+  border-color:rgba(113,91,100,.17)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92)!important;
+}
+body:not(.dark) .header-right .year-select-trigger:hover,
+body:not(.dark) .header-right .year-select-shell.is-open .year-select-trigger{
+  color:#9f4f6d!important;
+  background:#fff9fb!important;
+  border-color:rgba(195,103,133,.26)!important;
+}
+body:not(.dark) .header-right .year-select-caret{color:#8f7781!important}
+body:not(.dark) .header-right .year-select-shell.is-open .year-select-caret{color:#a95473!important}
+body:not(.dark) .header-right .year-select-menu{
+  background:rgba(255,252,253,.98)!important;
+  border-color:rgba(113,91,100,.15)!important;
+  box-shadow:0 14px 30px rgba(91,59,73,.14),inset 0 1px 0 #fff!important;
+}
+body:not(.dark) .header-right .year-select-option{color:#75646c!important}
+body:not(.dark) .header-right .year-select-option:hover,
+body:not(.dark) .header-right .year-select-option:focus-visible{color:#a84f6f!important;background:rgba(217,110,143,.07)!important}
+body:not(.dark) .header-right .year-select-option[aria-selected="true"]{color:#b75576!important;background:rgba(217,110,143,.075)!important}
+
+
+/* 3.6.0.61 — single year control, filled mauve treatment.
+   The native select no longer exists in the DOM. Only this trigger is visible. */
+.header-right .year-select-shell{
+  width:auto!important;
+  height:31px!important;
+  min-height:31px!important;
+}
+.header-right .year-select-trigger{
+  width:72px!important;
+  min-width:72px!important;
+  height:31px!important;
+  min-height:31px!important;
+  gap:8px!important;
+  padding:0 9px 0 12px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(232,157,188,.42)!important;
+  background:linear-gradient(180deg,rgba(75,52,64,.82),rgba(52,38,47,.88))!important;
+  color:#f8eef2!important;
+  box-shadow:inset 0 1px 0 rgba(255,229,239,.06),0 5px 14px rgba(0,0,0,.10)!important;
+}
+.header-right .year-select-trigger:hover{
+  background:linear-gradient(180deg,rgba(84,57,71,.90),rgba(59,42,52,.92))!important;
+  border-color:rgba(239,171,198,.54)!important;
+  color:#fff7fa!important;
+}
+.header-right .year-select-shell.is-open .year-select-trigger{
+  background:linear-gradient(180deg,rgba(90,60,75,.92),rgba(62,43,55,.94))!important;
+  border-color:rgba(242,177,202,.58)!important;
+  box-shadow:inset 0 1px 0 rgba(255,232,241,.08),0 7px 18px rgba(0,0,0,.14)!important;
+}
+.header-right .year-select-value{
+  min-width:31px!important;
+  color:inherit!important;
+  text-align:left!important;
+}
+.header-right .year-select-caret{
+  width:9px!important;
+  height:6px!important;
+  color:#edb5ca!important;
+}
+.header-right .year-select-caret path{stroke-width:1.35!important}
+body:not(.dark) .header-right .year-select-trigger{
+  background:linear-gradient(180deg,rgba(248,229,237,.96),rgba(242,216,228,.94))!important;
+  color:#654753!important;
+  border-color:rgba(197,104,139,.28)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 4px 12px rgba(117,66,88,.06)!important;
+}
+body:not(.dark) .header-right .year-select-trigger:hover,
+body:not(.dark) .header-right .year-select-shell.is-open .year-select-trigger{
+  background:linear-gradient(180deg,#f8e3ec,#f1d3e0)!important;
+  color:#8c4560!important;
+  border-color:rgba(191,82,123,.38)!important;
+}
+body:not(.dark) .header-right .year-select-caret{color:#ad617e!important}

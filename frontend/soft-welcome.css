@@ -1,0 +1,55 @@
+/* SakuraMeter Soft Welcome. Onboarding-only presentation, September 2026.
+   Requested exception to the frozen B-dark/A-light surface system.
+   Static blurred corner light; no rings, loops, moving gradients or runtime changes.
+   Primary-button base gradient is deliberately untouched. */
+body:has(#chat-frame) .welcome{
+  position:relative;isolation:isolate;
+  background:transparent;
+  padding:34px 24px 26px;
+  --welcome-rose:185 99 141;--welcome-mauve:106 100 154;--welcome-pearl:224 161 175;
+  --welcome-wash:.20;--welcome-secondary:.13;
+}
+body:has(#chat-frame) .welcome::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 240px 210px at 20% 5%,rgb(var(--welcome-rose) / var(--welcome-wash)) 0%,transparent 74%),
+    radial-gradient(ellipse 285px 245px at 114% 30%,rgb(var(--welcome-mauve) / var(--welcome-secondary)) 0%,transparent 77%),
+    radial-gradient(ellipse 300px 270px at -10% 78%,rgb(var(--welcome-rose) / .085) 0%,transparent 78%),
+    radial-gradient(ellipse 230px 150px at 90% 105%,rgb(var(--welcome-pearl) / .045),transparent 82%);
+  mask-image:none;-webkit-mask-image:none;filter:blur(32px);opacity:1;transform:none;
+}
+body:has(#chat-frame) .welcome-art{height:96px;margin:0 0 17px}
+body:has(#chat-frame) .welcome-art img{height:64px;width:64px;filter:drop-shadow(0 8px 18px rgba(70,22,46,.18))}
+body:has(#chat-frame) .welcome-art .halo{width:152px;height:112px;background:radial-gradient(ellipse,rgba(219,141,175,.17),transparent 74%);filter:blur(22px)}
+body:has(#chat-frame) .welcome .eyebrow{font-size:8px;letter-spacing:2.1px;color:var(--faint)}
+body:has(#chat-frame) .welcome h2{font-size:27px;font-weight:500;line-height:1.23;letter-spacing:-.65px;margin:13px 0 15px;text-wrap:balance}
+body:has(#chat-frame) .welcome .lead{max-width:280px;font-size:12px;line-height:1.85}
+body:has(#chat-frame) .welcome :is(.sample-quote,.permission-choice)::before{content:none;background:none;filter:none}
+body:has(#chat-frame) .welcome .sample-quote{margin:23px auto 29px;padding:8px 12px;border-color:rgba(218,162,186,.18);box-shadow:inset 0 1px 0 rgba(255,234,244,.065),0 5px 14px rgba(0,0,0,.08)}
+body:has(#chat-frame) .welcome .permissions{margin-bottom:21px}
+body:has(#chat-frame) .welcome .permissions legend{font-size:10px;letter-spacing:.1px;padding-bottom:11px}
+body:has(#chat-frame) .welcome .permission-choice{padding:13px 12px;border-radius:13px;margin-bottom:9px;background:rgba(255,241,247,.018);border-color:rgba(226,186,206,.15);box-shadow:inset 0 1px 0 rgba(255,235,246,.045)}
+body:has(#chat-frame) .welcome .permission-choice:has(input:checked){background:linear-gradient(120deg,rgba(205,140,171,.13),rgba(183,137,167,.045));border-color:rgba(231,177,201,.56);box-shadow:inset 0 1px 0 rgba(255,232,243,.10),0 3px 12px rgba(0,0,0,.055)}
+body:has(#chat-frame) .welcome .permission-choice strong{font-size:12px;font-weight:550}
+body:has(#chat-frame) .welcome .permission-choice small{font-size:10px;line-height:1.7;margin-top:5px}
+body:has(#chat-frame) .welcome .primary-button{border-radius:13px;min-height:43px;font-size:12px;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,234,244,.42),0 7px 22px rgba(197,119,157,.09)}
+body:has(#chat-frame) .welcome .footnote{margin:15px 4px 0;line-height:1.9;font-size:10px}
+body:has(#chat-frame) .welcome .disclosure{border-color:rgba(215,176,196,.14);padding-top:14px;margin-top:23px;font-size:10px;line-height:1.8}
+:root[data-theme="light"] body:has(#chat-frame) .welcome{--welcome-rose:215 132 168;--welcome-mauve:161 158 197;--welcome-pearl:220 174 158;--welcome-wash:.18;--welcome-secondary:.12}
+:root[data-theme="light"] body:has(#chat-frame) .welcome::before{
+  background:
+    radial-gradient(ellipse 240px 210px at 20% 5%,rgb(var(--welcome-rose) / var(--welcome-wash)),transparent 74%),
+    radial-gradient(ellipse 285px 245px at 114% 30%,rgb(var(--welcome-mauve) / var(--welcome-secondary)),transparent 77%),
+    radial-gradient(ellipse 300px 270px at -10% 78%,rgb(var(--welcome-rose) / .085),transparent 78%),
+    radial-gradient(ellipse 230px 150px at 90% 105%,rgb(var(--welcome-pearl) / .08),transparent 82%);
+  opacity:1;mask-image:none;-webkit-mask-image:none;filter:blur(32px);
+}
+:root[data-theme="light"] body:has(#chat-frame) .welcome-art img{filter:drop-shadow(0 7px 17px rgba(157,82,120,.10))}
+:root[data-theme="light"] body:has(#chat-frame) .welcome .sample-quote{border-color:rgba(163,100,133,.18);box-shadow:inset 0 1px 0 #fff,0 5px 14px rgba(117,62,90,.035)}
+:root[data-theme="light"] body:has(#chat-frame) .welcome .permission-choice{background:rgba(255,255,255,.36);border-color:rgba(159,104,132,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 5px rgba(119,63,93,.02)}
+:root[data-theme="light"] body:has(#chat-frame) .welcome .permission-choice:has(input:checked){background:linear-gradient(120deg,rgba(230,177,200,.23),rgba(255,255,255,.42));border-color:rgba(167,94,132,.43);box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 3px 12px rgba(133,70,103,.025)}
+:root[data-theme="light"] body:has(#chat-frame) .welcome .primary-button{box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 7px 22px rgba(155,79,119,.09)}
+:root[data-theme="light"] body:has(#chat-frame) .welcome .disclosure{border-color:rgba(154,100,128,.18)}
+@media(max-width:345px){body:has(#chat-frame) .welcome{padding:23px 17px 19px}body:has(#chat-frame) .welcome h2{font-size:25px}body:has(#chat-frame) .welcome .permission-choice{padding:12px 10px}}
+@media(max-height:700px){body:has(#chat-frame) .welcome{padding-top:19px}body:has(#chat-frame) .welcome-art{height:62px;margin-bottom:10px}body:has(#chat-frame) .welcome-art img{width:48px;height:48px}body:has(#chat-frame) .welcome h2{font-size:25px;margin:10px 0}body:has(#chat-frame) .welcome .sample-quote{margin:14px auto 20px}}
+@media(forced-colors:active){body:has(#chat-frame) .welcome::before,body:has(#chat-frame) .welcome-art .halo{display:none}body:has(#chat-frame) .welcome .permission-choice{border:1px solid CanvasText}body:has(#chat-frame) .welcome .permission-choice:has(input:checked){border:2px solid Highlight}}

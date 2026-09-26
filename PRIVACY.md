@@ -1,19 +1,56 @@
-# SakuraMeter 3.5.0 — Privacy
+# SakuraMeter 3.6.0.61 - Privacy and behavior
 
-Activity is stored on this browser profile. There is no developer backend or telemetry.
+Side Chat is optional and separate from the existing local usage tracker. There is no added developer backend, telemetry or model proxy.
 
-Stored fields: daily counts and timestamps, a SHA-256 identifier derived from the page message ID, observed model labels, local plan/calibration settings, normalized usage percentages/window/reset/credit metadata and sanitized error status/time/failure count. Existing historical fields are retained for compatibility.
+## Page and highlight capture
 
-The composer and a newly displayed user message are briefly compared in RAM to confirm a local send. Their text is never sent to the extension background, persisted, exported or logged. Pending comparisons expire after approximately 20 seconds.
+Only while a panel is open, enabled and the active site is authorized, first-party content scripts read selected visible text and a compact main-page excerpt. The extractor excludes common navigation/sidebars, hidden nodes, form controls and editable fields. It does not inspect cookie stores, input .value properties, passwords, JavaScript variables, or hidden documents. Sensitive information that is displayed as ordinary readable page text can still be included; review the chip preview or pause capture for sensitive sites.
 
-Authentication: automatic page polling may read the existing ChatGPT session token from page bootstrap data. UI refresh renews it with GET `/api/auth/session`. If the page bridge is missing or unavailable, the service worker may perform the same read-only session and usage requests using the existing ChatGPT host permission and browser session cookies. The token remains in request-local memory and is used only for GET `https://chatgpt.com/backend-api/wham/usage`. It is never stored, logged, exported or sent to third parties. Redirects are rejected.
+Page excerpts are capped at 12,000 characters; the background excerpt is capped at 6,000 when accompanied by a highlight. Explicit highlights may be up to 16,000 characters and expire after 15 minutes. Excerpts include sanitized source title/URL (query, fragment and URL credentials removed), tab/window metadata and capture metadata. Content fingerprints are local dedupe identifiers, not authentication or encryption.
 
-The extension does not initiate chat submissions, conversation creation, model generation, POST requests, or Pro model calls. It does not store passwords, cookies, raw account IDs, email addresses, or chat bodies. Activity exports contain only date-key counts and timestamps plus format metadata.
+Context stays in extension RAM/chrome.storage.session and is not added to usage history, local persistent usage storage, activity exports or telemetry. Closing a panel clears that window's captured context. Browser/session shutdown clears session storage. Pausing or revoking permission stops capture. There is no automatic model call just because a page was captured.
 
-The extension is unofficial. Private usage endpoints and page markup may change. Fixture tests do not establish current real-account compatibility.
+## Sending and local display
 
-## Dashboard surface: public global reset forecast
+The user's native Enter or send click may include the prepared excerpt and highlight in the ChatGPT draft. The extension does not call a private chat-generation API or automatically resend messages. Existing ChatGPT session cookies are used by the embedded website. Submitted references are ordinary ChatGPT message text, not OpenAI-native browser attachments; account/service settings apply to that submitted data.
 
-Opening the Overview dashboard requests `https://codex-reset.com/api/forecast` with GET, `credentials: omit`, `referrerPolicy: no-referrer`, and rejected redirects. It sends no account identifiers, tokens, cookies, chat text or local activity. The third-party server receives ordinary connection metadata such as the IP address. This is an independent experimental forecast, not an OpenAI account endpoint.
+Pending receipts and submitted text are kept briefly in the frame for local confirmation/presentation and are not persisted as extension chat history. Receipts expire without blocking later sends. Exact selection-version checks prevent a late acknowledgment from removing a newer highlight. An observed UI message is local evidence, not a server delivery guarantee.
 
-The dashboard caches only selected public forecast fields (probabilities, timestamps, confidence, signal category/source link) and retry state in extension-page localStorage under `gptTrackerResetForecastV1`. This cache is not part of activity exports. No new extension permission or remote code is introduced. Polling runs only while Overview is visible and stops when it is hidden or closed.
+A first-party presentation layer folds only locally generated reference messages into a question plus a disclosure. The ORIGINAL full included reference remains in the DOM and in the message sent to ChatGPT. Expanding reveals it. This is not deletion or redaction; other devices, shared chats, or native copy/export controls may expose the original reference. Pausing or clearing local context cannot remove data already submitted to ChatGPT.
+
+## Embedding and permissions
+
+The required permissions are: storage, tabs, sidePanel, scripting, declarativeNetRequestWithHostAccess, and the ChatGPT host. Other HTTP(S) site access is optional (current site or all sites).
+
+While at least one Side Chat panel is open, an existing session rule removes frame-blocking response headers from chatgpt.com sub-frame responses. It is scoped by destination and resource type, NOT by a single iframe initiator: other matching ChatGPT embeds can be affected while the panel is open. It does not alter top-level pages or unrelated domains. The rule is removed when the last panel closes. This scope remains unchanged.
+
+## Usage
+
+The existing usage core and export schema are unchanged. Usage events contain only a SHA-256-derived event identifier, timestamp and observed model/tier/effort metadata; no source text or reference is placed in the event. SakuraMeter now treats the actual outgoing ChatGPT user-message request ID as the primary counting signal. DOM/rendered-message receipts remain a fallback and use the same deterministic event ID, so the two paths deduplicate instead of double-counting. Missing request IDs do not prevent sending; the DOM fallback may still count the send when a stable rendered identity is available. The original read-only account-usage refresh and public reset forecast behavior remain unchanged.
+
+## Test boundary
+
+Only offline synthetic DOM/Chrome-API tests were performed here. No real account was used and no real user/model message was sent by the tests. Current ChatGPT UI compatibility needs local testing.
+
+## Context serialization
+
+The extension keeps XML-style model-facing boundaries and uses context ordering/selection emphasis: an explicit highlight is sent first as the primary focus, while page text is reduced to supporting background around that highlight. Internal storage remains unchanged. The visible context ID is random per send and is used locally to correlate the rendered user message; it contains no account identifier.
+
+
+## Popup trend metadata
+The popup now keeps a small local 7-day Codex remaining-percentage trend (timestamp, remaining percentage, reset timestamp) under `__gptLiveUsageTrendV1` so the mini sparkline reflects observed data rather than decoration. It contains no chat text or account identifier. Pro mini trend is derived from the existing local daily message counts.
+
+## Pro model detection
+
+For local Pro usage classification, SakuraMeter observes only model-related metadata from the outgoing ChatGPT send request (for example model/model_slug, model tier, and reasoning-effort fields). The observer runs locally in the page's main JavaScript world, does not block or alter the request, and does not send or persist request bodies or message text. The resolved model label/tier and a short source label may be stored with the local usage event. If request metadata is unavailable or ambiguous, SakuraMeter falls back to the visible composer model selector.
+
+## Automatic Pro allowance learning
+
+SakuraMeter now observes same-origin ChatGPT JSON responses for Pro allowance metadata when ChatGPT itself exposes it. The observer skips conversation/message endpoints and never forwards response bodies. Only normalized fields needed for usage display are sent to the extension service worker: allowance label/id, remaining/limit values, percentages, reset time, window length, source path, and timestamp.
+
+If no such metadata is observed, SakuraMeter continues to store only confirmed local Pro send events and does not invent a remaining balance or reset time. Learned reset-cycle metadata is stored locally only after an explicit server window or a real refill/reset transition is observed. Manual corrections remain available only under Advanced settings.
+
+
+## Tracker reliability
+
+SakuraMeter may read the client-generated user message identifier attached to a ChatGPT send request so it can count that actual send without depending on the current button/composer DOM. The request observer does not export or persist message text, prompt content, attachments, or conversation bodies. The raw message identifier is kept only transiently in page memory; persistent usage storage contains SakuraMeter's SHA-256-derived event ID for deduplication.

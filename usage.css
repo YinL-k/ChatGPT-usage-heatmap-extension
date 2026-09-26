@@ -1,4 +1,4 @@
-/* Sakura 3.4.0.7 — refresh UX polish on top of the reliability core. */
+/* Sakura refresh UX polish on top of the reliability core. */
 [hidden]{display:none!important}
 button,input,select{font:inherit}
 button{cursor:pointer}
@@ -6,7 +6,7 @@ button:disabled{opacity:.48;cursor:default}
 button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible,a:focus-visible{outline:2px solid var(--accent-color);outline-offset:3px}
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 
-.test-label{font-size:9px;letter-spacing:.11em;border:1px solid color-mix(in srgb,var(--accent-color) 28%,var(--border-color));padding:4px 7px;border-radius:999px;color:var(--muted-text-color);font-weight:650;white-space:nowrap;background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
+.version-label{font-size:9px;letter-spacing:.11em;border:1px solid color-mix(in srgb,var(--accent-color) 28%,var(--border-color));padding:4px 7px;border-radius:999px;color:var(--muted-text-color);font-weight:650;white-space:nowrap;background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
 .title-with-tag{display:flex;align-items:center;gap:10px}
 .view-tabs{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;padding:3px;border:0;border-radius:12px;background:color-mix(in srgb,var(--accent-soft) 72%,var(--card-bg));width:max-content;margin:0 0 24px;isolation:isolate;overflow:hidden}
 .view-tabs .tab-slider{position:absolute;z-index:0;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/2);border-radius:9px;background:var(--card-bg);box-shadow:0 5px 14px color-mix(in srgb,var(--shadow-color) 55%,transparent),inset 0 0 0 1px color-mix(in srgb,var(--border-color) 65%,transparent);transform:translateX(0);transition:transform .34s cubic-bezier(.22,1,.36,1),box-shadow .22s,background .22s;pointer-events:none}
@@ -165,7 +165,7 @@ body.popup{width:390px;margin:0;padding:18px;background-image:none;background:va
 .usage-status:not(.error){padding:0 1px;background:transparent;color:var(--muted-text-color);opacity:.78}
 .popup .usage-status:not(.error){font-size:8px;margin-top:-6px}
 
-/* ===== 3.4.0.7 Compact popup + refresh UX states ===== */
+/* ===== Compact popup + refresh UX states ===== */
 .trust-badge{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:20px;padding:2px 7px;border-radius:999px;border:1px solid var(--border-color);font-size:8px;font-weight:680;letter-spacing:.015em;white-space:nowrap;line-height:1}
 .trust-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 10%,transparent)}
 .trust-badge.live{color:#43c78b;border-color:color-mix(in srgb,#43c78b 34%,var(--border-color));background:color-mix(in srgb,#43c78b 9%,transparent)}
@@ -239,7 +239,7 @@ body.popup-compact{width:360px;min-height:0;margin:0;padding:18px;background:var
 .trust-badge.stale{color:#d07a58;border-color:color-mix(in srgb,#d07a58 34%,var(--border-color));background:color-mix(in srgb,#d07a58 9%,transparent)}
 .trust-badge.estimated{color:var(--accent-color);border-color:color-mix(in srgb,var(--accent-color) 30%,var(--border-color));background:color-mix(in srgb,var(--accent-color) 10%,transparent)}
 
-/* ===== 3.4.0.8 Simple Auto: workspace concepts stay internal ===== */
+/* ===== Simple Auto: workspace concepts stay internal ===== */
 .compact-plan-card{padding:0 0 10px;border:0;border-bottom:1px solid color-mix(in srgb,var(--border-color) 72%,transparent);border-radius:0;background:transparent;box-shadow:none}
 .compact-plan-card .compact-eyebrow{text-transform:none;letter-spacing:.025em;font-size:8.5px}
 .compact-plan-card .compact-workspace-copy strong{font-size:12.5px}
@@ -248,12 +248,12 @@ body.popup-compact{width:360px;min-height:0;margin:0;padding:18px;background:var
 .usage-source .source-label{max-width:210px}
 .usage-commandbar .usage-source select#usageTab{display:none!important}
 
-/* 3.4.0.10: automatic source is status text, never a selector. */
+/* automatic source is status text, never a selector. */
 .auto-source{position:relative}
 .auto-source .source-label{max-width:none!important;color:var(--muted-text-color);font-weight:500}
 .auto-source .source-label::after{content:none!important}
 
-/* ===== 3.4.0.11 Release-safe local-only usage ===== */
+/* ===== Release-safe local-only usage ===== */
 .release-safe-usage{gap:16px}
 .release-safe-banner{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid color-mix(in srgb,var(--accent-color) 20%,var(--border-color));border-radius:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent-soft) 62%,var(--card-bg)),var(--card-bg));}
 .release-safe-banner .source-indicator{margin-top:5px;flex:0 0 auto}
@@ -269,7 +269,7 @@ body.popup-compact{width:360px;min-height:0;margin:0;padding:18px;background:var
 .popup-compact .compact-plan-card .trust-badge{margin-left:auto}
 
 
-/* ===== 3.4.0.13 Popup polish ===== */
+/* ===== Popup polish ===== */
 .popup-compact h1{font-size:18px}
 .compact-version{font-size:8px;padding:3px 5.5px}
 .compact-header-actions .lang-inline{font-size:9.5px}
@@ -319,7 +319,7 @@ body.popup-compact{width:360px;min-height:0;margin:0;padding:18px;background:var
 @media(prefers-reduced-motion:reduce){.compact-dashboard-button,.dashboard-arrow{transition:none!important}}
 
 
-/* ===== 3.4.0.14 Popup simplification + status-driven refresh ===== */
+/* ===== Popup simplification + status-driven refresh ===== */
 .popup-compact .compact-header{margin-bottom:16px}
 .popup-compact .compact-header>div:first-child{gap:9px}
 .compact-header-actions{display:none!important}
@@ -345,7 +345,7 @@ body.popup-compact{width:360px;min-height:0;margin:0;padding:18px;background:var
 @media(prefers-reduced-motion:reduce){.plan-status-pill{transition:none!important}}
 
 
-/* ===== 3.4.0.15 Activity mini card ===== */
+/* ===== Activity mini card ===== */
 .activity-mini-card{padding:12px 14px 11px;overflow:hidden}
 .activity-mini-summary{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:3px}
 .activity-mini-count{display:flex;align-items:baseline;gap:5px;min-width:0}
@@ -362,7 +362,7 @@ body.popup-compact{width:360px;min-height:0;margin:0;padding:18px;background:var
 .activity-sparkline.is-empty .activity-sparkline-area{opacity:0}
 .activity-sparkline.is-empty .activity-sparkline-line{opacity:.18;stroke:var(--muted-text-color);filter:none}
 
-/* ===== 3.4.0.18 True Reference Popup ===== */
+/* ===== True Reference Popup ===== */
 body.popup-reference-v3{
   width:340px;height:600px;min-height:600px;margin:0;padding:0;overflow:hidden;
   color:#f8f5f6;background:#090a0c;

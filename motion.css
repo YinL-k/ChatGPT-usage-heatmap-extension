@@ -1,0 +1,211 @@
+/* SakuraMeter unified motion system.
+   Principles: hierarchy first, one-shot state motion, GPU-friendly transform/opacity,
+   no decorative loops except low-frequency status feedback and the Side Chat preview field. */
+:root{
+  --sm-motion-fast:140ms;
+  --sm-motion-ui:220ms;
+  --sm-motion-card:340ms;
+  --sm-motion-enter:520ms;
+  --sm-motion-slow:720ms;
+  --sm-ease-out:cubic-bezier(.22,1,.36,1);
+  --sm-ease-soft:cubic-bezier(.2,.72,.18,1);
+  --sm-ease-press:cubic-bezier(.3,.8,.2,1);
+}
+
+/* ---------- shared interaction language ---------- */
+button,a,[role="button"],summary,.permission-choice,.day-cell,.overview-kpi,.overview-panel,.stat-box,.summary-block,.rf-metric{
+  -webkit-tap-highlight-color:transparent;
+}
+button:not(:disabled),a,[role="button"],summary{transition:transform var(--sm-motion-fast) var(--sm-ease-press),opacity var(--sm-motion-ui) ease,color var(--sm-motion-ui) ease,background-color var(--sm-motion-ui) ease,border-color var(--sm-motion-ui) ease,box-shadow var(--sm-motion-ui) ease}
+button:not(:disabled):active,[role="button"]:active{transform:translateY(1px) scale(.985)}
+.sm-value-updated{animation:sm-value-pop 420ms var(--sm-ease-out)}
+.sm-item-enter{animation:sm-item-enter 380ms var(--sm-ease-out) both}
+@keyframes sm-value-pop{0%{transform:translateY(1px) scale(.97);opacity:.64}48%{transform:translateY(-1px) scale(1.035);opacity:1}100%{transform:none;opacity:1}}
+@keyframes sm-item-enter{from{opacity:0;transform:translateY(7px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes sm-soft-pulse{0%,4%,100%{transform:scale(1);opacity:.86;box-shadow:0 0 0 0 currentColor}7%{transform:scale(1.12);opacity:1;box-shadow:0 0 0 5px transparent}10%{transform:scale(1);opacity:.9;box-shadow:0 0 0 0 transparent}}
+@keyframes sm-panel-enter{from{opacity:0;transform:translateY(9px) scale(.992)}to{opacity:1;transform:none}}
+@keyframes sm-modal-in{from{opacity:0;transform:translateY(12px) scale(.975)}to{opacity:1;transform:none}}
+@keyframes sm-tooltip-in{from{opacity:0;transform:translateY(4px) scale(.98)}to{opacity:1;transform:none}}
+
+/* ---------- compact popup ---------- */
+html.sm-motion-pending #artboard .header,
+html.sm-motion-pending #artboard .card,
+html.sm-motion-pending #artboard .dashboard-cta,
+html.sm-motion-pending #artboard .footer{opacity:0;transform:translateY(10px) scale(.992)}
+html.sm-motion-ready #artboard .header,
+html.sm-motion-ready #artboard .card,
+html.sm-motion-ready #artboard .dashboard-cta,
+html.sm-motion-ready #artboard .footer{
+  opacity:1;transform:none;
+  transition:opacity var(--sm-motion-enter) var(--sm-ease-soft),transform var(--sm-motion-enter) var(--sm-ease-soft),box-shadow var(--sm-motion-card) ease,border-color var(--sm-motion-card) ease;
+}
+html.sm-motion-ready #artboard .header{transition-delay:0ms}
+html.sm-motion-ready #artboard .membership{transition-delay:45ms}
+html.sm-motion-ready #artboard .usage-trend-main{transition-delay:80ms}
+html.sm-motion-ready #artboard .pro{transition-delay:115ms}
+html.sm-motion-ready #artboard .codex{transition-delay:150ms}
+html.sm-motion-ready #artboard .activity{transition-delay:185ms}
+html.sm-motion-ready #artboard .dashboard-cta{transition-delay:220ms}
+html.sm-motion-ready #artboard .footer{transition-delay:255ms}
+
+/* Membership identity should feel anchored, not animated like a data card.
+   Fade the card in, but keep Business Premium spatially fixed and avoid hover translation. */
+html.sm-motion-pending #artboard .membership,
+html.sm-motion-ready #artboard .membership{transform:none!important}
+#artboard .membership:hover{transform:none!important;box-shadow:inset 0 0 21px rgba(255,255,255,.012),0 8px 24px rgba(0,0,0,.12)}
+#artboard .membership .membership-title{animation:none!important;transition:none!important;transform:scaleX(.956)!important}
+
+#artboard .card{will-change:auto}
+#artboard .card:hover{transform:translateY(-2px) scale(1.0015);box-shadow:inset 0 0 21px rgba(255,255,255,.012),0 10px 28px rgba(0,0,0,.16)}
+#artboard .card .icon-tile{transition:transform var(--sm-motion-card) var(--sm-ease-out),box-shadow var(--sm-motion-card) ease}
+#artboard .card:hover .icon-tile{transform:translateY(-2px) scale(1.025)}
+#artboard .waves{transition:transform 700ms var(--sm-ease-soft),opacity 520ms ease}
+#artboard .card:hover .waves{transform:translate3d(5px,-2px,0) scale(1.008);opacity:.16}
+#artboard .dashboard-cta{transition:transform var(--sm-motion-card) var(--sm-ease-out),box-shadow var(--sm-motion-card) ease,filter var(--sm-motion-card) ease!important}
+#artboard .dashboard-cta:hover{transform:translateY(-3px) scale(1.002);box-shadow:0 15px 34px rgba(0,0,0,.22),0 0 24px rgba(233,144,181,.08)}
+#artboard .dashboard-cta .cta-arrow{transition:transform var(--sm-motion-card) var(--sm-ease-out)}
+#artboard .dashboard-cta:hover .cta-arrow{transform:translateX(5px)}
+#artboard .dashboard-cta:hover .icon-tile{transform:translateY(-1px) scale(1.035)}
+#artboard .language button:hover{transform:translateY(-1px)}
+#artboard .toggle-knob{transition:transform 300ms var(--sm-ease-out),background-color 260ms ease,box-shadow 260ms ease!important}
+#artboard .toggle:hover .toggle-knob{box-shadow:0 0 0 5px rgba(236,158,192,.08)}
+#artboard .card-action .chevron,.codex-reset-open .chevron{transition:transform var(--sm-motion-ui) var(--sm-ease-out),opacity var(--sm-motion-ui) ease}
+#artboard .card-action:hover .chevron,.codex-reset-open:hover .chevron{transform:translateX(3px)}
+#artboard .progress-fill,#artboard .codex-reset-track>span{transition:width 760ms var(--sm-ease-out)!important}
+#artboard .pro-background-kpi,#artboard .codex-background-kpi{transition:transform 620ms var(--sm-ease-out),opacity 420ms ease}
+#artboard .pro:hover .pro-background-kpi,#artboard .codex:hover .codex-background-kpi{transform:translateX(-3px)}
+#artboard .trust-badge.live .dot,#artboard .trend-dot{animation:sm-soft-pulse 5.2s ease-in-out infinite}
+#artboard .trend-main-line,#artboard .trend-path{stroke-dasharray:1;stroke-dashoffset:1;animation:sm-line-draw 760ms var(--sm-ease-out) 240ms forwards}
+@keyframes sm-line-draw{to{stroke-dashoffset:0}}
+#artboard #usageTrendDots circle{transform-box:fill-box;transform-origin:center;animation:sm-dot-enter 340ms var(--sm-ease-out) backwards;animation-delay:calc(300ms + var(--sm-i,0)*45ms)}
+@keyframes sm-dot-enter{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+#artboard .activity-column{transition:transform var(--sm-motion-card) var(--sm-ease-out),background-color var(--sm-motion-ui) ease}
+#artboard .activity-column:hover{transform:translateY(-2px)}
+#artboard .info-button:hover{transform:rotate(6deg) scale(1.04)}
+#artboard #scOpen:hover svg{transform:translateY(-1px) scale(1.07)}
+#artboard #scOpen svg{transition:transform var(--sm-motion-ui) var(--sm-ease-out)}
+
+/* ---------- full dashboard ---------- */
+html.sm-motion-pending body:has(.container) .container>.header,
+html.sm-motion-pending body:has(.container) .view-tabs,
+html.sm-motion-pending body:has(.container) .view-panel:not([hidden]){opacity:0;transform:translateY(10px)}
+html.sm-motion-ready body:has(.container) .container>.header,
+html.sm-motion-ready body:has(.container) .view-tabs,
+html.sm-motion-ready body:has(.container) .view-panel:not([hidden]){opacity:1;transform:none;transition:opacity var(--sm-motion-enter) var(--sm-ease-soft),transform var(--sm-motion-enter) var(--sm-ease-soft)}
+html.sm-motion-ready body:has(.container) .view-tabs{transition-delay:60ms}
+html.sm-motion-ready body:has(.container) .view-panel:not([hidden]){transition-delay:110ms}
+body:has(.container) .view-panel:not([hidden]){animation:sm-panel-enter 420ms var(--sm-ease-soft)!important}
+body:has(.container) .view-tabs .tab-slider{transition:transform 440ms var(--sm-ease-out),background-color 260ms ease,box-shadow 260ms ease!important}
+body:has(.container) .view-tabs button:hover{transform:translateY(-1px)}
+body:has(.container) .view-tabs button[aria-selected="true"]{text-shadow:0 0 18px color-mix(in srgb,var(--accent-color,#d889aa) 20%,transparent)}
+body:has(.container) :is(.overview-kpi,.overview-panel,.stat-box,.summary-block,.rf-metric,.usage-detail-grid>* ,.cycle-card,.window-card){transition:transform var(--sm-motion-card) var(--sm-ease-out),border-color var(--sm-motion-ui) ease,box-shadow var(--sm-motion-card) ease,background-color var(--sm-motion-ui) ease}
+body:has(.container) :is(.overview-kpi,.overview-panel,.stat-box,.summary-block,.rf-metric,.cycle-card,.window-card):hover{transform:translateY(-3px);box-shadow:0 13px 32px rgba(0,0,0,.11)}
+body:has(.container) .overview-context{animation:sm-item-enter 430ms var(--sm-ease-out) both}
+body:has(.container) .overview-kpi{animation:sm-item-enter 440ms var(--sm-ease-out) both;animation-delay:calc(60ms + var(--sm-i,0)*55ms)}
+body:has(.container) .overview-panel{animation:sm-item-enter 460ms var(--sm-ease-out) both;animation-delay:calc(120ms + var(--sm-i,0)*45ms)}
+body:has(.container) .stat-box{animation:sm-item-enter 420ms var(--sm-ease-out) both;animation-delay:calc(45ms + var(--sm-i,0)*38ms)}
+body:has(.container) .overview-kpi-value,body:has(.container) .stat-box .value,body:has(.container) .rf-value{transform-origin:left center}
+body:has(.container) .overview-jump button:hover,body:has(.container) .tool-btn:hover,body:has(.container) .secondary-button:hover,body:has(.container) .refresh-button:hover{transform:translateY(-2px)}
+body:has(.container) .rf-refresh:hover{transform:rotate(20deg) scale(1.04)}
+body:has(.container) .refresh-button.is-refreshing .refresh-svg,body:has(.container) #rfRefresh[aria-busy="true"]{animation:sm-spin 900ms linear infinite}
+@keyframes sm-spin{to{transform:rotate(360deg)}}
+body:has(.container) .cycle-progress>span,body:has(.container) .window-progress>span,body:has(.container) .rf-track>span,body:has(.container) .summary-bar-fill{transition:width 760ms var(--sm-ease-out)!important}
+body:has(.container) .graph-container,body:has(.container) .daily-chart-wrapper,body:has(.container) .time-distribution-chart-wrapper,body:has(.container) .overview-chart-wrap{animation:sm-chart-reveal 560ms var(--sm-ease-soft) both}
+@keyframes sm-chart-reveal{from{opacity:0;transform:translateY(7px) scale(.995)}to{opacity:1;transform:none}}
+body:has(.container) .day-cell{transition:transform 220ms var(--sm-ease-out),box-shadow 220ms ease,filter 220ms ease!important;transform-origin:center}
+body:has(.container) .day-cell:hover{transform:translateY(-3px) scale(1.09)!important;z-index:2;filter:saturate(1.12)}
+body:has(.container) .legend-item{transition:transform var(--sm-motion-ui) var(--sm-ease-out),filter var(--sm-motion-ui) ease}
+body:has(.container) .legend-item:hover{transform:translateY(-2px) scale(1.1);filter:saturate(1.1)}
+body:has(.container) .tooltip-visible{animation:sm-tooltip-in 180ms var(--sm-ease-out)}
+body:has(.container) .modal-overlay:not(.hidden){animation:sm-overlay-in 230ms ease both}
+body:has(.container) .modal-overlay:not(.hidden) .modal{animation:sm-modal-in 360ms var(--sm-ease-out) both}
+@keyframes sm-overlay-in{from{opacity:0}to{opacity:1}}
+body:has(.container) .modal-close:hover{transform:rotate(5deg) scale(1.04)}
+body:has(.container) details.advanced-panel summary .advanced-chevron{transition:transform 320ms var(--sm-ease-out)}
+body:has(.container) details.advanced-panel[open] summary .advanced-chevron{transform:rotate(180deg)}
+body:has(.container) .overview-freshness.live::before,body:has(.container) .trust-badge.live::before{animation:sm-soft-pulse 5.4s ease-in-out infinite}
+
+/* ---------- side chat shell / onboarding ---------- */
+html.sm-motion-pending body[data-side-stage] .welcome-art,
+html.sm-motion-pending body[data-side-stage] .welcome .eyebrow,
+html.sm-motion-pending body[data-side-stage] .welcome h2,
+html.sm-motion-pending body[data-side-stage] .welcome .lead,
+html.sm-motion-pending body[data-side-stage] .welcome .sample-quote,
+html.sm-motion-pending body[data-side-stage] .welcome .permissions,
+html.sm-motion-pending body[data-side-stage] .welcome .primary-button,
+html.sm-motion-pending body[data-side-stage] .welcome .footnote,
+html.sm-motion-pending body[data-side-stage] .welcome .disclosure{opacity:0;transform:translateY(10px) scale(.99)}
+html.sm-motion-ready body[data-side-stage] .welcome-art,
+html.sm-motion-ready body[data-side-stage] .welcome .eyebrow,
+html.sm-motion-ready body[data-side-stage] .welcome h2,
+html.sm-motion-ready body[data-side-stage] .welcome .lead,
+html.sm-motion-ready body[data-side-stage] .welcome .sample-quote,
+html.sm-motion-ready body[data-side-stage] .welcome .permissions,
+html.sm-motion-ready body[data-side-stage] .welcome .primary-button,
+html.sm-motion-ready body[data-side-stage] .welcome .footnote,
+html.sm-motion-ready body[data-side-stage] .welcome .disclosure{opacity:1;transform:none;transition:opacity 560ms var(--sm-ease-soft),transform 560ms var(--sm-ease-soft)}
+html.sm-motion-ready body[data-side-stage] .welcome-art{transition-delay:20ms}
+html.sm-motion-ready body[data-side-stage] .welcome .eyebrow{transition-delay:70ms}
+html.sm-motion-ready body[data-side-stage] .welcome h2{transition-delay:110ms}
+html.sm-motion-ready body[data-side-stage] .welcome .lead{transition-delay:150ms}
+html.sm-motion-ready body[data-side-stage] .welcome .sample-quote{transition-delay:190ms}
+html.sm-motion-ready body[data-side-stage] .welcome .permissions{transition-delay:230ms}
+html.sm-motion-ready body[data-side-stage] .welcome .primary-button{transition-delay:270ms}
+html.sm-motion-ready body[data-side-stage] .welcome .footnote{transition-delay:305ms}
+html.sm-motion-ready body[data-side-stage] .welcome .disclosure{transition-delay:335ms}
+body[data-side-stage] .welcome-art img{transition:transform 520ms var(--sm-ease-out),filter 420ms ease}
+body[data-side-stage] .welcome-art:hover img{transform:translateY(-3px) scale(1.035);filter:drop-shadow(0 8px 20px rgba(221,116,164,.14))}
+body[data-side-stage] .permission-choice{transition:transform 260ms var(--sm-ease-out),border-color 220ms ease,background-color 220ms ease,box-shadow 260ms ease!important}
+body[data-side-stage] .permission-choice:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.09)}
+body[data-side-stage] .permission-choice:has(input:checked){transform:translateY(-1px);box-shadow:0 0 0 1px rgba(238,157,193,.08),0 8px 26px rgba(0,0,0,.07)}
+body[data-side-stage] .primary-button{position:relative;overflow:hidden;transition:transform 280ms var(--sm-ease-out),box-shadow 300ms ease,filter 260ms ease!important}
+body[data-side-stage] .primary-button::after{content:"";position:absolute;inset:-40% -24%;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.22) 50%,transparent 62%);transform:translateX(-72%) rotate(3deg);transition:transform 620ms var(--sm-ease-out)}
+body[data-side-stage] .primary-button:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(193,91,142,.18)}
+body[data-side-stage] .primary-button:hover::after{transform:translateX(72%) rotate(3deg)}
+body[data-side-stage] .sample-quote{transition:transform 280ms var(--sm-ease-out),border-color 220ms ease,box-shadow 280ms ease}
+body[data-side-stage] .sample-quote:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+body[data-side-stage] .sample-dot{animation:sm-soft-pulse 5.4s ease-in-out infinite}
+body[data-side-stage] .disclosure summary:hover{transform:translateX(2px)}
+body[data-side-stage] .popover:not([hidden]){animation:sm-popover-in 230ms var(--sm-ease-out) both;transform-origin:top right}
+@keyframes sm-popover-in{from{opacity:0;transform:translateY(-5px) scale(.97)}to{opacity:1;transform:none}}
+body[data-side-stage] .more-menu>button:hover{transform:translateX(3px)!important}
+body[data-side-stage] .toast:not([hidden]){animation:sm-toast-in 300ms var(--sm-ease-out) both}
+@keyframes sm-toast-in{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+body[data-side-stage] dialog[open]{animation:sm-modal-in 360ms var(--sm-ease-out) both}
+body[data-side-stage] dialog[open]::backdrop{animation:sm-overlay-in 240ms ease both}
+body[data-side-stage] .setting-block{animation:sm-item-enter 360ms var(--sm-ease-out) both;animation-delay:calc(var(--sm-i,0)*50ms)}
+body[data-side-stage] .icon-button:hover{transform:translateY(-1px) scale(1.04)}
+body[data-side-stage] .status-button i[data-status="ready"]{animation:sm-soft-pulse 5.6s ease-in-out infinite}
+
+/* one-shot polish for identity and data movement */
+html.sm-motion-ready #artboard .brand-mark,
+html.sm-motion-ready body:has(.container) .dashboard-brand-mark{
+  animation:sm-brand-settle 620ms var(--sm-ease-out) both;
+}
+@keyframes sm-brand-settle{from{opacity:0;transform:translateY(3px) scale(.88) rotate(-5deg)}60%{opacity:1;transform:translateY(-1px) scale(1.025) rotate(1deg)}to{opacity:1;transform:none}}
+#artboard #usageTrendDots circle{transition:transform 180ms var(--sm-ease-out),opacity 180ms ease}
+#artboard #usageTrendDots circle:hover{transform:scale(1.45)}
+/* Keep compact-popup progress fills absolutely positioned. Changing .progress-fill to
+   position:relative collapses the empty span to zero height and hides the Codex/Pro line. */
+.progress-fill{overflow:hidden}
+.cycle-progress>span,.window-progress>span,.rf-track>span,.codex-reset-track>span,.summary-bar-fill{position:relative;overflow:hidden}
+.sm-progress-updated::after{content:"";position:absolute;inset:-35% -12%;pointer-events:none;background:linear-gradient(105deg,transparent 34%,rgba(255,255,255,.22) 49%,transparent 64%);transform:translateX(-100%);animation:sm-progress-sheen 720ms var(--sm-ease-out) both}
+@keyframes sm-progress-sheen{to{transform:translateX(110%)}}
+body[data-side-stage] .welcome.sm-welcome-live .welcome-art{animation:sm-item-enter 480ms var(--sm-ease-out) both}
+body[data-side-stage] .welcome.sm-welcome-live .eyebrow{animation:sm-item-enter 470ms var(--sm-ease-out) 45ms both}
+body[data-side-stage] .welcome.sm-welcome-live h2{animation:sm-item-enter 500ms var(--sm-ease-out) 85ms both}
+body[data-side-stage] .welcome.sm-welcome-live .lead{animation:sm-item-enter 500ms var(--sm-ease-out) 120ms both}
+body[data-side-stage] .welcome.sm-welcome-live .sample-quote{animation:sm-item-enter 500ms var(--sm-ease-out) 155ms both}
+body[data-side-stage] .welcome.sm-welcome-live .permissions{animation:sm-item-enter 520ms var(--sm-ease-out) 190ms both}
+body[data-side-stage] .welcome.sm-welcome-live .primary-button{animation:sm-item-enter 520ms var(--sm-ease-out) 225ms both}
+body[data-side-stage] .welcome.sm-welcome-live .footnote{animation:sm-item-enter 500ms var(--sm-ease-out) 260ms both}
+body[data-side-stage] .welcome.sm-welcome-live .disclosure{animation:sm-item-enter 500ms var(--sm-ease-out) 290ms both}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:0ms!important}
+  html.sm-motion-pending #artboard .header,html.sm-motion-pending #artboard .card,html.sm-motion-pending #artboard .dashboard-cta,html.sm-motion-pending #artboard .footer,
+  html.sm-motion-pending body:has(.container) .container>.header,html.sm-motion-pending body:has(.container) .view-tabs,html.sm-motion-pending body:has(.container) .view-panel:not([hidden]),
+  html.sm-motion-pending body[data-side-stage] .welcome>*{opacity:1!important;transform:none!important}
+}
+
+html.sm-motion-settled #artboard :is(.header,.card,.dashboard-cta,.footer){transition-delay:0ms!important}

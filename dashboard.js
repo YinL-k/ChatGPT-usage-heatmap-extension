@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   let current='overview', storageTimer=null, overviewResizeTimer=null;
 
   function redrawActivity(){
-    if(typeof renderCalendar==='function'&&yearSelectEl){
+    if(typeof renderCalendar==='function'&&Number.isFinite(currentYear)){
       renderCalendar(currentYear);
       updateDailyChartForToday();
       updateTimeDistribution();
@@ -78,17 +78,22 @@ document.addEventListener('DOMContentLoaded',()=>{
       else deltaEl.textContent=thisWeek?t('no_baseline'):t('week_empty');
       document.getElementById('overviewMonth').textContent=fmt(r.stats?.month||0);
 
-      const rules=preset?.rules?C.allowance(state,C.LOCAL_SCOPE,planKey):[];
-      const proRule=rules.find(x=>x.remaining!==null)||rules[0]||null;
+      const rules=C.proAllowances(state,C.LOCAL_SCOPE,planKey,r.proUsage,r.proCycles);
+      const proRule=C.proPrimary(rules);
       const proEl=document.getElementById('overviewPro'),proSub=document.getElementById('overviewProSub');
-      document.getElementById('overviewProTitle').textContent=t(proRule?(proRule.remaining!==null?'pro_estimated_title':'pro_recorded_title'):'pro_usage_title');
+      let proTitle='pro_usage_title';
+      if(proRule?.mode==='official')proTitle='pro_reported_title';
+      else if(proRule?.mode==='learned'||proRule?.mode==='manual')proTitle='pro_estimated_title';
+      else if(proRule)proTitle='pro_recorded_title';
+      document.getElementById('overviewProTitle').textContent=t(proTitle);
       let note=document.getElementById('overviewCacheNote');
       if(!note){note=document.createElement('p');note.id='overviewCacheNote';note.className='usage-cache-note';note.setAttribute('role','status');document.querySelector('.overview-context').after(note);}
       note.textContent=GPTFeedback.savedUsage(live,fresh.kind);note.hidden=!note.textContent;
       if(proRule){
-        if(proRule.remaining!==null){proEl.textContent=`≈ ${fmt(proRule.remaining)}`;proSub.textContent=tr('pro_of_reset',{cap:fmt(proRule.cap),date:fmtShortDate(proRule.resetAt)});}
-        else{proEl.textContent=fmt(proRule.observed);proSub.textContent=t('local_sync');}
-      }else{proEl.textContent='—';proSub.textContent=preset?t('no_pro_preset'):t('plan_unknown');}
+        if(Number.isFinite(proRule.remaining)){proEl.textContent=`${proRule.mode==='official'?'':'≈ '}${fmt(proRule.remaining)}`;proSub.textContent=Number.isFinite(proRule.resetAt)?`${proRule.mode==='official'?t('pro_reported','Reported by ChatGPT'):t('trust_estimated')} · ${t('compact_resets')} ${fmtShortDate(proRule.resetAt)}`:(proRule.mode==='official'?t('pro_reported','Reported by ChatGPT'):t('pro_learning_cycle','Learning reset cycle'));}
+        else if(Number.isFinite(proRule.remainingPercent)){proEl.textContent=`${fmt(proRule.remainingPercent)}%`;proSub.textContent=Number.isFinite(proRule.resetAt)?`${t('pro_reported','Reported by ChatGPT')} · ${t('compact_resets')} ${fmtShortDate(proRule.resetAt)}`:t('pro_reported','Reported by ChatGPT');}
+        else{proEl.textContent=fmt(proRule.observed||0);proSub.textContent=t('pro_observed_learning','Confirmed local Pro sends only · learning reset cycle automatically.');}
+      }else{proEl.textContent='—';proSub.textContent=preset?t('pro_waiting_metadata','Tracking Pro sends · waiting for reset metadata'):t('plan_unknown');}
 
       const primary=(live?.meters||[]).find(m=>m.id==='main:primary_window')||(live?.meters||[]).find(m=>m.id.endsWith('primary_window'));
       const codexEl=document.getElementById('overviewCodex'),codexSub=document.getElementById('overviewCodexSub');
@@ -105,7 +110,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     renderResets(rules,live){
       const host=document.getElementById('overviewResets');host.replaceChildren();
       const items=[];
-      for(const r of rules||[])if(Number.isFinite(r.resetAt))items.push({name:r.id==='shared_week'?t('pro_allowance'):r.id==='astra_week'?'GPT-6 Pro':r.id==='sol_day'?'GPT-5.6 Sol Pro':t('pro_allowance'),note:t('u_local'),ts:r.resetAt,green:false});
+      for(const r of rules||[]){
+        if(!Number.isFinite(r.resetAt))continue;
+        const name=r.label||(r.id==='shared_week'?t('pro_allowance'):r.id==='astra_week'?'GPT-6 Pro':r.id==='sol_day'?'GPT-5.6 Sol Pro':t('pro_allowance'));
+        const note=r.mode==='official'?t('compact_server_reported'):r.mode==='learned'?t('trust_estimated'):t('u_local');
+        items.push({name,note,ts:r.resetAt,green:false});
+      }
       for(const m of live?.meters||[]){
         if(!Number.isFinite(m.resetAt)||!(m.id==='main:primary_window'||m.id==='main:secondary_window'))continue;
         items.push({name:`Codex · ${C.windowLabel(m.windowSeconds,document.documentElement.lang)}`,note:t('compact_server_reported'),ts:m.resetAt,green:true});

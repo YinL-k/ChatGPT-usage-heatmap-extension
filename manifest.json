@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "3.5.0",
-  "version_name": "3.5.0",
+  "version": "3.6.0.61",
+  "version_name": "3.6.0.61",
   "description": "__MSG_extensionDescription__",
-  "minimum_chrome_version": "111",
+  "minimum_chrome_version": "116",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -23,9 +23,46 @@
   },
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "sidePanel",
+    "scripting",
+    "declarativeNetRequestWithHostAccess"
   ],
   "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "model-observer-main.js",
+        "pro-usage-observer-main.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "usage-network-bridge.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "pro-usage-bridge.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    },
     {
       "matches": [
         "https://chatgpt.com/*"
@@ -36,6 +73,20 @@
       ],
       "run_at": "document_idle",
       "world": "ISOLATED"
+    },
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "sidechat/core.js",
+        "sidechat/view.js",
+        "model-resolver.js",
+        "sidechat/adapter.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "world": "ISOLATED"
     }
   ],
   "background": {
@@ -45,5 +96,33 @@
     "https://chatgpt.com/*"
   ],
   "default_locale": "en",
-  "short_name": "SakuraMeter"
+  "short_name": "SakuraMeter",
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "side_panel": {
+    "default_path": "sidechat/panel.html"
+  },
+  "commands": {
+    "open-side-chat": {
+      "suggested_key": {
+        "default": "Alt+Shift+C"
+      },
+      "description": "Open SakuraMeter Side Chat"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; frame-src https://chatgpt.com; base-uri 'self';"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/sakurameter-32.png"
+      ],
+      "matches": [
+        "https://chatgpt.com/*"
+      ]
+    }
+  ]
 }

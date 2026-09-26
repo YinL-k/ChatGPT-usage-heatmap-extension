@@ -1,0 +1,240 @@
+/* Dark texture hierarchy
+   Goal: keep B's premium depth without repeating the same concentric arc on every card.
+   LIGHT remains the approved A / Fine Waves from reference-hybrid.css.
+   POPUP remains unchanged. This layer only reorganizes the full dashboard dark theme. */
+
+body.dark:has(>.container){
+  --th-pink:224 149 177;
+  --th-pink-soft:197 126 153;
+  --th-green:115 198 143;
+  --th-green-soft:82 151 109;
+  --th-ripple-pink:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='860' height='190' viewBox='0 0 860 190'%3E%3Cg fill='none' stroke='%23d99ab1' stroke-width='1.35' stroke-opacity='.45' stroke-linecap='round'%3E%3Cpath d='M-35 112C72 74 139 139 247 102S411 43 534 88s187 69 326 12'/%3E%3Cpath d='M-38 124C69 87 145 151 250 115S416 57 538 101s184 65 325 11'/%3E%3Cpath d='M-42 136C65 101 151 163 254 128S420 72 542 114s181 61 324 9'/%3E%3Cpath d='M-46 148C61 115 157 175 258 141S425 87 546 127s178 57 323 7'/%3E%3Cpath d='M-50 160C57 129 163 187 262 154S430 102 550 140s175 53 322 5'/%3E%3C/g%3E%3C/svg%3E");
+  --th-ripple-green:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='860' height='190' viewBox='0 0 860 190'%3E%3Cg fill='none' stroke='%237fc391' stroke-width='1.35' stroke-opacity='.43' stroke-linecap='round'%3E%3Cpath d='M-35 112C72 74 139 139 247 102S411 43 534 88s187 69 326 12'/%3E%3Cpath d='M-38 124C69 87 145 151 250 115S416 57 538 101s184 65 325 11'/%3E%3Cpath d='M-42 136C65 101 151 163 254 128S420 72 542 114s181 61 324 9'/%3E%3Cpath d='M-46 148C61 115 157 175 258 141S425 87 546 127s178 57 323 7'/%3E%3Cpath d='M-50 160C57 129 163 187 262 154S430 102 550 140s175 53 322 5'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* 1) Reset the inherited "every card gets the same arc" rule in DARK only. */
+body.dark:has(>.container) :is(
+  .overview-context,.overview-kpi,.overview-panel,
+  .stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,
+  .usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,
+  .reset-forecast,.usage-details,.advanced-panel,.modal
+)::before{
+  background:none!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+  filter:none!important;
+  opacity:0!important;
+  transform:none!important;
+}
+
+/* Remove the small cloned rings from KPI cards and reset forecast. */
+body.dark:has(>.container) .overview-kpi::after{display:none!important}
+body.dark:has(>.container) .reset-forecast::after{display:none!important}
+
+/* Shared role primitives. */
+body.dark:has(>.container) :is(
+  .overview-context,.overview-panel,.graph-container,.daily-chart-wrapper,.summary-block,
+  .time-distribution-section,.usage-context-strip,.usage-detail-section,.usage-history-card,
+  .cycle-card,.window-card,.reset-forecast
+){overflow:hidden}
+
+/* Ambient = a broad, blurred glass reflection. It reads as atmosphere, not a literal ring. */
+body.dark:has(>.container) :is(
+  .graph-container,
+  .overview-context,
+  .usage-detail-section.pro-detail,
+  .usage-detail-section.codex-detail,
+  .reset-forecast
+)::before{
+  content:"";
+  position:absolute;
+  inset:-24px -32px -30px 36%;
+  z-index:-1;
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:.55!important;
+  filter:blur(17px)!important;
+  transform:scale(1.045)!important;
+  background:
+    radial-gradient(ellipse 520px 235px at 104% 112%,transparent 0 43%,rgb(var(--th-pink)/.19) 47%,rgb(var(--th-pink)/.10) 54%,transparent 60%),
+    radial-gradient(ellipse 610px 300px at 115% 116%,transparent 0 58%,rgb(var(--th-pink-soft)/.095) 62%,transparent 70%),
+    linear-gradient(125deg,rgba(255,229,239,.035),transparent 42%)!important;
+}
+body.dark:has(>.container) .usage-detail-section.codex-detail::before{
+  opacity:.47!important;
+  background:
+    radial-gradient(ellipse 520px 235px at 104% 112%,transparent 0 43%,rgb(var(--th-green)/.17) 47%,rgb(var(--th-green)/.075) 54%,transparent 60%),
+    radial-gradient(ellipse 610px 300px at 115% 116%,transparent 0 58%,rgb(var(--th-green-soft)/.075) 62%,transparent 70%),
+    linear-gradient(125deg,rgba(222,255,231,.025),transparent 42%)!important;
+}
+body.dark:has(>.container) .overview-context::before{
+  inset:-34px -22px -34px 52%;opacity:.33!important;filter:blur(20px)!important;
+}
+body.dark:has(>.container) .reset-forecast::before{
+  inset:-34px -22px -42px 48%;opacity:.30!important;filter:blur(22px)!important;
+}
+
+/* 2) Activity page — rhythm instead of repetition. */
+/* KPI row: mostly clean. Only first and last receive a very faint native fine-wave accent. */
+body.dark:has(>.container) .stats-bar .stat-box::before{opacity:0!important}
+body.dark:has(>.container) .stats-bar .stat-box:first-child::before,
+body.dark:has(>.container) .stats-bar .stat-box:last-child::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.22!important;
+  background:var(--lux-wave-pink) right 118% / 125% auto no-repeat!important;
+  -webkit-mask-image:linear-gradient(100deg,transparent 42%,#000 80%)!important;
+  mask-image:linear-gradient(100deg,transparent 42%,#000 80%)!important;
+}
+
+/* Heatmap = one ambient highlight only; no line pattern competing with the grid. */
+body.dark:has(>.container) .graph-container{
+  background-image:linear-gradient(120deg,rgba(19,22,23,.96),rgba(15,17,19,.92))!important;
+}
+body.dark:has(>.container) .graph-container::before{opacity:.42!important}
+
+/* 24-hour chart keeps the native fine wave already used by SakuraMeter. */
+body.dark:has(>.container) .daily-chart-wrapper::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.31!important;
+  background:var(--lux-wave-pink) right 112% / 68% auto no-repeat!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 36%,#000 73%)!important;
+  mask-image:linear-gradient(90deg,transparent 36%,#000 73%)!important;
+}
+
+/* Monthly = clean; Weekly = fine wave; Weekday = clean. */
+body.dark:has(>.container) .trend-summary .summary-block::before{opacity:0!important}
+body.dark:has(>.container) .trend-summary .summary-block:nth-child(2)::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.22!important;
+  background:var(--lux-wave-pink) right 108% / 112% auto no-repeat!important;
+  -webkit-mask-image:linear-gradient(105deg,transparent 46%,#000 84%)!important;
+  mask-image:linear-gradient(105deg,transparent 46%,#000 84%)!important;
+}
+
+/* Time-of-day = new irregular water ripple; deliberately not concentric. */
+body.dark:has(>.container) .time-distribution-section::before{
+  content:"";position:absolute;inset:auto -3% -12px 34%;height:190px;z-index:-1;pointer-events:none;
+  opacity:.31!important;
+  background:var(--th-ripple-pink) right bottom / 100% 100% no-repeat!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 78%,transparent 100%)!important;
+  mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 78%,transparent 100%)!important;
+}
+
+/* 3) Usage page — parent atmosphere, child specificity. */
+/* Remove the old inherited SVG wave from the parent sections; ambient pseudo owns them now. */
+body.dark:has(>.container) .usage-detail-section.pro-detail,
+body.dark:has(>.container) .usage-detail-section.codex-detail{
+  background-image:var(--ia-card)!important;
+  background-position:0 0!important;
+  background-size:auto!important;
+}
+
+/* Pro allowance card stays almost clean; recent history gets water ripple. */
+body.dark:has(>.container) .pro-detail .cycle-card::before{opacity:0!important}
+body.dark:has(>.container) .pro-detail .usage-history-card::before{
+  content:"";position:absolute;inset:auto -8% -8px 18%;height:165px;z-index:-1;pointer-events:none;
+  opacity:.30!important;
+  background:var(--th-ripple-pink) right bottom / 118% 100% no-repeat!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 2%,#000 24%,#000 84%,transparent 100%)!important;
+  mask-image:linear-gradient(90deg,transparent 2%,#000 24%,#000 84%,transparent 100%)!important;
+}
+
+/* Codex child card uses a restrained native green fine wave, not another big ring. */
+body.dark:has(>.container) .codex-detail .window-card::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.33!important;
+  background:var(--lux-wave-green) right 110% / 92% auto no-repeat!important;
+  -webkit-mask-image:linear-gradient(100deg,transparent 36%,#000 77%)!important;
+  mask-image:linear-gradient(100deg,transparent 36%,#000 77%)!important;
+}
+
+/* Utility/advanced rows should stay quiet. */
+body.dark:has(>.container) :is(.usage-details,.advanced-panel)::before{opacity:0!important}
+body.dark:has(>.container) .usage-context-strip::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.18!important;
+  background:linear-gradient(120deg,rgba(255,229,239,.035),transparent 42%)!important;
+}
+
+/* 4) Overview — keep the strong first-screen balance. */
+body.dark:has(>.container) .overview-kpi::before{opacity:0!important}
+body.dark:has(>.container) .overview-kpis .overview-kpi:first-child::before,
+body.dark:has(>.container) .overview-kpis .overview-kpi:last-child::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.18!important;
+  background:var(--lux-wave-pink) right 116% / 115% auto no-repeat!important;
+  -webkit-mask-image:linear-gradient(100deg,transparent 50%,#000 86%)!important;
+  mask-image:linear-gradient(100deg,transparent 50%,#000 86%)!important;
+}
+body.dark:has(>.container) .overview-kpis .overview-kpi.green:last-child::before{
+  background:var(--lux-wave-green) right 116% / 115% auto no-repeat!important;
+}
+
+/* Trend chart: native wave; reset panel: clean. */
+body.dark:has(>.container) .overview-grid .overview-panel:first-child::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.26!important;
+  background:var(--lux-wave-pink) right 112% / 60% auto no-repeat!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 36%,#000 80%)!important;
+  mask-image:linear-gradient(90deg,transparent 36%,#000 80%)!important;
+}
+body.dark:has(>.container) .overview-grid .overview-panel:nth-child(2)::before{opacity:0!important}
+
+/* Lower panels alternate: context clean, go-deeper gets a faint ripple. */
+body.dark:has(>.container) .overview-lower .overview-panel:first-child::before{opacity:0!important}
+body.dark:has(>.container) .overview-lower .overview-panel:nth-child(2)::before{
+  content:"";position:absolute;inset:auto -5% -18px 26%;height:145px;z-index:-1;pointer-events:none;
+  opacity:.18!important;background:var(--th-ripple-pink) right bottom / 108% 100% no-repeat!important;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 30%,#000 85%,transparent)!important;
+  mask-image:linear-gradient(90deg,transparent,#000 30%,#000 85%,transparent)!important;
+}
+
+/* Light theme intentionally gets no rules here: reference-hybrid.css remains A / Fine Waves. */
+
+/* QA pass 2 — lift selected texture roles above opaque card backgrounds,
+   while all interactive/content children stay on top. */
+body.dark:has(>.container) :is(
+  .graph-container,.usage-detail-section,.usage-history-card,.window-card,
+  .daily-chart-wrapper,.summary-block,.time-distribution-section,.overview-panel,.overview-context,.reset-forecast
+)::before{z-index:0!important}
+body.dark:has(>.container) :is(
+  .graph-container,.usage-detail-section,.usage-history-card,.window-card,
+  .daily-chart-wrapper,.summary-block,.time-distribution-section,.overview-panel,.overview-context,.reset-forecast
+)>*{position:relative;z-index:1}
+
+/* Ambient should be perceived, not read as a literal ring. */
+body.dark:has(>.container) :is(.graph-container,.usage-detail-section.pro-detail,.reset-forecast)::before{
+  opacity:.58!important;
+}
+body.dark:has(>.container) .usage-detail-section.codex-detail::before{opacity:.50!important}
+body.dark:has(>.container) .graph-container::before{opacity:.45!important}
+
+/* Water ripple is intentionally a touch more legible than the ambient layer. */
+body.dark:has(>.container) .pro-detail .usage-history-card::before{opacity:.38!important}
+body.dark:has(>.container) .time-distribution-section::before{opacity:.36!important}
+body.dark:has(>.container) .overview-lower .overview-panel:nth-child(2)::before{opacity:.23!important}
+
+/* QA pass 3 — make parent atmosphere visible without reintroducing rings. */
+body.dark:has(>.container) .usage-detail-section.pro-detail{
+  background-image:
+    radial-gradient(720px 245px at 98% 116%,rgba(224,149,177,.085),transparent 61%),
+    radial-gradient(520px 210px at 16% -16%,rgba(255,229,239,.020),transparent 72%),
+    var(--ia-card)!important;
+}
+body.dark:has(>.container) .usage-detail-section.codex-detail{
+  background-image:
+    radial-gradient(720px 245px at 98% 116%,rgba(115,198,143,.072),transparent 61%),
+    radial-gradient(520px 210px at 16% -16%,rgba(222,255,231,.016),transparent 72%),
+    var(--ia-card)!important;
+}
+body.dark:has(>.container) .codex-detail .window-card{
+  background-image:var(--lux-wave-green)!important;
+  background-position:right 118%!important;
+  background-repeat:no-repeat!important;
+  background-size:90% auto!important;
+}
+body.dark:has(>.container) .graph-container{
+  background-image:
+    radial-gradient(680px 230px at 104% 124%,rgba(224,149,177,.055),transparent 66%),
+    linear-gradient(120deg,rgba(19,22,23,.96),rgba(15,17,19,.92))!important;
+}

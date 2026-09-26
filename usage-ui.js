@@ -7,8 +7,8 @@
   const node=(tag,cls,value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n;};
   const fmt=n=>Number.isFinite(n)?new Intl.NumberFormat().format(n):'—';
   const date=n=>Number.isFinite(n)?new Date(n).toLocaleString(document.documentElement.lang,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
-  function ruleName(r){return r.id==='astra_week'?'GPT-6 Pro':r.id==='sol_day'?'GPT-5.6 Sol Pro':r.id==='combined_day'?t('u_combined','Combined daily'):t('u_shared','Shared allowance');}
-  function ruleRef(r){return `${r.cap} / ${t('u_'+r.period,r.period)}`;}
+  function ruleName(r){if(r.mode==='official'&&r.label)return r.label;return r.id==='astra_week'?'GPT-6 Pro':r.id==='sol_day'?'GPT-5.6 Sol Pro':r.id==='combined_day'?t('u_combined','Combined daily'):t('u_shared','Shared allowance');}
+  function ruleRef(r){if(r.mode==='official'){if(Number.isFinite(r.cap)&&Number.isFinite(r.windowSeconds))return `${fmt(r.cap)} / ${C.windowLabel(r.windowSeconds,document.documentElement.lang)}`;if(Number.isFinite(r.windowSeconds))return C.windowLabel(r.windowSeconds,document.documentElement.lang);if(Number.isFinite(r.cap))return `${fmt(r.cap)} ${t('u_reference','reference')}`;return t('compact_server_reported','Reported by ChatGPT');}return `${r.cap} / ${t('u_'+r.period,r.period)}`;}
   function localDateTime(ts){const d=new Date(ts);return `${C.localDate(ts)}T${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
 
   function mount(root){
@@ -34,13 +34,12 @@
           <div id="creditsRow" class="credits-row" hidden><span data-i18n="u_credit">Reported credits</span><strong id="creditsValue">—</strong></div>
         </section>
 
-        <details id="calibrateDetails" class="usage-details release-calibration"><summary data-i18n="u_sync_pro">Sync current Pro usage</summary><div>
-          <span class="sync-copy" data-i18n="u_sync_pro_note"></span><p id="calDisabled"></p>
-          <form id="calibrationForm"><div class="calibration-grid"><label class="full-row"><span data-i18n="u_sync_rule"></span><select id="calRule" required></select></label><label><span data-i18n="u_sync_remaining"></span><input id="calRemaining" type="number" min="0" step="1" required inputmode="numeric"></label><label><span data-i18n="u_sync_reset"></span><input id="calReset" type="datetime-local" required></label></div>
-          <div class="form-actions"><button id="calSave" type="submit" class="usage-button primary small" data-i18n="u_sync_save"></button><button id="calClear" type="button" class="usage-button small" data-i18n="u_sync_clear"></button></div><p id="calStatus" role="status" class="usage-status"></p></form>
-        </div></details>
-
         <details class="advanced-panel"><summary><span data-i18n="u_advanced">Advanced</span><span class="advanced-chevron" aria-hidden="true"></span></summary><div class="advanced-body">
+          <details id="calibrateDetails" class="usage-details release-calibration"><summary data-i18n="u_correct_pro">Correct detected data</summary><div>
+            <span class="sync-copy" data-i18n="u_correct_pro_note">Only use this if the automatic reading is wrong.</span><p id="calDisabled"></p>
+            <form id="calibrationForm"><div class="calibration-grid"><label class="full-row"><span data-i18n="u_sync_rule"></span><select id="calRule" required></select></label><label><span data-i18n="u_sync_remaining"></span><input id="calRemaining" type="number" min="0" step="1" required inputmode="numeric"></label><label><span data-i18n="u_sync_reset"></span><input id="calReset" type="datetime-local" required></label></div>
+            <div class="form-actions"><button id="calSave" type="submit" class="usage-button primary small" data-i18n="u_sync_save"></button><button id="calClear" type="button" class="usage-button small" data-i18n="u_sync_clear"></button></div><p id="calStatus" role="status" class="usage-status"></p></form>
+          </div></details>
           <details class="usage-details"><summary data-i18n="u_plan_override">Plan override</summary><div><p class="usage-footnote" data-i18n="u_plan_override_note">Normally this is detected automatically. Only override it if the detected plan is wrong.</p><label><span data-i18n="release_choose_plan_label">Your plan</span><select id="membership"></select></label></div></details>
           <details class="usage-details"><summary data-i18n="u_recent">Recent local models</summary><div><div id="recentModels"></div><p id="coverage" class="usage-footnote"></p><p class="usage-footnote" data-i18n="release_no_text">Only timestamps and model labels are stored; chat text is not stored.</p></div></details>
           <details class="usage-details"><summary data-i18n="u_compare">Plan reference</summary><div><table class="usage-table"><thead><tr><th data-i18n="u_plan"></th><th data-i18n="u_allowance"></th></tr></thead><tbody id="planTable"></tbody></table><p class="usage-footnote"><span data-i18n="u_verified"></span>: ${C.VERIFIED} · <a href="${C.SOURCE}" target="_blank" rel="noopener noreferrer" data-i18n="u_source"></a></p></div></details>
@@ -49,7 +48,7 @@
       </div>`;
 
     const $=id=>root.querySelector('#'+id);
-    let s=C.freshState(),live=null,liveError=null,active=false,formKey='',refreshTimer=null;
+    let s=C.freshState(),live=null,liveError=null,proUsage=null,proCycles=null,active=false,formKey='',refreshTimer=null;
     function manualPlan(){const p=C.obj(s.settings[SCOPE]).plan||'auto';return p==='auto'?'':p;}
     function selectedPlan(){return manualPlan()||live?.plan||'';}
     function setTrust(el,kind,label){el.className=`trust-badge ${kind}`;el.textContent=label;}
@@ -61,15 +60,24 @@
       const c=node('article','cycle-card');
       const head=node('div','cycle-card-head');head.append(node('span','cycle-card-title',ruleName(r)),node('span','cycle-card-ref',ruleRef(r)));c.append(head);
       const value=node('div','cycle-value');
-      if(r.remaining!==null){value.append(node('strong','',`≈ ${fmt(r.remaining)}`),node('span','',`/ ${fmt(r.cap)} ${t('popup_left')}`));}
-      else{value.append(node('strong','',fmt(r.observed)),node('span','',t('u_seen','used locally')));}
+      const hasRemaining=Number.isFinite(r.remaining),hasPct=Number.isFinite(r.remainingPercent),hasCap=Number.isFinite(r.cap)&&r.cap>0;
+      if(hasRemaining){const prefix=r.mode==='official'?'':'≈ ';value.append(node('strong','',`${prefix}${fmt(r.remaining)}`),node('span','',hasCap?`/ ${fmt(r.cap)} ${t('popup_left','left')}`:t('popup_left','left')));}
+      else if(hasPct){value.append(node('strong','',`${fmt(r.remainingPercent)}%`),node('span','',t('u_remaining','remaining')));}
+      else{value.append(node('strong','',fmt(r.observed||0)),node('span','',t('u_seen','used locally')));}
       c.append(value);
-      if(r.remaining!==null){const p=node('div','cycle-progress'),f=node('span');f.style.width=`${Math.max(0,Math.min(100,100*r.remaining/r.cap))}%`;p.setAttribute('role','progressbar');p.setAttribute('aria-label',t('u_remaining'));p.setAttribute('aria-valuemin','0');p.setAttribute('aria-valuemax','100');p.setAttribute('aria-valuenow',String(parseFloat(f.style.width)));p.append(f);c.append(p);}
-      const meta=node('div','cycle-meta');
-      const left=node('span','',r.remaining!==null?t('release_estimated_local','Estimated from your sync + local sends.'):t('release_tracking_only','Tracking locally from this browser.'));
-      const right=node('span','',Number.isFinite(r.resetAt)?`${t('compact_resets')} ${date(r.resetAt)}`:`${t('u_reference')} ${ruleRef(r)}`);meta.append(left,right);c.append(meta);
-      if(r.remaining===null){const b=node('button','usage-button small meter-calibrate',t('u_calibrate_action','Sync current balance'));b.type='button';b.addEventListener('click',()=>{$('calibrateDetails').open=true;$('calRule').value=r.id;fillCalibration();$('calRemaining').focus();});c.append(b);}
-      return c;
+      const pct=hasPct?r.remainingPercent:hasRemaining&&hasCap?100*r.remaining/r.cap:null;
+      if(Number.isFinite(pct)){const p=node('div','cycle-progress'),f=node('span');f.style.width=`${Math.max(0,Math.min(100,pct))}%`;p.setAttribute('role','progressbar');p.setAttribute('aria-label',t('u_remaining'));p.setAttribute('aria-valuemin','0');p.setAttribute('aria-valuemax','100');p.setAttribute('aria-valuenow',String(parseFloat(f.style.width)));p.append(f);c.append(p);}
+      const meta=node('div','cycle-meta');let left='';
+      if(r.mode==='official')left=t('pro_reported','Reported by ChatGPT');
+      else if(r.mode==='learned')left=t('pro_learned','Estimated from learned reset cycle + local sends.');
+      else if(r.mode==='manual')left=t('pro_corrected','Corrected manually in Advanced.');
+      else left=t('pro_observed_learning','Confirmed local Pro sends only · learning reset cycle automatically.');
+      let right='';
+      if(Number.isFinite(r.resetAt))right=`${t('compact_resets','Resets')} ${date(r.resetAt)}`;
+      else if(r.mode==='official')right=t('reset_unknown','Reset not reported');
+      else if(r.mode==='observed')right=t('pro_learning_cycle','Learning reset cycle');
+      else right=ruleRef(r);
+      meta.append(node('span','',left),node('span','',right));c.append(meta);return c;
     }
 
     function codexCard(m){
@@ -94,6 +102,12 @@
     function render(){
       GPTTrackerI18n.applyI18n(root);
       const key=selectedPlan(),preset=C.plans[key],fresh=C.liveStatus(live,liveError);
+      const noPro=!!preset&&Array.isArray(preset.rules)&&preset.rules.length===0;
+      root.classList.toggle('no-pro-plan',noPro);
+      const proDetail=root.querySelector('.pro-detail');
+      if(proDetail)proDetail.hidden=noPro;
+      const calibrateDetails=$('calibrateDetails');
+      if(calibrateDetails)calibrateDetails.hidden=noPro;
       if(fresh.kind==='live')GPTFeedback.clearRefreshNotice(live?.updatedAt);
       $('selectedPlan').textContent=preset?.label||t('u_unknown','Not identified yet');
       if(manualPlan()){$('planMeta').textContent=t('u_manual','Manual preset · does not change your subscription');setTrust($('planTrust'),'tracking',t('compact_local','Local'));}
@@ -106,11 +120,16 @@
       $('refreshLive').title=liveError?t('error_cached'):t('refresh_action');
 
       $('proMeters').replaceChildren();
-      if(!preset){empty($('proMeters'),t('u_pick_plan','Open ChatGPT for auto-detection or choose a manual fallback.'));setTrust($('proTrust'),'unavailable',t('trust_unavailable','Unavailable'));}
-      else if(preset.rules===null){empty($('proMeters'),t('release_managed','Allowance depends on workspace settings.'));setTrust($('proTrust'),'unavailable',t('trust_unavailable','Unavailable'));}
-      else if(!preset.rules.length){empty($('proMeters'),t('release_no_pro','No Pro allowance preset for this plan.'));setTrust($('proTrust'),'unavailable',t('trust_unavailable','Unavailable'));}
-      else{const rules=C.allowance(s,SCOPE,key);let estimated=false;for(const r of rules){estimated||=r.remaining!==null;$('proMeters').append(proCard(r));}setTrust($('proTrust'),estimated?'estimated':'tracking',estimated?t('trust_estimated','Estimated'):t('trust_tracking','Tracking'));}
-      renderHistory();
+      if(!noPro){
+        const proRules=C.proAllowances(s,SCOPE,key,proUsage,proCycles);
+        if(proRules.length){for(const r of proRules)$('proMeters').append(proCard(r));const primary=C.proPrimary(proRules);if(primary?.mode==='official'){const pf=C.freshness(proUsage?.updatedAt,Date.now(),5*60*1000,60*60*1000);setTrust($('proTrust'),pf.kind,pf.kind==='live'?t('trust_live','Live'):pf.kind==='cached'?t('trust_cached','Cached'):t('compact_server_reported','Reported'));}else if(primary?.mode==='learned'||primary?.mode==='manual')setTrust($('proTrust'),'estimated',t('trust_estimated','Estimated'));else setTrust($('proTrust'),'tracking',t('trust_tracking','Tracking'));}
+        else if(!preset){empty($('proMeters'),t('u_pick_plan','Open ChatGPT for automatic plan detection.'));setTrust($('proTrust'),'unavailable',t('trust_unavailable','Unavailable'));}
+        else if(preset.rules===null){empty($('proMeters'),t('release_managed','No Pro allowance metadata observed yet. Local Pro sends will still be recorded automatically.'));setTrust($('proTrust'),'tracking',t('trust_tracking','Tracking'));}
+        renderHistory();
+      }else{
+        $('proHistoryBars').replaceChildren();
+        $('proHistoryTotal').textContent='0';
+      }
 
       $('codexMeters').replaceChildren();$('creditsRow').hidden=true;
       const meters=(live?.meters||[]).slice(0,24);
@@ -124,7 +143,7 @@
       $('planTable').replaceChildren();for(const [id,p]of Object.entries(C.plans)){if(id==='business_unknown')continue;const r=node('tr');r.append(node('td','',p.label),node('td','',p.rules===null?t('u_managed','Managed'):p.rules.length?p.rules.map(v=>`${ruleName(v)} ${ruleRef(v)}`).join('; '):t('u_none','No Pro preset')));$('planTable').append(r);}
     }
 
-    async function load(){const r=await send({type:'UG_STATE'});if(r.ok){s=C.state(r.state);live=r.liveUsage||null;liveError=r.liveError||null;}else GPTFeedback.status(t('state_error'),true);render();GPTTrackerI18n.applyI18n(root);}
+    async function load(){const r=await send({type:'UG_STATE'});if(r.ok){s=C.state(r.state);live=r.liveUsage||null;liveError=r.liveError||null;proUsage=r.proUsage||null;proCycles=r.proCycles||null;}else GPTFeedback.status(t('state_error'),true);render();GPTTrackerI18n.applyI18n(root);}
     async function refresh(){const b=$('refreshLive');if(b.disabled)return;b.hidden=false;b.disabled=true;b.classList.add('is-refreshing');b.querySelector('span').textContent=t('refresh_refreshing','Refreshing…');const r=await send({type:'UG_REFRESH_LIVE'});if(!r.refreshed)GPTFeedback.refreshStatus(r);else GPTFeedback.clearRefreshNotice();await load();b.disabled=false;b.classList.remove('is-refreshing');if(r.ok&&(r.refreshed||r.current)){b.classList.add('is-updated');b.querySelector('span').textContent=t('refresh_updated','Updated');}else{b.classList.add('is-retry');b.querySelector('span').textContent=t('refresh_retry','Retry');}clearTimeout(refreshTimer);refreshTimer=setTimeout(()=>{b.classList.remove('is-updated','is-retry');b.querySelector('span').textContent=t('refresh_action','Refresh');const f=C.freshness(live?.updatedAt);b.hidden=false;},1400);}
 
     $('refreshLive').addEventListener('click',()=>void refresh());
@@ -133,7 +152,7 @@
     $('calibrationForm').addEventListener('submit',async ev=>{ev.preventDefault();const key=selectedPlan(),r=C.plans[key]?.rules?.find(v=>v.id===$('calRule').value),remaining=Number($('calRemaining').value),resetAt=new Date($('calReset').value).getTime();if(!r||$('calRemaining').value===''||!Number.isInteger(remaining)||remaining<0||remaining>r.cap||!Number.isFinite(resetAt)||resetAt<=Date.now()){$('calStatus').textContent=t('u_invalid','Check the values and reset time.');return;}$('calSave').disabled=true;$('calSave').setAttribute('aria-busy','true');const result=await send({type:'UG_BASELINE',plan:key,rule:r.id,used:r.cap-remaining,resetAt});await load();$('calSave').disabled=false;$('calSave').removeAttribute('aria-busy');$('calStatus').textContent=t(result.ok?'u_saved':'u_invalid',result.ok?'Saved':'Invalid');});
     $('calClear').addEventListener('click',()=>GPTFeedback.run($('calClear'),async()=>{const key=selectedPlan(),r=await send({type:'UG_BASELINE',plan:key,rule:$('calRule').value,clear:true});formKey='';await load();if(!r.ok)throw Error();$('calStatus').textContent=t('cleared');}));
     document.addEventListener('gpt-language-changed',()=>{if(active)render();});
-    let timer;chrome.storage.onChanged.addListener((changes,area)=>{if(active&&area==='local'&&(changes[C.KEY]||changes.__gptLiveUsageV1||changes.__gptLiveUsageErrorV1)){clearTimeout(timer);timer=setTimeout(()=>void load(),100);}});
+    let timer;chrome.storage.onChanged.addListener((changes,area)=>{if(active&&area==='local'&&(changes[C.KEY]||changes.__gptLiveUsageV1||changes.__gptLiveUsageErrorV1||changes.__gptProUsageV1||changes.__gptProCycleV1)){clearTimeout(timer);timer=setTimeout(()=>void load(),100);}});
     setInterval(()=>{if(active&&!document.hidden)render();},30000);
     return {deactivate:()=>{active=false;},activate:async()=>{active=true;await load();if(!live||C.freshness(live.updatedAt).kind!=='live')void refresh();},reload:load,refresh};
   }

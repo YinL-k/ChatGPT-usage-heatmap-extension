@@ -1,0 +1,84 @@
+/* SakuraMeter Hybrid: approved A Native Fine Wave for LIGHT only.
+   Popup texture definitions are copied from the approved A study.
+   Card backgrounds, gradient layers, geometry and application code are not changed.
+   Dark B remains in b-surface.css, byte-for-byte from the approved FullSuite preview. */
+/* SakuraMeter surface study: CSS-only. No layout, data, permission or script changes.
+   Original background declarations remain in their original files.
+   The decoration uses non-interactive pseudo-elements below card content. */
+#artboard[data-theme="light"]{--surface-rgb:173 66 111;--surface-soft-rgb:195 115 153;--surface-white:255 255 255;--surface-warm:0.095;--surface-sheen:0.55;--surface-wave:0.32;--surface-line:#af567e;--surface-cta-wave:0.39;--surface-ring:0.10}
+#artboard[data-theme="light"] .codex{--surface-rgb:115 198 143;--surface-soft-rgb:145 204 168;--surface-line:#98c9a8}
+#artboard[data-theme="light"] .codex{--surface-rgb:66 132 94;--surface-soft-rgb:100 156 127;--surface-line:#54816c;--surface-warm:0.075}
+#artboard[data-theme="light"] .card::before{content:"";position:absolute;inset:0;width:auto;height:auto;border-radius:inherit;z-index:0;pointer-events:none;opacity:1;transform:none;mix-blend-mode:normal;mask-image:none;-webkit-mask-image:none}
+#artboard[data-theme="light"] .shell::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 540px 550px at -12% -8%,rgb(var(--surface-rgb) / .065),transparent 78%),radial-gradient(ellipse 380px 720px at 112% 75%,rgb(var(--surface-rgb) / .045),transparent 82%)}
+#artboard[data-theme="light"] .waves{stroke:var(--surface-line);opacity:var(--surface-wave);stroke-width:2;mix-blend-mode:normal;pointer-events:none}
+#artboard[data-theme="light"] :is(.waves-pro,.waves-codex){mask-image:linear-gradient(90deg,transparent 28%,#000 68%),linear-gradient(180deg,#000 12%,#000 65%,transparent 94%);mask-composite:intersect}
+#artboard[data-theme="light"] .waves-member{opacity:calc(var(--surface-wave) + .08);stroke-width:1.8}
+#artboard[data-theme="light"] .waves-cta{opacity:var(--surface-cta-wave);stroke-width:1.7;mask-image:linear-gradient(90deg,transparent 8%,#000 62%)}
+#artboard[data-theme="light"] .dashboard-cta::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:0;pointer-events:none}
+#artboard[data-theme="light"] .dashboard-cta :is(.icon-tile,.cta-heading,.cta-subtitle,.cta-arrow){z-index:2}
+#artboard[data-theme="light"] .trend-action .mini-sparkline{position:relative;z-index:2}
+#artboard[data-theme="light"] .card :is(.usage-number,.progress-row,.card-bottom,.activity-columns){z-index:2}
+@media (forced-colors:active){#artboard[data-theme="light"] :is(.card,.shell,.dashboard-cta)::before,#artboard[data-theme="light"] .dashboard-cta::after,#artboard[data-theme="light"] .waves{display:none}}
+@media (prefers-reduced-motion:reduce){#artboard[data-theme="light"] .card::before,#artboard[data-theme="light"] .dashboard-cta::after{animation:none;transition:none}}
+/* A - Fine waves. Restore the original hairline motif, with gentle corner light. */
+#artboard[data-theme="light"] .card::before{background:radial-gradient(ellipse 370px 230px at 101% 108%,rgb(var(--surface-rgb) / var(--surface-warm)),transparent 78%),radial-gradient(ellipse 390px 210px at -6% -13%,rgb(var(--surface-soft-rgb) / .060),transparent 80%),linear-gradient(124deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 44%)}
+#artboard[data-theme="light"] .membership::before{background:radial-gradient(ellipse 355px 165px at 101% 106%,rgb(var(--surface-rgb) / .14),transparent 76%),linear-gradient(132deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 45%)}
+#artboard[data-theme="light"] .membership::before{background:radial-gradient(ellipse 355px 165px at 101% 106%,rgb(var(--surface-rgb) / .085),transparent 76%),linear-gradient(132deg,rgb(var(--surface-white) / .66),transparent 48%)}
+#artboard[data-theme="light"] .activity::before{background:radial-gradient(ellipse 380px 220px at 105% 100%,rgb(var(--surface-rgb) / .07),transparent 79%)}
+#artboard[data-theme="light"] .dashboard-cta::after{background:radial-gradient(ellipse 330px 165px at 102% 119%,rgb(var(--surface-rgb) / .12),transparent 83%),linear-gradient(122deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 49%)}
+
+/* Restore A base light edges rather than inheriting the B-only light rims. */
+#artboard[data-theme="light"] .shell{box-shadow:rgba(119, 61, 85, 0.12) 0px 22px 48px 0px, rgba(119, 61, 85, 0.07) 0px 3px 7px 0px, rgba(255, 255, 255, 0.95) 0px 0px 0px 1.5px inset, rgba(156, 96, 121, 0.1) 0px 0px 0px 3px inset}
+#artboard[data-theme="light"] .shell::after{background-image:linear-gradient(128deg, rgba(245, 181, 198, 0.74) 0px, rgba(199, 192, 195, 0.4) 9%, rgba(205, 205, 205, 0.38) 37%, rgba(161, 164, 166, 0.32) 72%, rgba(190, 192, 194, 0.26));padding:1.45px}
+#artboard[data-theme="light"] .membership{box-shadow:rgba(255, 255, 255, 0.96) 0px 2px 0px 0px inset, rgba(127, 66, 92, 0.07) 0px 5px 12px 0px}
+#artboard[data-theme="light"] .membership::after{background-image:linear-gradient(110deg, rgba(155, 91, 120, 0.55), rgba(170, 103, 135, 0.38), rgba(151, 87, 116, 0.49));padding:2.2px}
+#artboard[data-theme="light"] .pro{box-shadow:rgba(255, 255, 255, 0.96) 0px 2px 0px 0px inset, rgba(127, 66, 92, 0.07) 0px 5px 12px 0px}
+#artboard[data-theme="light"] .pro::after{background-image:linear-gradient(118deg, rgba(155, 91, 120, 0.55), rgba(170, 103, 135, 0.38) 46%, rgba(151, 87, 116, 0.49));padding:2.2px}
+#artboard[data-theme="light"] .codex{box-shadow:rgba(255, 255, 255, 0.96) 0px 2px 0px 0px inset, rgba(127, 66, 92, 0.07) 0px 5px 12px 0px}
+#artboard[data-theme="light"] .codex::after{background-image:linear-gradient(118deg, rgba(155, 91, 120, 0.55), rgba(170, 103, 135, 0.38) 46%, rgba(151, 87, 116, 0.49));padding:2.2px}
+#artboard[data-theme="light"] .activity{box-shadow:rgba(255, 255, 255, 0.96) 0px 2px 0px 0px inset, rgba(127, 66, 92, 0.07) 0px 5px 12px 0px}
+#artboard[data-theme="light"] .activity::after{background-image:linear-gradient(118deg, rgba(155, 91, 120, 0.55), rgba(170, 103, 135, 0.38) 46%, rgba(151, 87, 116, 0.49));padding:2.2px}
+#artboard[data-theme="light"] .dashboard-cta{box-shadow:rgba(255, 255, 255, 0.95) 0px 2px 0px 0px inset, rgba(107, 63, 80, 0.055) 0px 4px 9px 0px}
+
+/* New Trend-first layout: content stays above decoration without changing position.
+   Intentionally no universal position:relative on children. */
+#artboard[data-theme] :is(.membership,.usage-trend-main,.codex,.pro,.activity) > *:not(.waves){z-index:2}
+#artboard[data-theme] :is(.membership,.usage-trend-main,.codex,.pro,.activity) > .waves{z-index:0}
+
+/* Full dashboard: A's corner wash, with the existing native SVG fine waves retained.
+   No substitute concentric rings. Data plots get a still quieter wash. */
+body:not(.dark):has(>.container){
+  --sb-rgb:157 72 112;--sb-arc:0;--sb-arc-fine:0;--sb-sheen:.34;
+  --sb-rim:rgba(157,84,119,.17);--sb-top:rgba(255,255,255,.88);--sb-shadow:rgba(117,62,90,.042);
+  --sb-surface-depth:inset 0 1px 0 rgba(255,255,255,.90),inset 0 -1px 0 rgba(151,77,113,.045),0 3px 9px rgba(114,64,88,.028),0 10px 24px rgba(114,64,88,.042);
+}
+body:not(.dark):has(>.container) :is(.overview-context,.overview-kpi,.overview-panel,.stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,.usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,.reset-forecast,.usage-details,.advanced-panel,.modal)::before{
+  background:radial-gradient(ellipse 370px 230px at 101% 108%,rgb(var(--sb-rgb) / .065),transparent 78%),radial-gradient(ellipse 390px 210px at -6% -13%,rgb(var(--sb-rgb) / .025),transparent 80%),linear-gradient(124deg,rgba(255,255,255,.34),transparent 44%);
+  mask-image:none;-webkit-mask-image:none;opacity:.72;
+}
+body:not(.dark):has(>.container) :is(.graph-container,.daily-chart-wrapper,.time-distribution-section,.summary-block)::before{opacity:.14}
+body:not(.dark):has(>.container) .overview-panel:has(canvas)::before{opacity:.12}
+body:not(.dark):has(>.container) :is(.overview-context,.usage-context-strip)::before{opacity:.36}
+body:not(.dark):has(>.container) :is(.usage-details,.advanced-panel)::before{opacity:.30}
+body:not(.dark):has(>.container) .container::after{background:linear-gradient(126deg,rgba(255,255,255,.94),rgba(182,113,149,.19) 25%,rgba(182,113,149,.065) 60%,rgba(167,93,133,.22))}
+body:not(.dark):has(>.container) :is(.overview-kpi,.stat-box,.cycle-card,.window-card){box-shadow:inset 0 1px 0 rgba(255,255,255,.94),inset 0 -1px 0 rgba(145,87,117,.05),0 2px 5px rgba(120,65,93,.025),0 8px 19px rgba(120,65,93,.042)!important}
+
+/* Light Side Chat surfaces: no broad B arcs. Keep compact control geometry. */
+:root[data-theme="light"] body:has(#chat-frame) .masthead::before{background:linear-gradient(116deg,rgba(255,255,255,.30),transparent 38%),radial-gradient(ellipse at 18% 0,rgb(var(--sb-rgb) / .028),transparent 68%)}
+:root[data-theme="light"] body:has(#chat-frame) .workspace{border-color:rgba(157,84,119,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.90),inset 0 -1px 0 rgba(151,77,113,.045),0 5px 18px rgba(114,64,88,.040)}
+:root[data-theme="light"] body:has(#chat-frame) .workspace::after{background:linear-gradient(130deg,rgba(255,255,255,.94),rgba(163,99,133,.17) 27%,rgba(163,99,133,.055) 69%,rgba(163,99,133,.22))}
+:root[data-theme="light"] body:has(#chat-frame) :is(.popover,dialog,.welcome,.permission-choice,.sample-quote)::before{
+  background:radial-gradient(ellipse 370px 230px at 101% 108%,rgb(var(--sb-rgb) / .065),transparent 78%),linear-gradient(124deg,rgba(255,255,255,.34),transparent 44%);
+  mask-image:none;-webkit-mask-image:none;
+}
+:root[data-theme="light"] body:has(#chat-frame) :is(.popover,dialog,.permission-choice,.sample-quote,.notice){border-color:rgba(157,84,119,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.90),0 7px 20px rgba(114,64,88,.045)}
+
+/* Preserve the approved SVG motif geometry; clip, never redraw or vertically stretch. */
+#artboard .pro .waves-pro{width:585px;height:255px;right:-3px;top:65px}
+#artboard .codex .waves-codex{width:585px;height:255px;right:-2px;top:68px}
+
+/* Alignment-only corrections found during screenshot QA, both themes. */
+#artboard #codexTrust{left:330px;top:24px}
+#artboard #proTrust{left:213px;top:24px;height:38px;min-width:112px;font-size:19px;padding:0 13px}
+/* The approved A CTA has no B arc mask. */
+#artboard[data-theme="light"] .dashboard-cta::after{mask-image:none;-webkit-mask-image:none}

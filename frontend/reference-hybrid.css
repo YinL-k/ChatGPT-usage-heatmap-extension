@@ -1,0 +1,116 @@
+/* Reference Hybrid Texture Lock
+   Source of truth: SakuraMeter-Frontend-A-B-C(1).html
+   LIGHT = A / Fine Waves. DARK = B / Arc Glass.
+   This file is loaded after the whole-product theme layers so later calibration
+   cannot change the approved Popup texture geometry. It does not replace base backgrounds. */
+
+/* Shared reference variables, copied from the approved A/B surface study. */
+#artboard[data-theme="dark"]{
+  --surface-rgb:224 149 177;--surface-soft-rgb:214 179 194;--surface-white:255 229 239;
+  --surface-warm:0.13;--surface-sheen:0.038;--surface-wave:0.37;--surface-line:#ca94a8;
+  --surface-cta-wave:0.48;--surface-ring:0.085;
+}
+#artboard[data-theme="light"]{
+  --surface-rgb:173 66 111;--surface-soft-rgb:195 115 153;--surface-white:255 255 255;
+  --surface-warm:0.095;--surface-sheen:0.55;--surface-wave:0.32;--surface-line:#af567e;
+  --surface-cta-wave:0.39;--surface-ring:0.10;
+}
+#artboard[data-theme] .codex{--surface-rgb:115 198 143;--surface-soft-rgb:145 204 168;--surface-line:#98c9a8}
+#artboard[data-theme="light"] .codex{--surface-rgb:66 132 94;--surface-soft-rgb:100 156 127;--surface-line:#54816c;--surface-warm:0.075}
+
+/* Reference pseudo-element geometry. */
+#artboard[data-theme] .card::before{
+  content:"";position:absolute;inset:0;width:auto;height:auto;border-radius:inherit;z-index:0;
+  pointer-events:none;opacity:1;transform:none;mix-blend-mode:normal;
+}
+#artboard[data-theme] .shell::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 540px 550px at -12% -8%,rgb(var(--surface-rgb) / .065),transparent 78%),radial-gradient(ellipse 380px 720px at 112% 75%,rgb(var(--surface-rgb) / .045),transparent 82%);
+}
+#artboard[data-theme] .waves{stroke:var(--surface-line);opacity:var(--surface-wave);stroke-width:2;mix-blend-mode:normal;pointer-events:none}
+#artboard[data-theme] :is(.waves-pro,.waves-codex){mask-image:linear-gradient(90deg,transparent 28%,#000 68%),linear-gradient(180deg,#000 12%,#000 65%,transparent 94%);mask-composite:intersect}
+#artboard[data-theme] .waves-member{opacity:calc(var(--surface-wave) + .08);stroke-width:1.8}
+#artboard[data-theme] .waves-cta{opacity:var(--surface-cta-wave);stroke-width:1.7;mask-image:linear-gradient(90deg,transparent 8%,#000 62%)}
+#artboard[data-theme] .dashboard-cta::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:0;pointer-events:none}
+#artboard[data-theme] .dashboard-cta :is(.icon-tile,.cta-heading,.cta-subtitle,.cta-arrow){z-index:2}
+#artboard[data-theme] .trend-action .mini-sparkline{position:relative;z-index:2}
+#artboard[data-theme] .card :is(.usage-number,.progress-row,.card-bottom,.activity-columns){z-index:2}
+
+/* DARK = B / ARC GLASS — exact reference texture formulas. */
+#artboard[data-theme="dark"] .card::before{
+  background:repeating-radial-gradient(ellipse 460px 285px at 106% 127%,transparent 0 72px,rgb(var(--surface-rgb) / var(--surface-ring)) 73px 103px,rgb(var(--surface-rgb) / .033) 104px 128px,transparent 129px 175px),radial-gradient(ellipse 480px 300px at 109% 117%,rgb(var(--surface-rgb) / .07),transparent 78%),linear-gradient(124deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 44%);
+  mask-image:linear-gradient(100deg,transparent 28%,#000 61%);-webkit-mask-image:linear-gradient(100deg,transparent 28%,#000 61%);
+}
+#artboard[data-theme="dark"] :is(.waves-pro,.waves-codex){opacity:.22}
+#artboard[data-theme="dark"] .membership::before{
+  background:repeating-radial-gradient(ellipse 420px 270px at 110% 143%,transparent 0 64px,rgb(var(--surface-rgb) / .09) 65px 91px,rgb(var(--surface-rgb) / .035) 92px 113px,transparent 114px 152px),radial-gradient(ellipse 350px 210px at 100% 107%,rgb(var(--surface-rgb) / .10),transparent 80%);
+  mask-image:linear-gradient(105deg,transparent 38%,#000 70%);-webkit-mask-image:linear-gradient(105deg,transparent 38%,#000 70%);
+}
+#artboard[data-theme="dark"] .activity::before{
+  background:repeating-radial-gradient(ellipse 510px 290px at 107% 141%,transparent 0 71px,rgb(var(--surface-rgb) / .065) 72px 105px,rgb(var(--surface-rgb) / .025) 106px 135px,transparent 136px 184px);
+  mask-image:linear-gradient(100deg,transparent 33%,#000 68%);-webkit-mask-image:linear-gradient(100deg,transparent 33%,#000 68%);
+}
+#artboard[data-theme="dark"] .dashboard-cta::after{
+  background:repeating-radial-gradient(ellipse 400px 270px at 106% 172%,transparent 0 69px,rgb(var(--surface-rgb) / .11) 70px 97px,rgb(var(--surface-rgb) / .03) 98px 117px,transparent 118px 156px);
+  mask-image:linear-gradient(100deg,transparent 34%,#000 76%);-webkit-mask-image:linear-gradient(100deg,transparent 34%,#000 76%);
+}
+
+/* LIGHT = A / FINE WAVES — exact reference texture formulas. No broad arcs. */
+#artboard[data-theme="light"] .card::before{
+  background:radial-gradient(ellipse 370px 230px at 101% 108%,rgb(var(--surface-rgb) / var(--surface-warm)),transparent 78%),radial-gradient(ellipse 390px 210px at -6% -13%,rgb(var(--surface-soft-rgb) / .060),transparent 80%),linear-gradient(124deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 44%);
+  mask-image:none;-webkit-mask-image:none;
+}
+#artboard[data-theme="light"] .membership::before{
+  background:radial-gradient(ellipse 355px 165px at 101% 106%,rgb(var(--surface-rgb) / .085),transparent 76%),linear-gradient(132deg,rgb(var(--surface-white) / .66),transparent 48%);
+  mask-image:none;-webkit-mask-image:none;
+}
+#artboard[data-theme="light"] .activity::before{
+  background:radial-gradient(ellipse 380px 220px at 105% 100%,rgb(var(--surface-rgb) / .07),transparent 79%);
+  mask-image:none;-webkit-mask-image:none;
+}
+#artboard[data-theme="light"] .dashboard-cta::after{
+  background:radial-gradient(ellipse 330px 165px at 102% 119%,rgb(var(--surface-rgb) / .12),transparent 83%),linear-gradient(122deg,rgb(var(--surface-white) / var(--surface-sheen)),transparent 49%);
+  mask-image:none;-webkit-mask-image:none;
+}
+
+/* The approved reference SVG motif keeps its own geometry. Never stretch it to fill new cards. */
+#artboard .pro .waves-pro{width:585px;height:255px;right:-3px;top:65px}
+#artboard .codex .waves-codex{width:585px;height:255px;right:-2px;top:68px}
+/* Trend-first cards are shorter; clip the exact motif instead of rescaling the waveform. */
+#artboard :is(.pro,.codex){overflow:hidden}
+
+/* Content always stays above texture, without changing absolute positioning. */
+#artboard[data-theme] :is(.membership,.usage-trend-main,.codex,.pro,.activity) > *:not(.waves){z-index:2}
+#artboard[data-theme] :is(.membership,.usage-trend-main,.codex,.pro,.activity) > .waves{z-index:0}
+
+/* Whole Dashboard — same material language: B arcs only in dark, A corner wash only in light. */
+body.dark:has(>.container){--ref-rgb:224 149 177;--ref-soft:214 179 194;--ref-white:255 229 239;--ref-ring:.085}
+body:not(.dark):has(>.container){--ref-rgb:173 66 111;--ref-soft:195 115 153;--ref-white:255 255 255}
+body.dark:has(>.container) :is(.overview-context,.overview-kpi,.overview-panel,.stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,.usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,.reset-forecast,.usage-details,.advanced-panel,.modal)::before{
+  background:repeating-radial-gradient(ellipse 460px 285px at 106% 127%,transparent 0 72px,rgb(var(--ref-rgb) / var(--ref-ring)) 73px 103px,rgb(var(--ref-rgb) / .033) 104px 128px,transparent 129px 175px),radial-gradient(ellipse 480px 300px at 109% 117%,rgb(var(--ref-rgb) / .07),transparent 78%),linear-gradient(124deg,rgb(var(--ref-white) / .038),transparent 44%);
+  max-width:none;left:0;width:auto;opacity:1;mask-image:linear-gradient(100deg,transparent 28%,#000 61%);-webkit-mask-image:linear-gradient(100deg,transparent 28%,#000 61%);
+}
+body:not(.dark):has(>.container) :is(.overview-context,.overview-kpi,.overview-panel,.stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,.usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,.reset-forecast,.usage-details,.advanced-panel,.modal)::before{
+  background:radial-gradient(ellipse 370px 230px at 101% 108%,rgb(var(--ref-rgb) / .095),transparent 78%),radial-gradient(ellipse 390px 210px at -6% -13%,rgb(var(--ref-soft) / .060),transparent 80%),linear-gradient(124deg,rgb(var(--ref-white) / .55),transparent 44%);
+  max-width:none;left:0;width:auto;opacity:1;mask-image:none;-webkit-mask-image:none;
+}
+/* Charts stay quieter than informational cards. */
+body.dark:has(>.container) :is(.graph-container,.daily-chart-wrapper,.time-distribution-section,.summary-block)::before{opacity:.28}
+body:not(.dark):has(>.container) :is(.graph-container,.daily-chart-wrapper,.time-distribution-section,.summary-block)::before{opacity:.14}
+body:not(.dark):has(>.container) :is(.graph-container,.daily-chart-wrapper,.time-distribution-section,.summary-block)::before{opacity:.14}
+
+/* Side Chat — welcome is intentionally excluded; soft-welcome.css owns that screen. */
+:root[data-theme="dark"] body:has(#chat-frame) :is(.popover,dialog,.permission-choice,.sample-quote)::before{
+  background:repeating-radial-gradient(ellipse 460px 285px at 106% 127%,transparent 0 72px,rgb(224 149 177 / .085) 73px 103px,rgb(224 149 177 / .033) 104px 128px,transparent 129px 175px),radial-gradient(ellipse 480px 300px at 109% 117%,rgb(224 149 177 / .07),transparent 78%),linear-gradient(124deg,rgb(255 229 239 / .038),transparent 44%);
+  mask-image:linear-gradient(100deg,transparent 28%,#000 61%);-webkit-mask-image:linear-gradient(100deg,transparent 28%,#000 61%);
+}
+:root[data-theme="light"] body:has(#chat-frame) :is(.popover,dialog,.permission-choice,.sample-quote)::before{
+  background:radial-gradient(ellipse 370px 230px at 101% 108%,rgb(173 66 111 / .095),transparent 78%),radial-gradient(ellipse 390px 210px at -6% -13%,rgb(195 115 153 / .060),transparent 80%),linear-gradient(124deg,rgb(255 255 255 / .55),transparent 44%);
+  mask-image:none;-webkit-mask-image:none;
+}
+
+@media (forced-colors:active){
+  #artboard[data-theme] :is(.card,.shell,.dashboard-cta)::before,#artboard[data-theme] .dashboard-cta::after,#artboard[data-theme] .waves,
+  body:has(>.container) :is(.overview-context,.overview-kpi,.overview-panel,.stat-box,.graph-container,.daily-chart-wrapper,.summary-block,.time-distribution-section,.usage-context-strip,.usage-detail-section,.cycle-card,.window-card,.usage-history-card,.reset-forecast,.usage-details,.advanced-panel,.modal)::before,
+  body:has(#chat-frame) :is(.popover,dialog,.permission-choice,.sample-quote)::before{display:none}
+}
