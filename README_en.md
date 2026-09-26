@@ -44,7 +44,7 @@ Unknown quotas remain unavailable. Calibrated Pro balances are local estimates. 
 
 ## Tests
 
-Run `npm install` and `npm test` in `tests/`. Browser checks require Google Chrome: `npm run browser`, `npm run themes`, `npm run readability`, and `npm run controls`. All regression requests use local fixtures. See the [verification report](verification/3.5.0/report.json) and [testing history](TESTING.md); historical local screenshot paths are not shipped in this repository.
+Run `npm install` and `npm test` in `tests/`. Browser checks require Google Chrome: `npm run browser`, `npm run themes`, `npm run readability`, and `npm run controls`. All regression requests use local fixtures. See the [verification report](verification/3.6.0.61/report.json) and [testing history](TESTING.md); historical local screenshot paths are not shipped in this repository.
 
 
 ## Brand and icon
