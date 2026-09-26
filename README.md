@@ -27,6 +27,7 @@
 - **一致的主题与控件**：主题切换保持尺寸、滚动、输入和展开状态；统一会员栏、Live 标签、下拉菜单、整框可点击的日期时间选择和操作按钮，支持键盘与 reduced-motion。
 - **只读额度刷新**：读取已有 ChatGPT 登录会话与 usage，动态显示 Codex 窗口时长；失败保留缓存，不自动重载聊天页，不提交聊天或调用模型。
 - **Codex Reset**：读取 codex-reset.com 公开全局重置预测。属于实验性第三方预测，不是个人额度重置或官方保证。
+- **Side Chat**：可选的侧边聊天体验，直接使用现有 ChatGPT 登录会话。面板打开且网站已授权时，可读取当前页面的可见正文，并可将你主动高亮的文本作为重点上下文加入下一条消息。可随时暂停页面上下文或撤销站点权限；不新增开发者后端、遥测或模型代理。
 
 ## 安装与升级
 
@@ -38,7 +39,7 @@
 
 统计在本地保存，不保存聊天正文、密码或认证令牌；发送确认短暂在内存比较文本，过期即丢弃。保留历史日期键、`__gptUsageV4`、schema 3、手动计划与校准；活动导出格式 version 5，appVersion 3.6.0.61。
 
-当前权限为 `storage`、`tabs` 和 `https://chatgpt.com/*`。与本次优化前的 3.4 源码一致；与仓库旧 2.0.0 的仅 storage 权限不同。个人额度使用 GET `/api/auth/session` 和 `/backend-api/wham/usage`，令牌仅用于请求内存。公开预测使用不携带账户信息的 GET；第三方会收到 IP 等普通连接元数据。无开发者后台、遥测、对话创建或模型生成请求。详见 [隐私说明](PRIVACY.md)。
+当前必需权限为 `storage`、`tabs`、`sidePanel`、`scripting`、`declarativeNetRequestWithHostAccess`，以及 `https://chatgpt.com/*` 主机权限。Side Chat 对其他网站的访问属于**可选权限**：只有在你授权当前网站或全部网站后，才会读取该页面的可见正文用于本地上下文；可以随时暂停或撤销权限。`sidePanel` 用于 Side Chat 面板，`scripting` 用于在已授权页面运行本地上下文脚本，`declarativeNetRequestWithHostAccess` 仅在 Side Chat 面板打开期间处理 ChatGPT 子框架所需的响应头规则。个人额度使用 GET `/api/auth/session` 和 `/backend-api/wham/usage`，令牌仅用于请求内存。公开预测使用不携带账户信息的 GET；第三方会收到 IP 等普通连接元数据。无开发者后台、遥测、自动模型调用或模型代理。详见 [隐私说明](PRIVACY.md)。
 
 未知额度不补造数值；Pro 余额在手动校准后为本地估算。私有 API 和页面结构可能变化。当前自动化使用本地合成夹具，未将其视为真实登录账户或扩展安装验收。
 
