@@ -27,6 +27,7 @@ Six English store screenshots are shown below.
 - Consistent membership rows, compact Live badges, themed dropdowns and date/time picker, keyboard navigation, and reduced-motion support.
 - Read-only refresh using the existing ChatGPT session, dynamic Codex windows, timeout/backoff, and cached/error states. No chat submission, generation, or automatic page reload.
 - Experimental third-party global reset forecasts from codex-reset.com, distinct from personal reset times and official promises.
+- **Side Chat** is an optional side-panel chat experience that uses your existing ChatGPT session. While the panel is open and a site is authorized, SakuraMeter can read visible page text and include text you explicitly highlight as higher-priority context in the next message. Page context can be paused and site access can be revoked at any time. It adds no developer backend, telemetry, or model proxy.
 
 ## Install and update
 
@@ -36,7 +37,7 @@ Export activity and back up the existing extension directory before updating. Re
 
 ## Privacy and permissions
 
-Activity remains local. Chat text is briefly compared in memory to confirm a send, never persisted or exported. Authentication tokens remain in request-local memory. Current permissions are storage, tabs, and the ChatGPT host, unchanged from the optimized 3.4 source but different from the old 2.0.0 repository version.
+Activity remains local. Chat text is briefly compared in memory to confirm a send, never persisted or exported. Authentication tokens remain in request-local memory. Required permissions are `storage`, `tabs`, `sidePanel`, `scripting`, `declarativeNetRequestWithHostAccess`, plus the `https://chatgpt.com/*` host permission. Access to other HTTP(S) sites is **optional** and is requested only for Side Chat page context when you authorize the current site or all sites. `sidePanel` provides the Side Chat surface, `scripting` runs the local context helper on authorized pages, and `declarativeNetRequestWithHostAccess` is used only while Side Chat is open to manage the response-header rule required for the ChatGPT sub-frame. Page context can be paused and site access can be revoked at any time.
 
 Personal usage uses GET requests to ChatGPT session and usage endpoints. Public forecasts use credential-free GET requests; the forecast provider receives normal connection metadata such as IP address. No developer backend, telemetry, conversation creation, or model calls. See [Privacy](PRIVACY.md).
 
